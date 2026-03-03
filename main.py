@@ -21,7 +21,6 @@ ALGORITHM  = "HS256"
 ACCESS_EXP  = 1440
 REFRESH_EXP = 14
 
-
 client      = MongoClient(MONGO_URL)
 db          = client[DB_NAME]
 users       = db["users"]
