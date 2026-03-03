@@ -1,0 +1,69 @@
+name: 🚀 Deploy Tree Plantation
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup SSH Agent
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.SERVER_KEY }}
+
+      - name: Deploy Application
+        run: |
+          set -e
+
+          BRANCH="${GITHUB_REF_NAME}"
+
+          case "$BRANCH" in
+            main)
+              ENV="production"
+              APP_NAME="tree_plantation_production"
+              PORT=9020
+              ;;
+            staging)
+              ENV="staging"
+              APP_NAME="tree_plantation_staging"
+              PORT=9019
+              ;;
+            *)
+              echo "Unsupported branch"
+              exit 1
+              ;;
+          esac
+
+          IMAGE="ghcr.io/jhsassociatesllp/tree-plantation:$ENV"
+
+          ssh -p "${{ secrets.SERVER_PORT }}" \
+            -o StrictHostKeyChecking=no \
+            "${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}" << EOF
+
+              set -e
+
+              echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+
+              docker pull "$IMAGE"
+
+              docker stop "$APP_NAME" || true
+              docker rm "$APP_NAME" || true
+
+              docker run -d \
+                --name "$APP_NAME" \
+                -p "$PORT:8000" \
+                -e APP_ENV="$ENV" \
+                -e MONGO_URL="${{ secrets.MONGO_URL }}" \
+                -e DB_NAME="${{ secrets.DB_NAME }}" \
+                -e JWT_SECRET="${{ secrets.JWT_SECRET }}" \
+                "$IMAGE"
+
+              docker image prune -f --filter "dangling=true"
+
+              echo "Deployment complete"
+          EOF

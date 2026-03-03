@@ -1,0 +1,35 @@
+name: 🏗️ Build & Push Tree Plantation Image
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Login to GHCR
+        run: |
+          echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+
+      - name: Build & Push Image
+        run: |
+          IMAGE="ghcr.io/jhsassociatesllp/tree-plantation"
+
+          if [ "${GITHUB_REF_NAME}" = "main" ]; then
+            TAG="production"
+          elif [ "${GITHUB_REF_NAME}" = "staging" ]; then
+            TAG="staging"
+          else
+            echo "Unsupported branch"
+            exit 1
+          fi
+
+          docker build -t "$IMAGE:$TAG" .
+          docker push "$IMAGE:$TAG"
