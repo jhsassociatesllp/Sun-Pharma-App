@@ -288,6 +288,32 @@
   </div>
 </div>
 
+<!-- Sign out confirm modal -->
+<div class="switch-modal-bg" id="signout-modal-bg">
+  <div class="switch-modal">
+    <div class="sm-icon">👋</div>
+    <h3>Sign out?</h3>
+    <p>Any unsubmitted data is safely saved on this device and will sync when you sign back in.</p>
+    <div class="sm-btns">
+      <button class="sm-btn no" onclick="closeSignoutModal()">Stay</button>
+      <button class="sm-btn yes" style="background:#ef4444" onclick="doLogout()">Yes, Sign out</button>
+    </div>
+  </div>
+</div>
+
+<!-- Exit app confirm modal -->
+<div class="switch-modal-bg" id="exit-modal-bg">
+  <div class="switch-modal">
+    <div class="sm-icon">🚪</div>
+    <h3>Leave TreeApp?</h3>
+    <p>You have unsaved data. Are you sure you want to leave the app?</p>
+    <div class="sm-btns">
+      <button class="sm-btn no" onclick="closeExitModal()">Stay</button>
+      <button class="sm-btn yes" style="background:#ef4444" onclick="confirmExit()">Leave</button>
+    </div>
+  </div>
+</div>
+
 <main class="main">
   <div class="page-hdr">
     <h1>Outcome Dipstick Questionnaire</h1>
@@ -874,12 +900,79 @@ document.addEventListener('click', e => {
   }
 });
 
+// ── Sign out confirm ────────────────────────────────────────
 function logout() {
+  // Show confirm modal instead of logging out immediately
+  document.getElementById('user-dropdown').classList.remove('open');
+  document.getElementById('signout-modal-bg').classList.add('open');
+}
+function closeSignoutModal() {
+  document.getElementById('signout-modal-bg').classList.remove('open');
+}
+function doLogout() {
+  // Bypass exit guard and actually sign out
+  exitAllowed = true;
   localStorage.removeItem('access_token');
   localStorage.removeItem('refresh_token');
   localStorage.removeItem('user');
   window.location.href = '/';
 }
+document.getElementById('signout-modal-bg').addEventListener('click', e => {
+  if (e.target.id === 'signout-modal-bg') closeSignoutModal();
+});
+
+// ── Exit / Leave app guard ───────────────────────────────────
+let exitAllowed  = false;   // set true when user confirms or intentionally leaves
+let pendingExitUrl = null;  // destination URL when navigating away
+
+function closeExitModal() {
+  document.getElementById('exit-modal-bg').classList.remove('open');
+  pendingExitUrl = null;
+}
+function confirmExit() {
+  exitAllowed = true;
+  document.getElementById('exit-modal-bg').classList.remove('open');
+  if (pendingExitUrl) {
+    window.location.href = pendingExitUrl;
+  } else {
+    window.close(); // for tab-close scenario (may not work in all browsers)
+  }
+}
+document.getElementById('exit-modal-bg').addEventListener('click', e => {
+  if (e.target.id === 'exit-modal-bg') closeExitModal();
+});
+
+// Intercept browser tab close / refresh
+window.addEventListener('beforeunload', e => {
+  if (exitAllowed) return;
+  const hasDraft = Object.keys(savedData).length > 0;
+  if (hasDraft) {
+    e.preventDefault();
+    e.returnValue = ''; // triggers native browser dialog
+  }
+});
+
+// Intercept in-app navigation links (Home/History toggle, back button)
+document.addEventListener('click', e => {
+  if (exitAllowed) return;
+  const hasDraft = Object.keys(savedData).length > 0;
+  if (!hasDraft) return;
+
+  const link = e.target.closest('a[href]');
+  if (!link) return;
+
+  const href = link.getAttribute('href');
+  // Only intercept real navigation links, not # anchors or same-page
+  if (!href || href.startsWith('#') || href === window.location.pathname) return;
+
+  // Allow admin/logout links to be handled by their own modals
+  if (href === '/admin.html') return;
+
+  e.preventDefault();
+  e.stopPropagation();
+  pendingExitUrl = href;
+  document.getElementById('exit-modal-bg').classList.add('open');
+}, true); // capture phase so it fires before toggle dropdown
 
 function openSwitchModal(e) {
   e.preventDefault();
@@ -887,7 +980,10 @@ function openSwitchModal(e) {
   document.getElementById('switch-modal-bg').classList.add('open');
 }
 function closeSwitchModal() { document.getElementById('switch-modal-bg').classList.remove('open'); }
-function goToAdmin() { window.location.href = '/admin.html'; }
+function goToAdmin() {
+  exitAllowed = true;
+  window.location.href = '/admin.html';
+}
 document.getElementById('switch-modal-bg').addEventListener('click', e => {
   if (e.target.id === 'switch-modal-bg') closeSwitchModal();
 });
