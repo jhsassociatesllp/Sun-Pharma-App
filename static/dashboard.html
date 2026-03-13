@@ -39,7 +39,7 @@
 
     .nav-right{margin-left:auto;display:flex;align-items:center;gap:.45rem;flex-shrink:0}
 
-    /* Sync indicator (no button, just a status dot) */
+    /* Sync indicator */
     .sync-indicator{display:flex;align-items:center;gap:5px;font-size:.75rem;font-weight:600;color:rgba(255,255,255,.4);padding:4px 8px;border-radius:100px}
     .sync-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.2);flex-shrink:0;transition:background .3s}
     .sync-dot.syncing{background:var(--amber);animation:pulse .8s ease-in-out infinite}
@@ -85,7 +85,7 @@
     .prog-bar{height:8px;background:var(--border);border-radius:100px;overflow:hidden}
     .prog-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--leaf));border-radius:100px;transition:width .5s ease}
 
-    /* ── ACTION BAR (Submit + Export) ── */
+    /* ── ACTION BAR ── */
     .action-bar{display:flex;gap:.75rem;margin-top:1.75rem;flex-wrap:wrap;align-items:center}
     .submit-btn{display:flex;align-items:center;gap:6px;background:var(--green);color:#fff;border:none;padding:11px 20px;border-radius:11px;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;transition:background .18s,box-shadow .18s;position:relative;overflow:hidden;flex:1;min-width:160px;justify-content:center}
     .submit-btn:hover{background:var(--leaf);box-shadow:0 5px 16px rgba(45,106,79,.25)}
@@ -225,13 +225,11 @@
   </div>
 
   <div class="nav-right">
-    <!-- Sync status indicator -->
     <div class="sync-indicator" id="sync-indicator" title="Sync status">
       <span class="sync-dot offline" id="sync-dot"></span>
       <span id="sync-label">—</span>
     </div>
 
-    <!-- User icon -->
     <div class="user-menu-wrap" id="user-menu-wrap">
       <button class="user-icon-btn" onclick="toggleUserMenu()" title="Account">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -332,7 +330,6 @@
 
   <div class="grid" id="cards-grid"></div>
 
-  <!-- Action bar — below sections -->
   <div class="action-bar">
     <button class="submit-btn" id="submit-btn" onclick="openConfirm()" disabled>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
@@ -465,10 +462,14 @@ if (storedDate && storedDate !== TODAY) {
 }
 localStorage.setItem(DATE_KEY, TODAY);
 
-let savedData  = JSON.parse(localStorage.getItem(SEC_KEY)   || '{}');
-let pending    = JSON.parse(localStorage.getItem(PEND_KEY)  || '[]');
-// pendingLocal: sections saved locally but NOT yet synced to server at all
-// This is what we track to show the correct sync status
+let savedData = JSON.parse(localStorage.getItem(SEC_KEY)  || '{}');
+let pending   = JSON.parse(localStorage.getItem(PEND_KEY) || '[]');
+
+// ✅ FIX: If no access token exists, the pending queue is stale — clear it
+if (!localStorage.getItem('access_token')) {
+  pending = [];
+  localStorage.removeItem(PEND_KEY);
+}
 
 let currentSec = null;
 let isSyncing  = false;
@@ -480,12 +481,40 @@ document.getElementById('today-label').textContent =
 // SYNC STATUS INDICATOR
 // ─────────────────────────────────────────────────────────────
 function setSyncStatus(state) {
-  // state: 'offline' | 'syncing' | 'synced' | 'pending'
   const dot   = document.getElementById('sync-dot');
   const label = document.getElementById('sync-label');
   dot.className = 'sync-dot ' + state;
   const labels = { offline:'Offline', syncing:'Syncing…', synced:'Synced', pending:'Pending' };
   label.textContent = labels[state] || state;
+}
+
+// ─────────────────────────────────────────────────────────────
+// TOKEN REFRESH
+// ─────────────────────────────────────────────────────────────
+async function tryRefreshToken() {
+  const refreshToken = localStorage.getItem('refresh_token');
+  if (!refreshToken) {
+    // No refresh token — session is completely dead, redirect to login
+    window.location.href = '/';
+    return false;
+  }
+  try {
+    const res = await fetch('/api/refresh', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refresh_token: refreshToken })
+    });
+    if (!res.ok) {
+      // Refresh token also expired — force re-login
+      window.location.href = '/';
+      return false;
+    }
+    const data = await res.json();
+    localStorage.setItem('access_token', data.access_token);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -513,7 +542,6 @@ function updateProgress() {
   document.getElementById('prog-fill').style.width = (done/11*100)+'%';
   document.getElementById('prog-count').textContent = `${done} / 11`;
 
-  // Enable/disable action buttons
   const hasSections = done > 0;
   document.getElementById('submit-btn').disabled  = !hasSections;
   document.getElementById('export-btn').disabled  = !hasSections;
@@ -535,20 +563,30 @@ async function restoreFromServer() {
     return;
   }
   try {
-    // Check if today's temp draft exists on server
     const res = await fetch(`/api/submissions/temp/today?date=${TODAY}`, {
       headers: { 'Authorization': 'Bearer ' + token }
     });
-    if (!res.ok) return;
+
+    // ✅ FIX: Handle 401 — access token expired, attempt silent refresh
+    if (res.status === 401) {
+      const refreshed = await tryRefreshToken();
+      if (refreshed) return restoreFromServer(); // retry once with new token
+      return; // tryRefreshToken will redirect if fully expired
+    }
+
+    if (!res.ok) {
+      setSyncStatus(pending.length > 0 ? 'pending' : 'synced');
+      return;
+    }
+
     const doc = await res.json();
     if (!doc || !doc.sections) {
       setSyncStatus(pending.length > 0 ? 'pending' : 'synced');
       return;
     }
-    // Merge server sections (server wins for fields that haven't been changed locally)
+
+    // Merge server sections — server wins for fields not in the pending list
     const serverSecs = doc.sections;
-    // Only overwrite local sections that are NOT in the pending list
-    // (pending = locally changed but not yet sent to server)
     Object.keys(serverSecs).forEach(id => {
       if (!pending.includes(id)) {
         savedData[id] = serverSecs[id];
@@ -583,8 +621,16 @@ async function syncToServer(sectionsToSync) {
       headers: { 'Content-Type':'application/json', 'Authorization':'Bearer '+token },
       body: JSON.stringify({ date: TODAY, sections: payload })
     });
+
+    // ✅ FIX: Handle 401 — refresh token and retry once
+    if (res.status === 401) {
+      isSyncing = false;
+      const refreshed = await tryRefreshToken();
+      if (refreshed) return syncToServer(sectionsToSync);
+      return false;
+    }
+
     if (res.ok) {
-      // Remove synced sections from pending
       const synced = Object.keys(payload);
       pending = pending.filter(id => !synced.includes(id));
       localStorage.setItem(PEND_KEY, JSON.stringify(pending));
@@ -599,7 +645,6 @@ async function syncToServer(sectionsToSync) {
   return false;
 }
 
-// Sync all pending when back online
 async function syncAllPending() {
   if (pending.length === 0) return;
   await syncToServer([...pending]);
@@ -709,7 +754,6 @@ function saveSection() {
     renderCards();
     updateProgress();
 
-    // If online: sync immediately to server, clear from pending
     if (navigator.onLine) {
       setSyncStatus('syncing');
       const ok = await syncToServer([id]);
@@ -727,7 +771,7 @@ function saveSection() {
 }
 
 // ─────────────────────────────────────────────────────────────
-// EXPORT EXCEL (current draft)
+// EXPORT EXCEL
 // ─────────────────────────────────────────────────────────────
 function flattenSection(secId, data, meta) {
   const row = { ...meta };
@@ -795,8 +839,7 @@ document.getElementById('confirm-bg').addEventListener('click', e => {
 });
 
 async function doSubmit() {
-  const token = localStorage.getItem('access_token');
-  const btn   = document.getElementById('confirm-submit-btn');
+  const btn = document.getElementById('confirm-submit-btn');
 
   if (!navigator.onLine) {
     closeConfirm();
@@ -808,24 +851,40 @@ async function doSubmit() {
   btn.textContent = 'Submitting…';
 
   try {
-    // 1. First ensure all local data is synced to temp
+    // 1. Ensure all local data is synced to temp (handles token refresh internally)
     if (pending.length > 0) {
       await syncToServer([...pending]);
     }
 
-    // 2. Call submit endpoint — moves temp → main collection
-    const res = await fetch('/api/submissions/submit', {
+    // 2. Get a fresh token after potential refresh above
+    const token = localStorage.getItem('access_token');
+    if (!token) throw new Error('Not authenticated');
+
+    // 3. Call submit endpoint — moves temp → main collection
+    let res = await fetch('/api/submissions/submit', {
       method: 'POST',
       headers: { 'Content-Type':'application/json', 'Authorization':'Bearer '+token },
       body: JSON.stringify({ date: TODAY })
     });
+
+    // ✅ FIX: Handle 401 on submit too
+    if (res.status === 401) {
+      const refreshed = await tryRefreshToken();
+      if (!refreshed) throw new Error('Session expired. Please sign in again.');
+      const newToken = localStorage.getItem('access_token');
+      res = await fetch('/api/submissions/submit', {
+        method: 'POST',
+        headers: { 'Content-Type':'application/json', 'Authorization':'Bearer '+newToken },
+        body: JSON.stringify({ date: TODAY })
+      });
+    }
 
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
       throw new Error(err.detail || 'Submit failed');
     }
 
-    // 3. Clear ALL local data for today
+    // 4. Clear ALL local data for today
     localStorage.removeItem(SEC_KEY);
     localStorage.removeItem(PEND_KEY);
     savedData = {};
@@ -900,9 +959,7 @@ document.addEventListener('click', e => {
   }
 });
 
-// ── Sign out confirm ────────────────────────────────────────
 function logout() {
-  // Show confirm modal instead of logging out immediately
   document.getElementById('user-dropdown').classList.remove('open');
   document.getElementById('signout-modal-bg').classList.add('open');
 }
@@ -910,7 +967,6 @@ function closeSignoutModal() {
   document.getElementById('signout-modal-bg').classList.remove('open');
 }
 function doLogout() {
-  // Bypass exit guard and actually sign out
   exitAllowed = true;
   localStorage.removeItem('access_token');
   localStorage.removeItem('refresh_token');
@@ -922,8 +978,8 @@ document.getElementById('signout-modal-bg').addEventListener('click', e => {
 });
 
 // ── Exit / Leave app guard ───────────────────────────────────
-let exitAllowed  = false;   // set true when user confirms or intentionally leaves
-let pendingExitUrl = null;  // destination URL when navigating away
+let exitAllowed    = false;
+let pendingExitUrl = null;
 
 function closeExitModal() {
   document.getElementById('exit-modal-bg').classList.remove('open');
@@ -935,24 +991,22 @@ function confirmExit() {
   if (pendingExitUrl) {
     window.location.href = pendingExitUrl;
   } else {
-    window.close(); // for tab-close scenario (may not work in all browsers)
+    window.close();
   }
 }
 document.getElementById('exit-modal-bg').addEventListener('click', e => {
   if (e.target.id === 'exit-modal-bg') closeExitModal();
 });
 
-// Intercept browser tab close / refresh
 window.addEventListener('beforeunload', e => {
   if (exitAllowed) return;
   const hasDraft = Object.keys(savedData).length > 0;
   if (hasDraft) {
     e.preventDefault();
-    e.returnValue = ''; // triggers native browser dialog
+    e.returnValue = '';
   }
 });
 
-// Intercept in-app navigation links (Home/History toggle, back button)
 document.addEventListener('click', e => {
   if (exitAllowed) return;
   const hasDraft = Object.keys(savedData).length > 0;
@@ -962,17 +1016,14 @@ document.addEventListener('click', e => {
   if (!link) return;
 
   const href = link.getAttribute('href');
-  // Only intercept real navigation links, not # anchors or same-page
   if (!href || href.startsWith('#') || href === window.location.pathname) return;
-
-  // Allow admin/logout links to be handled by their own modals
   if (href === '/admin.html') return;
 
   e.preventDefault();
   e.stopPropagation();
   pendingExitUrl = href;
   document.getElementById('exit-modal-bg').classList.add('open');
-}, true); // capture phase so it fires before toggle dropdown
+}, true);
 
 function openSwitchModal(e) {
   e.preventDefault();

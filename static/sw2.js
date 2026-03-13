@@ -24,7 +24,7 @@ self.addEventListener('install', e => {
   e.waitUntil(
     caches.open(CACHE)
       .then(c => Promise.allSettled(PRECACHE.map(url => c.add(url).catch(() => {}))))
-      .then(() => self.skipWaiting())
+      .then(() => self.skipWaiting())   // activate immediately, don't wait
   );
 });
 
@@ -35,7 +35,7 @@ self.addEventListener('activate', e => {
       .then(keys => Promise.all(
         keys.filter(k => k !== CACHE).map(k => caches.delete(k))
       ))
-      .then(() => self.clients.claim())
+      .then(() => self.clients.claim())  // take control of all open tabs
   );
 });
 
@@ -45,7 +45,7 @@ self.addEventListener('fetch', e => {
 
   // 1. API calls — always go to network, never intercept
   if (url.pathname.startsWith('/api/')) {
-    return;
+    return; // let browser handle normally
   }
 
   // 2. HTML pages — NETWORK FIRST, no caching
@@ -69,10 +69,9 @@ self.addEventListener('fetch', e => {
     caches.match(e.request).then(cached => {
       if (cached) return cached;
       return fetch(e.request).then(res => {
-        // ✅ FIX: clone BEFORE returning res, not after
+        // Only cache successful same-origin responses
         if (res.ok && url.origin === location.origin) {
-          const resClone = res.clone();
-          caches.open(CACHE).then(c => c.put(e.request, resClone));
+          caches.open(CACHE).then(c => c.put(e.request, res.clone()));
         }
         return res;
       });
@@ -80,7 +79,7 @@ self.addEventListener('fetch', e => {
   );
 });
 
-// ── Offline fallback page ───────────────────────────────────
+// ── Offline fallback page (shown when HTML fetch fails) ─────
 function offlinePage() {
   return `<!DOCTYPE html>
 <html lang="en">
