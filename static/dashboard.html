@@ -403,6 +403,8 @@
           ondragleave="this.classList.remove('drag')"
           ondrop="handleDrop(event)">
           <input type="file" id="file-input" accept="image/*" multiple onchange="handleFileInput(this)"/>
+        <!-- Hidden fallback input used when getUserMedia is unavailable (HTTP) -->
+        <input type="file" id="cam-input-fallback" accept="image/*" capture="environment" style="display:none" onchange="handleFileInput(this)"/>
           <div class="upload-zone-icon">🖼️</div>
           <p><strong>Tap to choose photos</strong><br/>or drag & drop here<br/><span style="font-size:.75rem;color:#9ca3af">JPG, PNG, WEBP · Max 5MB each</span></p>
         </div>
@@ -1173,11 +1175,22 @@ document.getElementById('photo-modal-bg').addEventListener('click', e => {
 let camStream   = null;
 let camFacing   = 'environment'; // 'environment' = rear, 'user' = front
 
+// Check if getUserMedia is available (requires HTTPS or localhost)
+function hasGetUserMedia() {
+  return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
+}
+
 async function openCameraStream() {
-  const wrap = document.getElementById('cam-stream-wrap');
+  // ── Fallback: HTTP / no getUserMedia → use file input with capture ──
+  if (!hasGetUserMedia()) {
+    const inp = document.getElementById('cam-input-fallback');
+    inp.click();
+    return;
+  }
+
+  const wrap  = document.getElementById('cam-stream-wrap');
   const video = document.getElementById('cam-video');
 
-  // Stop any existing stream
   if (camStream) stopCamStream();
 
   try {
@@ -1189,11 +1202,19 @@ async function openCameraStream() {
     wrap.style.display = 'block';
     document.getElementById('cam-open-btn').style.display = 'none';
   } catch (err) {
-    const msg = err.name === 'NotAllowedError'
-      ? 'Camera permission denied. Please allow camera access in your browser settings.'
-      : err.name === 'NotFoundError'
-      ? 'No camera found on this device.'
-      : 'Could not open camera: ' + err.message;
+    let msg;
+    if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+      msg = 'Camera permission denied. Please allow camera access and try again.';
+    } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
+      msg = 'No camera found on this device.';
+    } else if (err.name === 'NotReadableError') {
+      msg = 'Camera is already in use by another app.';
+    } else {
+      // Any other error — fall back to file input
+      const inp = document.getElementById('cam-input-fallback');
+      inp.click();
+      return;
+    }
     toast(msg, 4000);
   }
 }
@@ -1213,37 +1234,30 @@ function stopCamStream() {
 function closeCameraStream() {
   stopCamStream();
   document.getElementById('cam-stream-wrap').style.display = 'none';
-  document.getElementById('cam-open-btn').style.display   = 'flex';
+  document.getElementById('cam-open-btn').style.display    = 'flex';
 }
 
 function snapPhoto() {
   const video  = document.getElementById('cam-video');
   const canvas = document.getElementById('cam-canvas');
-  if (!video.videoWidth) { toast('Camera not ready yet', 1500); return; }
+  if (!video.videoWidth) { toast('Camera not ready yet — try again', 1800); return; }
 
   canvas.width  = video.videoWidth;
   canvas.height = video.videoHeight;
   canvas.getContext('2d').drawImage(video, 0, 0);
 
   const base64 = canvas.toDataURL('image/jpeg', 0.85);
-  const ts     = new Date().toISOString().replace(/[:.]/g, '-').slice(0,19);
-  const id     = 'ph_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
+  const ts     = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+  const id     = 'ph_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7);
 
-  photoData.push({
-    id,
-    name:    `photo_${ts}.jpg`,
-    base64,
-    type:    'image/jpeg',
-    addedAt: new Date().toISOString()
-  });
+  photoData.push({ id, name: `photo_${ts}.jpg`, base64, type: 'image/jpeg', addedAt: new Date().toISOString() });
 
   renderPhotoPreview();
   toast('📷 Photo captured!', 1500);
 
-  // Flash effect
-  const video_el = document.getElementById('cam-video');
-  video_el.style.filter = 'brightness(3)';
-  setTimeout(() => { video_el.style.filter = ''; }, 120);
+  // Brief flash effect
+  video.style.filter = 'brightness(3)';
+  setTimeout(() => { video.style.filter = ''; }, 120);
 }
 
 function handleDrop(e) {
