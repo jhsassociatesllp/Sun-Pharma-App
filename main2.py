@@ -14,20 +14,19 @@ from typing import Optional
 
 load_dotenv()
 
-MONGO_URL  = os.getenv("MONGO_URL", "mongodb://localhost:27017")
-DB_NAME    = os.getenv("DB_NAME", "tree_plantation")
-JWT_SECRET = os.getenv("JWT_SECRET", "change-this-secret")
+MONGO_URL  = os.getenv("MONGO_URL")
+DB_NAME    = os.getenv("DB_NAME")
+JWT_SECRET = os.getenv("JWT_SECRET")
 ALGORITHM  = "HS256"
-ACCESS_EXP  = 30
+ACCESS_EXP  = 1440
 REFRESH_EXP = 14
 
 client      = MongoClient(MONGO_URL)
 db          = client[DB_NAME]
 users       = db["users"]
-submissions      = db["submissions"]        # ── MAIN (submitted) collection
+submissions = db["submissions"]        # ── MAIN (submitted) collection
 temp_submissions = db["temp_submissions"]  # ── TEMP (in-progress) collection
-photo_submissions = db["photo_submissions"] # ── PHOTOS (per day, per employee)
-admin_col        = db["admin"]
+admin_col   = db["admin"]
 
 # ── Indexes ─────────────────────────────────────────────────
 users.create_index("email",   unique=True)
@@ -49,10 +48,6 @@ except Exception:
     pass
 temp_submissions.create_index([("employee_id", 1), ("date", 1)], unique=True)
 temp_submissions.create_index("updated_at")
-
-# Photo submissions: unique per employee+date
-photo_submissions.create_index([("employee_id", 1), ("date", 1)], unique=True)
-photo_submissions.create_index("updated_at")
 
 # Admin config
 if not admin_col.find_one({"_id": "config"}):
@@ -113,17 +108,6 @@ class SubmitIn(BaseModel):
     date: str       # "YYYY-MM-DD" — finalize this day's temp data
 
 
-class PhotoItem(BaseModel):
-    id:       str
-    name:     str
-    base64:   str       # data:image/jpeg;base64,...
-    type:     str       # e.g. "image/jpeg"
-    addedAt:  str
-
-class PhotoUploadIn(BaseModel):
-    date:   str         # "YYYY-MM-DD"
-    photos: list[PhotoItem]
-
 class AddAdminIn(BaseModel):
     email: EmailStr
 
@@ -164,12 +148,6 @@ def get_user(creds: HTTPAuthorizationCredentials = Depends(bearer)):
     u = users.find_one({"user_id": p["sub"]})
     if not u or not u.get("is_active"):
         raise HTTPException(401, "User not found")
-    return u
-
-# ── Admin endpoints ──────────────────────────────────────────
-def require_admin(u=Depends(get_user)):
-    if not is_admin(u["email"]):
-        raise HTTPException(403, "Admin access required")
     return u
 
 def is_admin(email: str) -> bool:
@@ -327,55 +305,6 @@ def submit_day(data: SubmitIn, u=Depends(get_user)):
     return clean(doc)
 
 
-# ── Photo Upload ─────────────────────────────────────────────
-@app.post("/api/submissions/photos")
-def upload_photos(data: PhotoUploadIn, u=Depends(get_user)):
-    """
-    Upsert photos into the photo_submissions collection.
-    Called both during draft (temp sync) and on final submit.
-    Photos are stored as base64 strings alongside metadata.
-    """
-    now = datetime.utcnow().isoformat()
-    photo_list = [p.model_dump() for p in data.photos]
-
-    doc = photo_submissions.find_one_and_update(
-        {"employee_id": u["user_id"], "date": data.date},
-        {
-            "$set": {
-                "photos":        photo_list,
-                "employee_name": u["name"],
-                "updated_at":    now,
-            },
-            "$setOnInsert": {
-                "employee_id": u["user_id"],
-                "date":        data.date,
-                "created_at":  now,
-            }
-        },
-        upsert=True,
-        return_document=ReturnDocument.AFTER
-    )
-    return {"ok": True, "count": len(photo_list)}
-
-
-@app.get("/api/submissions/photos/today")
-def get_photos_today(date: str, u=Depends(get_user)):
-    """Return today's photos if they exist (for restore on login)."""
-    doc = photo_submissions.find_one({"employee_id": u["user_id"], "date": date})
-    if not doc:
-        return {"photos": []}
-    return {"photos": doc.get("photos", [])}
-
-
-# ── Admin: get photos for a submission ────────────────────────
-@app.get("/api/admin/photos/{employee_id}/{date}")
-def admin_get_photos(employee_id: str, date: str, u=Depends(require_admin)):
-    doc = photo_submissions.find_one({"employee_id": employee_id, "date": date})
-    if not doc:
-        return {"photos": []}
-    return {"photos": doc.get("photos", [])}
-
-
 # ── Main Submissions (submitted / finalized) ─────────────────
 @app.get("/api/submissions")
 def list_submissions(u=Depends(get_user)):
@@ -401,7 +330,11 @@ def upsert_submission_legacy(data: SectionSyncIn, u=Depends(get_user)):
     return sync_sections(data, u)
 
 
-
+# ── Admin endpoints ──────────────────────────────────────────
+def require_admin(u=Depends(get_user)):
+    if not is_admin(u["email"]):
+        raise HTTPException(403, "Admin access required")
+    return u
 
 
 @app.get("/api/admin/employees")
