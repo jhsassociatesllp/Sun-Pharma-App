@@ -109,6 +109,19 @@
       .field-grid{grid-template-columns:1fr 1fr}
       .sub-right{flex-direction:row;align-items:center}
     }
+
+    /* Sign out modal */
+    .switch-modal-bg{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.55);align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+    .switch-modal-bg.open{display:flex}
+    .switch-modal{background:#fff;border-radius:18px;padding:2rem 1.75rem;width:90%;max-width:360px;text-align:center;animation:popIn .25s cubic-bezier(.34,1.56,.64,1)}
+    @keyframes popIn{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
+    .switch-modal .sm-icon{font-size:2.2rem;margin-bottom:.75rem}
+    .switch-modal h3{font-family:'Fraunces',serif;font-size:1.15rem;color:#1a3a2a;margin-bottom:.4rem}
+    .switch-modal p{color:#6b7280;font-size:.88rem;line-height:1.55;margin-bottom:1.4rem}
+    .switch-modal .sm-btns{display:flex;gap:.7rem}
+    .sm-btn{flex:1;padding:10px;border-radius:10px;border:none;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .18s}
+    .sm-btn.no{background:#e5e7eb;color:#111827}.sm-btn.no:hover{background:#d1d5db}
+    .sm-btn.yes{background:#2d6a4f;color:#fff}.sm-btn.yes:hover{background:#52b788}
   </style>
 </head>
 <body>
@@ -154,6 +167,19 @@
     </div>
   </div>
 </main>
+
+<!-- Sign out confirm modal -->
+<div class="switch-modal-bg" id="signout-modal-bg">
+  <div class="switch-modal">
+    <div class="sm-icon">👋</div>
+    <h3>Sign out?</h3>
+    <p>Your submission history is safely stored on the server.</p>
+    <div class="sm-btns">
+      <button class="sm-btn no" onclick="closeSignoutModal()">Stay</button>
+      <button class="sm-btn yes" style="background:#ef4444" onclick="doLogout()">Yes, Sign out</button>
+    </div>
+  </div>
+</div>
 
 <div class="toast" id="toast">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
@@ -374,9 +400,19 @@ document.addEventListener('click', e => {
 });
 
 function logout() {
+  document.getElementById('user-dropdown').classList.remove('open');
+  document.getElementById('signout-modal-bg').classList.add('open');
+}
+function closeSignoutModal() {
+  document.getElementById('signout-modal-bg').classList.remove('open');
+}
+function doLogout() {
   ['access_token','refresh_token','user'].forEach(k => localStorage.removeItem(k));
   window.location.href = '/';
 }
+document.getElementById('signout-modal-bg').addEventListener('click', e => {
+  if (e.target.id === 'signout-modal-bg') closeSignoutModal();
+});
 
 load();
 </script>

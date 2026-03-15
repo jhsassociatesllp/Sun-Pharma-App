@@ -39,7 +39,7 @@
 
     .nav-right{margin-left:auto;display:flex;align-items:center;gap:.45rem;flex-shrink:0}
 
-    /* Sync indicator (no button, just a status dot) */
+    /* Sync indicator */
     .sync-indicator{display:flex;align-items:center;gap:5px;font-size:.75rem;font-weight:600;color:rgba(255,255,255,.4);padding:4px 8px;border-radius:100px}
     .sync-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.2);flex-shrink:0;transition:background .3s}
     .sync-dot.syncing{background:var(--amber);animation:pulse .8s ease-in-out infinite}
@@ -85,7 +85,7 @@
     .prog-bar{height:8px;background:var(--border);border-radius:100px;overflow:hidden}
     .prog-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--leaf));border-radius:100px;transition:width .5s ease}
 
-    /* ── ACTION BAR (Submit + Export) ── */
+    /* ── ACTION BAR ── */
     .action-bar{display:flex;gap:.75rem;margin-top:1.75rem;flex-wrap:wrap;align-items:center}
     .submit-btn{display:flex;align-items:center;gap:6px;background:var(--green);color:#fff;border:none;padding:11px 20px;border-radius:11px;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;transition:background .18s,box-shadow .18s;position:relative;overflow:hidden;flex:1;min-width:160px;justify-content:center}
     .submit-btn:hover{background:var(--leaf);box-shadow:0 5px 16px rgba(45,106,79,.25)}
@@ -225,13 +225,11 @@
   </div>
 
   <div class="nav-right">
-    <!-- Sync status indicator -->
     <div class="sync-indicator" id="sync-indicator" title="Sync status">
       <span class="sync-dot offline" id="sync-dot"></span>
       <span id="sync-label">—</span>
     </div>
 
-    <!-- User icon -->
     <div class="user-menu-wrap" id="user-menu-wrap">
       <button class="user-icon-btn" onclick="toggleUserMenu()" title="Account">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -332,7 +330,6 @@
 
   <div class="grid" id="cards-grid"></div>
 
-  <!-- Action bar — below sections -->
   <div class="action-bar">
     <button class="submit-btn" id="submit-btn" onclick="openConfirm()" disabled>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
@@ -381,7 +378,7 @@ const SECTIONS = [
   { id:'A', icon:'👤', name:'Respondent Profile', desc:'Beneficiary details, land and irrigation', q:10,
     html:`<div class="fg"><label class="fl">1. Name of Beneficiary</label><input class="fi" id="name" placeholder="Full name"/></div><div class="row2"><div class="fg"><label class="fl">2. Age</label><input class="fi" id="age" type="number" placeholder="Age"/></div><div class="fg"><label class="fl">3. Gender</label><div class="radio-grp"><label class="r-item"><input type="radio" name="gender" value="Male"/> Male</label><label class="r-item"><input type="radio" name="gender" value="Female"/> Female</label><label class="r-item"><input type="radio" name="gender" value="Other"/> Other</label></div></div></div><div class="row2"><div class="fg"><label class="fl">4. Mobile Number</label><input class="fi" id="mobile" type="tel" placeholder="Mobile"/></div><div class="fg"><label class="fl">5. Marital Status</label><select class="fs" id="marital"><option value="">Select</option><option>Single</option><option>Married</option><option>Widowed</option><option>Divorced</option></select></div></div><div class="fg"><label class="fl">6. Location (Village/Town, District, State)</label><input class="fi" id="location" placeholder="e.g. Shirpur, Dhule, Maharashtra"/></div><div class="fg"><label class="fl">7. Landholding size where saplings were planted</label><div class="radio-grp"><label class="r-item"><input type="radio" name="landsize" value="Less than 1 acre"/> &lt;1 acre</label><label class="r-item"><input type="radio" name="landsize" value="1–2 acres"/> 1–2 acres</label><label class="r-item"><input type="radio" name="landsize" value="2–5 acres"/> 2–5 acres</label><label class="r-item"><input type="radio" name="landsize" value="More than 5 acres"/> &gt;5 acres</label></div></div><div class="fg"><label class="fl">8. Land ownership status</label><div class="radio-grp"><label class="r-item"><input type="radio" name="landown" value="Owned"/> Owned</label><label class="r-item"><input type="radio" name="landown" value="Leased"/> Leased</label><label class="r-item"><input type="radio" name="landown" value="Shared / family land"/> Shared / family land</label></div></div><div class="fg"><label class="fl">9. Regular access to irrigation?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="irrigation" value="Yes" onchange="showSub('irr-sub',true)"/> Yes</label><label class="r-item"><input type="radio" name="irrigation" value="No" onchange="showSub('irr-sub',false)"/> No</label></div><div class="sub-f" id="irr-sub"><label class="fl">Source of irrigation (multiple allowed)</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Borewell"/> Borewell</label><label class="c-item"><input type="checkbox" value="Open well"/> Open well</label><label class="c-item"><input type="checkbox" value="Canal"/> Canal</label><label class="c-item"><input type="checkbox" value="Drip irrigation"/> Drip irrigation</label><label class="c-item"><input type="checkbox" value="Rainfed only"/> Rainfed only</label><label class="c-item"><input type="checkbox" value="Other"/> Other</label></div></div></div><div class="fg"><label class="fl">10. How many times received saplings under this program?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="times_received" value="Only once"/> Only once</label><label class="r-item"><input type="radio" name="times_received" value="More than once"/> More than once</label></div></div>`},
   { id:'B', icon:'🌱', name:'Sapling Quality', desc:'Condition, height, suitability at distribution', q:4,
-    html:`<div class="fg"><label class="fl">11. Condition of saplings at distribution</label><div class="radio-grp"><label class="r-item"><input type="radio" name="sapling_cond" value="Healthy"/> Healthy</label><label class="r-item"><input type="radio" name="sapling_cond" value="Average"/> Average</label><label class="r-item"><input type="radio" name="sapling_cond" value="Weak"/> Weak</label><label class="r-item"><input type="radio" name="sapling_cond" value="Damaged"/> Damaged</label></div></div><div class="fg"><label class="fl">12a. Approximate height of saplings at time of distribution</label><div class="row2"><div class="fg" style="flex:1"><input class="fi" id="sapling_height" type="text" placeholder="e.g. 1.5 ft or 45 cm"/></div></div></div><div class="fg"><label class="fl">12b. Approximate age of saplings at time of distribution (in years)</label><div class="row2"><div class="fg" style="flex:1"><input class="fi" id="sapling_age_yrs" type="number" min="0" step="0.5" placeholder="e.g. 1.5"/></div></div></div><div class="fg"><label class="fl">13. Suitable for your soil and local climate?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="sapling_suit" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="sapling_suit" value="No"/> No</label><label class="r-item"><input type="radio" name="sapling_suit" value="Partially"/> Partially</label></div></div>`},
+    html:`<div class="fg"><label class="fl">11. Condition of saplings at distribution</label><div class="radio-grp"><label class="r-item"><input type="radio" name="sapling_cond" value="Healthy"/> Healthy</label><label class="r-item"><input type="radio" name="sapling_cond" value="Average"/> Average</label><label class="r-item"><input type="radio" name="sapling_cond" value="Weak"/> Weak</label><label class="r-item"><input type="radio" name="sapling_cond" value="Damaged"/> Damaged</label></div></div><div class="fg"><label class="fl">12a. Approximate height of saplings at time of distribution</label><div class="row2"><div class="fg" style="flex:1"><input class="fi" id="sapling_height" type="text" placeholder="e.g. 1.5 ft"/></div></div></div><div class="fg"><label class="fl">12b. Approximate age of saplings at time of distribution (in years)</label><div class="row2"><div class="fg" style="flex:1"><input class="fi" id="sapling_age_yrs" type="number" min="0" step="0.5" placeholder="e.g. 1.5"/></div></div></div><div class="fg"><label class="fl">13. Suitable for your soil and local climate?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="sapling_suit" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="sapling_suit" value="No"/> No</label><label class="r-item"><input type="radio" name="sapling_suit" value="Partially"/> Partially</label></div></div>`},
   { id:'C', icon:'📦', name:'Sapling Distribution', desc:'Verify MIS numbers vs actual received', q:3,
     html:`<div class="fg"><label class="fl">14. Did you receive same number of saplings as in MIS?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="mis_match" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="mis_match" value="No"/> No</label></div></div><div class="fg"><label class="fl">15. Number of saplings supposed to receive</label><table class="s-table"><thead><tr><th>Crop</th><th>Count</th></tr></thead><tbody><tr><td>Papaya</td><td><input type="number" id="sup_papaya" placeholder="0"/></td></tr><tr><td>Mulberry</td><td><input type="number" id="sup_mulberry" placeholder="0"/></td></tr><tr><td>Banana</td><td><input type="number" id="sup_banana" placeholder="0"/></td></tr></tbody></table></div><div class="fg"><label class="fl">16. Number of saplings actually received</label><table class="s-table"><thead><tr><th>Crop</th><th>Count</th></tr></thead><tbody><tr><td>Papaya</td><td><input type="number" id="rcv_papaya" placeholder="0"/></td></tr><tr><td>Mulberry</td><td><input type="number" id="rcv_mulberry" placeholder="0"/></td></tr><tr><td>Banana</td><td><input type="number" id="rcv_banana" placeholder="0"/></td></tr></tbody></table></div>`},
   { id:'D', icon:'🪴', name:'Plantation Process', desc:'Land, season, spacing, manure, protection', q:6,
@@ -389,7 +386,7 @@ const SECTIONS = [
   { id:'E', icon:'📊', name:'Survival & Maintenance', desc:'Survival count, mortality reasons, watering', q:4,
     html:`<div class="fg"><label class="fl">23. Approximate number of saplings currently surviving</label><table class="s-table"><thead><tr><th>Crop</th><th>Surviving</th></tr></thead><tbody><tr><td>Papaya</td><td><input type="number" id="surv_papaya" placeholder="0"/></td></tr><tr><td>Mulberry</td><td><input type="number" id="surv_mulberry" placeholder="0"/></td></tr><tr><td>Banana</td><td><input type="number" id="surv_banana" placeholder="0"/></td></tr></tbody></table></div><div class="fg"><label class="fl">24. Main reasons for mortality (multiple allowed)</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Water shortage"/> Water shortage</label><label class="c-item"><input type="checkbox" value="Pest attack"/> Pest attack</label><label class="c-item"><input type="checkbox" value="Disease"/> Disease</label><label class="c-item"><input type="checkbox" value="Animal grazing"/> Animal grazing</label><label class="c-item"><input type="checkbox" value="Climate/weather"/> Climate/weather</label><label class="c-item"><input type="checkbox" value="Poor sapling quality"/> Poor sapling quality</label><label class="c-item"><input type="checkbox" value="No mortality"/> No mortality</label></div></div><div class="fg"><label class="fl">25. Frequency of watering</label><div class="radio-grp"><label class="r-item"><input type="radio" name="watering" value="Daily"/> Daily</label><label class="r-item"><input type="radio" name="watering" value="Alternate days"/> Alternate days</label><label class="r-item"><input type="radio" name="watering" value="Weekly"/> Weekly</label><label class="r-item"><input type="radio" name="watering" value="Depends on rainfall"/> Depends on rainfall</label></div></div><div class="fg"><label class="fl">26. Frequency of weeding and field cleaning</label><div class="radio-grp"><label class="r-item"><input type="radio" name="weeding" value="Monthly"/> Monthly</label><label class="r-item"><input type="radio" name="weeding" value="Once in 2–3 months"/> Once in 2–3 months</label><label class="r-item"><input type="radio" name="weeding" value="Rarely"/> Rarely</label><label class="r-item"><input type="radio" name="weeding" value="Not done"/> Not done</label></div></div>`},
   { id:'F', icon:'🎓', name:'Capacity Building', desc:'Training attended, topics, helpfulness', q:4,
-    html:`<div class="fg"><label class="fl">27. Attended any training or awareness program?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="training" value="Yes" onchange="showSub('train-sub',true)"/> Yes</label><label class="r-item"><input type="radio" name="training" value="No" onchange="showSub('train-sub',false)"/> No</label></div><div class="sub-f" id="train-sub"><div class="fg"><label class="fl">28. Training details</label><textarea class="ft" id="train_details" placeholder="e.g. Date, location, organiser, topics covered…" style="min-height:70px"></textarea></div></div></div><div class="fg"><label class="fl">29. Topics covered (tick all applicable)</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Plantation methods"/> Plantation methods</label><label class="c-item"><input type="checkbox" value="Crop-specific care (Papaya/Mulberry/Banana)"/> Crop-specific care</label><label class="c-item"><input type="checkbox" value="Pest and disease management"/> Pest and disease management</label><label class="c-item"><input type="checkbox" value="Pruning / harvesting practices"/> Pruning / harvesting practices</label></div></div><div class="fg"><label class="fl">30. Has training helped in better sapling maintenance?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="train_help" value="Yes, significantly"/> Yes, significantly</label><label class="r-item"><input type="radio" name="train_help" value="Yes, to some extent"/> To some extent</label><label class="r-item"><input type="radio" name="train_help" value="No"/> No</label></div></div>`},
+    html:`<div class="fg"><label class="fl">27. Attended any training or awareness program?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="training" value="Yes" onchange="showSub('train-sub',true)"/> Yes</label><label class="r-item"><input type="radio" name="training" value="No" onchange="showSub('train-sub',false)"/> No</label></div><div class="sub-f" id="train-sub"><div class="fg"><label class="fl">28. Training details (if attended)</label><div class="row2" style="margin-top:.5rem"><div class="fg" style="margin-bottom:0"><label class="fl" style="font-weight:500;font-size:.78rem;margin-bottom:.3rem">Month &amp; Year (MM/YY)</label><input class="fi" id="train_mmyy" placeholder="e.g. 03/25" maxlength="5" style="letter-spacing:.05em"/></div><div class="fg" style="margin-bottom:0"><label class="fl" style="font-weight:500;font-size:.78rem;margin-bottom:.3rem">Location</label><input class="fi" id="train_location" placeholder="e.g. Shirpur, Dhule"/></div></div></div></div></div><div class="fg"><label class="fl">29. Topics covered (tick all applicable)</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Plantation methods"/> Plantation methods</label><label class="c-item"><input type="checkbox" value="Crop-specific care (Papaya/Mulberry/Banana)"/> Crop-specific care</label><label class="c-item"><input type="checkbox" value="Pest and disease management"/> Pest and disease management</label><label class="c-item"><input type="checkbox" value="Pruning / harvesting practices"/> Pruning / harvesting practices</label></div></div><div class="fg"><label class="fl">30. Has training helped in better sapling maintenance?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="train_help" value="Yes, significantly"/> Yes, significantly</label><label class="r-item"><input type="radio" name="train_help" value="Yes, to some extent"/> To some extent</label><label class="r-item"><input type="radio" name="train_help" value="No"/> No</label></div></div>`},
   { id:'G', icon:'🏕️', name:'Field Support', desc:'GVT field team visits and issue resolution', q:5,
     html:`<div class="fg"><label class="fl">31. Did GVT field team visit your farm after planting?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="team_visit" value="Yes" onchange="showSub('visit-sub',true)"/> Yes</label><label class="r-item"><input type="radio" name="team_visit" value="No" onchange="showSub('visit-sub',false)"/> No</label></div><div class="sub-f" id="visit-sub"><label class="fl">32. Number of visits</label><div class="radio-grp"><label class="r-item"><input type="radio" name="num_visits" value="1 time"/> 1 time</label><label class="r-item"><input type="radio" name="num_visits" value="2–3 times"/> 2–3 times</label><label class="r-item"><input type="radio" name="num_visits" value="More than 3 times"/> More than 3 times</label></div></div></div><div class="fg"><label class="fl">33. Did the field team provide technical guidance?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="tech_guidance" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="tech_guidance" value="No"/> No</label></div></div><div class="fg"><label class="fl">34. If you faced issues, did you know whom to contact?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="know_contact" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="know_contact" value="No"/> No</label></div></div><div class="fg"><label class="fl">35. Were your concerns resolved on time?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="resolved" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="resolved" value="No"/> No</label><label class="r-item"><input type="radio" name="resolved" value="Not applicable"/> Not applicable</label></div></div>`},
   { id:'H', icon:'🔍', name:'Duplication Check', desc:'Other CSR or government scheme benefits', q:2,
@@ -420,7 +417,7 @@ const F_LABELS = {
   plant_month:'Planting Month',plant_year:'Planting Year',pit_size:'Pit Size & Spacing',manure:'Manure Applied',
   surv_papaya:'Surviving – Papaya',surv_mulberry:'Surviving – Mulberry',surv_banana:'Surviving – Banana',
   watering:'Watering Frequency',weeding:'Weeding Frequency',training:'Attended Training',
-  train_details:'Training Details',train_help:'Training Helped',
+  train_mmyy:'Training Month & Year (MM/YY)',train_location:'Training Location',train_help:'Training Helped',
   team_visit:'Field Team Visit',num_visits:'No. of Visits',tech_guidance:'Technical Guidance',
   know_contact:'Knew Whom to Contact',resolved:'Concerns Resolved',other_csr:'Another CSR Program',
   csr_partner:'CSR Partner',govt_scheme:'Govt Scheme',scheme_name:'Scheme Name',
@@ -465,10 +462,14 @@ if (storedDate && storedDate !== TODAY) {
 }
 localStorage.setItem(DATE_KEY, TODAY);
 
-let savedData  = JSON.parse(localStorage.getItem(SEC_KEY)   || '{}');
-let pending    = JSON.parse(localStorage.getItem(PEND_KEY)  || '[]');
-// pendingLocal: sections saved locally but NOT yet synced to server at all
-// This is what we track to show the correct sync status
+let savedData = JSON.parse(localStorage.getItem(SEC_KEY)  || '{}');
+let pending   = JSON.parse(localStorage.getItem(PEND_KEY) || '[]');
+
+// ✅ FIX: If no access token exists, the pending queue is stale — clear it
+if (!localStorage.getItem('access_token')) {
+  pending = [];
+  localStorage.removeItem(PEND_KEY);
+}
 
 let currentSec = null;
 let isSyncing  = false;
@@ -480,12 +481,40 @@ document.getElementById('today-label').textContent =
 // SYNC STATUS INDICATOR
 // ─────────────────────────────────────────────────────────────
 function setSyncStatus(state) {
-  // state: 'offline' | 'syncing' | 'synced' | 'pending'
   const dot   = document.getElementById('sync-dot');
   const label = document.getElementById('sync-label');
   dot.className = 'sync-dot ' + state;
   const labels = { offline:'Offline', syncing:'Syncing…', synced:'Synced', pending:'Pending' };
   label.textContent = labels[state] || state;
+}
+
+// ─────────────────────────────────────────────────────────────
+// TOKEN REFRESH
+// ─────────────────────────────────────────────────────────────
+async function tryRefreshToken() {
+  const refreshToken = localStorage.getItem('refresh_token');
+  if (!refreshToken) {
+    // No refresh token — session is completely dead, redirect to login
+    window.location.href = '/';
+    return false;
+  }
+  try {
+    const res = await fetch('/api/refresh', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refresh_token: refreshToken })
+    });
+    if (!res.ok) {
+      // Refresh token also expired — force re-login
+      window.location.href = '/';
+      return false;
+    }
+    const data = await res.json();
+    localStorage.setItem('access_token', data.access_token);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -513,7 +542,6 @@ function updateProgress() {
   document.getElementById('prog-fill').style.width = (done/11*100)+'%';
   document.getElementById('prog-count').textContent = `${done} / 11`;
 
-  // Enable/disable action buttons
   const hasSections = done > 0;
   document.getElementById('submit-btn').disabled  = !hasSections;
   document.getElementById('export-btn').disabled  = !hasSections;
@@ -535,20 +563,30 @@ async function restoreFromServer() {
     return;
   }
   try {
-    // Check if today's temp draft exists on server
     const res = await fetch(`/api/submissions/temp/today?date=${TODAY}`, {
       headers: { 'Authorization': 'Bearer ' + token }
     });
-    if (!res.ok) return;
+
+    // ✅ FIX: Handle 401 — access token expired, attempt silent refresh
+    if (res.status === 401) {
+      const refreshed = await tryRefreshToken();
+      if (refreshed) return restoreFromServer(); // retry once with new token
+      return; // tryRefreshToken will redirect if fully expired
+    }
+
+    if (!res.ok) {
+      setSyncStatus(pending.length > 0 ? 'pending' : 'synced');
+      return;
+    }
+
     const doc = await res.json();
     if (!doc || !doc.sections) {
       setSyncStatus(pending.length > 0 ? 'pending' : 'synced');
       return;
     }
-    // Merge server sections (server wins for fields that haven't been changed locally)
+
+    // Merge server sections — server wins for fields not in the pending list
     const serverSecs = doc.sections;
-    // Only overwrite local sections that are NOT in the pending list
-    // (pending = locally changed but not yet sent to server)
     Object.keys(serverSecs).forEach(id => {
       if (!pending.includes(id)) {
         savedData[id] = serverSecs[id];
@@ -583,8 +621,16 @@ async function syncToServer(sectionsToSync) {
       headers: { 'Content-Type':'application/json', 'Authorization':'Bearer '+token },
       body: JSON.stringify({ date: TODAY, sections: payload })
     });
+
+    // ✅ FIX: Handle 401 — refresh token and retry once
+    if (res.status === 401) {
+      isSyncing = false;
+      const refreshed = await tryRefreshToken();
+      if (refreshed) return syncToServer(sectionsToSync);
+      return false;
+    }
+
     if (res.ok) {
-      // Remove synced sections from pending
       const synced = Object.keys(payload);
       pending = pending.filter(id => !synced.includes(id));
       localStorage.setItem(PEND_KEY, JSON.stringify(pending));
@@ -599,7 +645,6 @@ async function syncToServer(sectionsToSync) {
   return false;
 }
 
-// Sync all pending when back online
 async function syncAllPending() {
   if (pending.length === 0) return;
   await syncToServer([...pending]);
@@ -709,7 +754,6 @@ function saveSection() {
     renderCards();
     updateProgress();
 
-    // If online: sync immediately to server, clear from pending
     if (navigator.onLine) {
       setSyncStatus('syncing');
       const ok = await syncToServer([id]);
@@ -727,7 +771,7 @@ function saveSection() {
 }
 
 // ─────────────────────────────────────────────────────────────
-// EXPORT EXCEL (current draft)
+// EXPORT EXCEL
 // ─────────────────────────────────────────────────────────────
 function flattenSection(secId, data, meta) {
   const row = { ...meta };
@@ -795,8 +839,7 @@ document.getElementById('confirm-bg').addEventListener('click', e => {
 });
 
 async function doSubmit() {
-  const token = localStorage.getItem('access_token');
-  const btn   = document.getElementById('confirm-submit-btn');
+  const btn = document.getElementById('confirm-submit-btn');
 
   if (!navigator.onLine) {
     closeConfirm();
@@ -808,24 +851,40 @@ async function doSubmit() {
   btn.textContent = 'Submitting…';
 
   try {
-    // 1. First ensure all local data is synced to temp
+    // 1. Ensure all local data is synced to temp (handles token refresh internally)
     if (pending.length > 0) {
       await syncToServer([...pending]);
     }
 
-    // 2. Call submit endpoint — moves temp → main collection
-    const res = await fetch('/api/submissions/submit', {
+    // 2. Get a fresh token after potential refresh above
+    const token = localStorage.getItem('access_token');
+    if (!token) throw new Error('Not authenticated');
+
+    // 3. Call submit endpoint — moves temp → main collection
+    let res = await fetch('/api/submissions/submit', {
       method: 'POST',
       headers: { 'Content-Type':'application/json', 'Authorization':'Bearer '+token },
       body: JSON.stringify({ date: TODAY })
     });
+
+    // ✅ FIX: Handle 401 on submit too
+    if (res.status === 401) {
+      const refreshed = await tryRefreshToken();
+      if (!refreshed) throw new Error('Session expired. Please sign in again.');
+      const newToken = localStorage.getItem('access_token');
+      res = await fetch('/api/submissions/submit', {
+        method: 'POST',
+        headers: { 'Content-Type':'application/json', 'Authorization':'Bearer '+newToken },
+        body: JSON.stringify({ date: TODAY })
+      });
+    }
 
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
       throw new Error(err.detail || 'Submit failed');
     }
 
-    // 3. Clear ALL local data for today
+    // 4. Clear ALL local data for today
     localStorage.removeItem(SEC_KEY);
     localStorage.removeItem(PEND_KEY);
     savedData = {};
@@ -900,9 +959,7 @@ document.addEventListener('click', e => {
   }
 });
 
-// ── Sign out confirm ────────────────────────────────────────
 function logout() {
-  // Show confirm modal instead of logging out immediately
   document.getElementById('user-dropdown').classList.remove('open');
   document.getElementById('signout-modal-bg').classList.add('open');
 }
@@ -910,7 +967,6 @@ function closeSignoutModal() {
   document.getElementById('signout-modal-bg').classList.remove('open');
 }
 function doLogout() {
-  // Bypass exit guard and actually sign out
   exitAllowed = true;
   localStorage.removeItem('access_token');
   localStorage.removeItem('refresh_token');
@@ -922,8 +978,8 @@ document.getElementById('signout-modal-bg').addEventListener('click', e => {
 });
 
 // ── Exit / Leave app guard ───────────────────────────────────
-let exitAllowed  = false;   // set true when user confirms or intentionally leaves
-let pendingExitUrl = null;  // destination URL when navigating away
+let exitAllowed    = false;
+let pendingExitUrl = null;
 
 function closeExitModal() {
   document.getElementById('exit-modal-bg').classList.remove('open');
@@ -935,24 +991,22 @@ function confirmExit() {
   if (pendingExitUrl) {
     window.location.href = pendingExitUrl;
   } else {
-    window.close(); // for tab-close scenario (may not work in all browsers)
+    window.close();
   }
 }
 document.getElementById('exit-modal-bg').addEventListener('click', e => {
   if (e.target.id === 'exit-modal-bg') closeExitModal();
 });
 
-// Intercept browser tab close / refresh
 window.addEventListener('beforeunload', e => {
   if (exitAllowed) return;
   const hasDraft = Object.keys(savedData).length > 0;
   if (hasDraft) {
     e.preventDefault();
-    e.returnValue = ''; // triggers native browser dialog
+    e.returnValue = '';
   }
 });
 
-// Intercept in-app navigation links (Home/History toggle, back button)
 document.addEventListener('click', e => {
   if (exitAllowed) return;
   const hasDraft = Object.keys(savedData).length > 0;
@@ -962,17 +1016,14 @@ document.addEventListener('click', e => {
   if (!link) return;
 
   const href = link.getAttribute('href');
-  // Only intercept real navigation links, not # anchors or same-page
   if (!href || href.startsWith('#') || href === window.location.pathname) return;
-
-  // Allow admin/logout links to be handled by their own modals
   if (href === '/admin.html') return;
 
   e.preventDefault();
   e.stopPropagation();
   pendingExitUrl = href;
   document.getElementById('exit-modal-bg').classList.add('open');
-}, true); // capture phase so it fires before toggle dropdown
+}, true);
 
 function openSwitchModal(e) {
   e.preventDefault();

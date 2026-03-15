@@ -1,16 +1,18 @@
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel, EmailStr, field_validator
 from pymongo import MongoClient, ReturnDocument
 from pymongo.errors import DuplicateKeyError
+import gridfs
 from dotenv import load_dotenv
 import bcrypt, jwt, uuid, os, re
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Optional
+from bson import ObjectId
 
 load_dotenv()
 
@@ -21,11 +23,20 @@ ALGORITHM  = "HS256"
 ACCESS_EXP  = 1440
 REFRESH_EXP = 14
 
+# Max file size: 10 MB per file, max 5 files per section
+MAX_FILE_SIZE  = 10 * 1024 * 1024   # 10 MB
+MAX_FILES      = 5
+ALLOWED_TYPES  = {
+    "image/jpeg", "image/jpg", "image/png", "image/webp", "image/heic",
+    "application/pdf"
+}
+
 client      = MongoClient(MONGO_URL)
 db          = client[DB_NAME]
+fs          = gridfs.GridFS(db)          # GridFS for file storage
 users       = db["users"]
-submissions = db["submissions"]        # ── MAIN (submitted) collection
-temp_submissions = db["temp_submissions"]  # ── TEMP (in-progress) collection
+submissions = db["submissions"]
+temp_submissions = db["temp_submissions"]
 admin_col   = db["admin"]
 
 # ── Indexes ─────────────────────────────────────────────────
@@ -37,11 +48,9 @@ try:
 except Exception:
     pass
 
-# Main submissions: unique per employee+date
 submissions.create_index([("employee_id", 1), ("date", 1)], unique=True)
 submissions.create_index("submitted_at")
 
-# Temp submissions: unique per employee+date (only one in-progress per day)
 try:
     temp_submissions.drop_index("submission_id_1")
 except Exception:
@@ -49,7 +58,12 @@ except Exception:
 temp_submissions.create_index([("employee_id", 1), ("date", 1)], unique=True)
 temp_submissions.create_index("updated_at")
 
-# Admin config
+# File metadata collection (lightweight — just references, not binaries)
+file_meta = db["file_meta"]
+file_meta.create_index("upload_id", unique=True)
+file_meta.create_index("employee_id")
+file_meta.create_index("date")
+
 if not admin_col.find_one({"_id": "config"}):
     admin_col.insert_one({"_id": "config", "admin_emails": []})
 
@@ -100,12 +114,12 @@ class RefreshIn(BaseModel):
 
 
 class SectionSyncIn(BaseModel):
-    date: str       # "YYYY-MM-DD"
-    sections: dict  # { "A": {...}, "B": {...} }
+    date: str
+    sections: dict
 
 
 class SubmitIn(BaseModel):
-    date: str       # "YYYY-MM-DD" — finalize this day's temp data
+    date: str
 
 
 class AddAdminIn(BaseModel):
@@ -228,14 +242,134 @@ def me(u=Depends(get_user)):
     }
 
 
-# ── TEMP Submissions (in-progress, saved but not submitted) ──
+# ── FILE UPLOAD (Section L) ───────────────────────────────────
+@app.post("/api/files/upload")
+async def upload_file(
+    file: UploadFile = File(...),
+    date: str = Form(...),
+    u=Depends(get_user)
+):
+    """
+    Upload a single file to GridFS.
+    Returns a lightweight metadata record (upload_id, filename, size, content_type).
+    The binary is in GridFS — section data only stores the upload_id reference.
+    This keeps admin/history queries fast (no binary data in submissions).
+    """
+    # Validate content type
+    ct = file.content_type or ""
+    if ct not in ALLOWED_TYPES:
+        raise HTTPException(400, f"File type '{ct}' not allowed. Use JPEG, PNG, WEBP, HEIC, or PDF.")
+
+    # Read and validate size
+    data = await file.read()
+    if len(data) > MAX_FILE_SIZE:
+        raise HTTPException(400, f"File too large. Maximum size is 10 MB.")
+
+    # Store binary in GridFS
+    gridfs_id = fs.put(
+        data,
+        filename=file.filename,
+        content_type=ct,
+        employee_id=u["user_id"],
+        date=date,
+        uploaded_at=datetime.utcnow().isoformat()
+    )
+
+    # Store lightweight metadata separately
+    upload_id = str(uuid.uuid4())
+    meta = {
+        "upload_id":   upload_id,
+        "gridfs_id":   str(gridfs_id),
+        "filename":    file.filename,
+        "content_type": ct,
+        "size":        len(data),
+        "employee_id": u["user_id"],
+        "employee_name": u["name"],
+        "date":        date,
+        "uploaded_at": datetime.utcnow().isoformat(),
+    }
+    file_meta.insert_one(meta)
+
+    return {
+        "upload_id":    upload_id,
+        "filename":     file.filename,
+        "content_type": ct,
+        "size":         len(data),
+    }
+
+
+@app.delete("/api/files/{upload_id}")
+def delete_file(upload_id: str, u=Depends(get_user)):
+    """Delete a file (owner or admin only)."""
+    meta = file_meta.find_one({"upload_id": upload_id})
+    if not meta:
+        raise HTTPException(404, "File not found")
+    if meta["employee_id"] != u["user_id"] and not is_admin(u["email"]):
+        raise HTTPException(403, "Not authorized")
+
+    # Remove from GridFS
+    try:
+        fs.delete(ObjectId(meta["gridfs_id"]))
+    except Exception:
+        pass
+
+    file_meta.delete_one({"upload_id": upload_id})
+    return {"ok": True}
+
+
+@app.get("/api/files/{upload_id}")
+def get_file(upload_id: str, u=Depends(get_user)):
+    """
+    Stream file bytes from GridFS.
+    Only the file owner or an admin can access it.
+    """
+    meta = file_meta.find_one({"upload_id": upload_id})
+    if not meta:
+        raise HTTPException(404, "File not found")
+    if meta["employee_id"] != u["user_id"] and not is_admin(u["email"]):
+        raise HTTPException(403, "Not authorized")
+
+    try:
+        grid_out = fs.get(ObjectId(meta["gridfs_id"]))
+    except Exception:
+        raise HTTPException(404, "File data not found")
+
+    return StreamingResponse(
+        grid_out,
+        media_type=meta["content_type"],
+        headers={
+            "Content-Disposition": f'inline; filename="{meta["filename"]}"',
+            "Content-Length": str(meta["size"]),
+            "Cache-Control": "private, max-age=3600",
+        }
+    )
+
+
+@app.get("/api/files/meta/by-date")
+def get_files_by_date(date: str, u=Depends(get_user)):
+    """Return file metadata list for a specific employee+date (no binaries)."""
+    docs = list(file_meta.find(
+        {"employee_id": u["user_id"], "date": date},
+        {"_id": 0, "gridfs_id": 0}   # exclude heavy fields
+    ))
+    return docs
+
+
+@app.get("/api/admin/files/{employee_id}")
+def admin_get_files(employee_id: str, u=Depends(get_user)):
+    """Admin: get all file metadata for an employee (no binaries)."""
+    if not is_admin(u["email"]):
+        raise HTTPException(403, "Admin access required")
+    docs = list(file_meta.find(
+        {"employee_id": employee_id},
+        {"_id": 0, "gridfs_id": 0}
+    ))
+    return docs
+
+
+# ── TEMP Submissions ─────────────────────────────────────────
 @app.post("/api/submissions/sync")
 def sync_sections(data: SectionSyncIn, u=Depends(get_user)):
-    """
-    Upsert sections into the TEMP collection.
-    Called automatically as the user fills sections (online).
-    Does NOT move data to the main submissions collection.
-    """
     now = datetime.utcnow().isoformat()
     set_patch = {"updated_at": now, "employee_name": u["name"], "status": "draft"}
     for sec_id, sec_data in data.sections.items():
@@ -259,17 +393,12 @@ def sync_sections(data: SectionSyncIn, u=Depends(get_user)):
 
 @app.get("/api/submissions/temp/today")
 def get_temp_today(date: str, u=Depends(get_user)):
-    """Return today's temp (draft) doc if it exists."""
     doc = temp_submissions.find_one({"employee_id": u["user_id"], "date": date})
     return clean(doc) if doc else None
 
 
 @app.post("/api/submissions/submit")
 def submit_day(data: SubmitIn, u=Depends(get_user)):
-    """
-    Move today's temp data into the MAIN submissions collection.
-    Clears the temp record afterward.
-    """
     temp = temp_submissions.find_one({"employee_id": u["user_id"], "date": data.date})
     if not temp:
         raise HTTPException(404, "No draft found for this date. Fill at least one section first.")
@@ -278,7 +407,6 @@ def submit_day(data: SubmitIn, u=Depends(get_user)):
     sections = temp.get("sections", {})
     employee_name = temp.get("employee_name", u["name"])
 
-    # Upsert into main collection
     doc = submissions.find_one_and_update(
         {"employee_id": u["user_id"], "date": data.date},
         {
@@ -299,16 +427,13 @@ def submit_day(data: SubmitIn, u=Depends(get_user)):
         return_document=ReturnDocument.AFTER
     )
 
-    # Delete from temp
     temp_submissions.delete_one({"employee_id": u["user_id"], "date": data.date})
-
     return clean(doc)
 
 
-# ── Main Submissions (submitted / finalized) ─────────────────
+# ── Main Submissions ─────────────────────────────────────────
 @app.get("/api/submissions")
 def list_submissions(u=Depends(get_user)):
-    """List all SUBMITTED (finalized) submissions for the current user."""
     docs = list(submissions.find(
         {"employee_id": u["user_id"]},
         sort=[("date", -1)]
@@ -318,19 +443,16 @@ def list_submissions(u=Depends(get_user)):
 
 @app.get("/api/submissions/today")
 def get_today(date: str, u=Depends(get_user)):
-    """Check if today has already been submitted (finalized)."""
     doc = submissions.find_one({"employee_id": u["user_id"], "date": date})
     return clean(doc) if doc else None
 
 
-# ── Legacy sync endpoint (keep for backwards compat) ─────────
 @app.post("/api/submissions")
 def upsert_submission_legacy(data: SectionSyncIn, u=Depends(get_user)):
-    """Backwards-compat: routes to sync endpoint."""
     return sync_sections(data, u)
 
 
-# ── Admin endpoints ──────────────────────────────────────────
+# ── Admin ────────────────────────────────────────────────────
 def require_admin(u=Depends(get_user)):
     if not is_admin(u["email"]):
         raise HTTPException(403, "Admin access required")

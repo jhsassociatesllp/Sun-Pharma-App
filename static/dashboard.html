@@ -201,6 +201,29 @@
     .toast.show{opacity:1}
     .toast.error-toast{background:#7f1d1d}
 
+    /* ── UPLOAD SECTION L ── */
+    .upload-drop-zone{border:2px dashed var(--border);border-radius:14px;padding:2rem 1.5rem;text-align:center;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;align-items:center;background:#fafffe;margin-bottom:.85rem}
+    .upload-drop-zone:hover,.upload-drop-zone.drag-over{border-color:var(--leaf);background:var(--pale)}
+    .upload-drop-zone.drag-over{transform:scale(1.01)}
+    .upload-file-list{display:flex;flex-direction:column;gap:.5rem}
+    .upload-file-item{display:flex;align-items:center;gap:.75rem;background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:.6rem .9rem;transition:border-color .18s}
+    .upload-file-item.done{border-color:#86efac;background:#f0fdf4}
+    .upload-file-item.error{border-color:#fca5a5;background:#fef2f2}
+    .upload-file-item.uploading{border-color:var(--amber)}
+    .upload-file-icon{font-size:1.2rem;flex-shrink:0}
+    .upload-file-info{flex:1;min-width:0}
+    .upload-file-name{font-size:.84rem;font-weight:600;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .upload-file-size{font-size:.72rem;color:var(--grey);margin-top:1px}
+    .upload-file-status{font-size:.72rem;font-weight:600;flex-shrink:0}
+    .upload-file-status.ok{color:#16a34a}
+    .upload-file-status.err{color:var(--red)}
+    .upload-file-status.pending{color:var(--amber)}
+    .upload-del-btn{width:24px;height:24px;border-radius:50%;background:var(--border);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s;color:var(--grey)}
+    .upload-del-btn:hover{background:#fecaca;color:var(--red)}
+    .upload-del-btn svg{width:11px;height:11px}
+    .upload-progress{height:3px;background:var(--border);border-radius:4px;margin-top:.35rem;overflow:hidden}
+    .upload-progress-fill{height:100%;background:var(--leaf);border-radius:4px;transition:width .3s}
+
     @media(max-width:640px){
       .main{padding:1.25rem 1rem 5rem}
       nav{padding:0 1rem}
@@ -261,7 +284,7 @@
   <div class="confirm-modal">
     <div class="confirm-icon">📋</div>
     <h3>Submit Today's Data?</h3>
-    <p>You've filled <strong id="confirm-count">0</strong> of 11 sections:</p>
+    <p>You've filled <strong id="confirm-count">0</strong> of 12 sections:</p>
     <div class="sec-summary" id="confirm-sections"></div>
     <p style="font-size:.8rem;color:#92400e;background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;padding:.6rem .8rem;margin-bottom:1.1rem">
       ⚠️ Once submitted, today's data will be locked and cleared from this screen.
@@ -323,7 +346,7 @@
   <div class="prog-wrap">
     <div class="prog-top">
       <span class="prog-label">Sections completed today</span>
-      <span class="prog-count" id="prog-count">0 / 11</span>
+      <span class="prog-count" id="prog-count">0 / 12</span>
     </div>
     <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
   </div>
@@ -386,7 +409,7 @@ const SECTIONS = [
   { id:'E', icon:'📊', name:'Survival & Maintenance', desc:'Survival count, mortality reasons, watering', q:4,
     html:`<div class="fg"><label class="fl">23. Approximate number of saplings currently surviving</label><table class="s-table"><thead><tr><th>Crop</th><th>Surviving</th></tr></thead><tbody><tr><td>Papaya</td><td><input type="number" id="surv_papaya" placeholder="0"/></td></tr><tr><td>Mulberry</td><td><input type="number" id="surv_mulberry" placeholder="0"/></td></tr><tr><td>Banana</td><td><input type="number" id="surv_banana" placeholder="0"/></td></tr></tbody></table></div><div class="fg"><label class="fl">24. Main reasons for mortality (multiple allowed)</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Water shortage"/> Water shortage</label><label class="c-item"><input type="checkbox" value="Pest attack"/> Pest attack</label><label class="c-item"><input type="checkbox" value="Disease"/> Disease</label><label class="c-item"><input type="checkbox" value="Animal grazing"/> Animal grazing</label><label class="c-item"><input type="checkbox" value="Climate/weather"/> Climate/weather</label><label class="c-item"><input type="checkbox" value="Poor sapling quality"/> Poor sapling quality</label><label class="c-item"><input type="checkbox" value="No mortality"/> No mortality</label></div></div><div class="fg"><label class="fl">25. Frequency of watering</label><div class="radio-grp"><label class="r-item"><input type="radio" name="watering" value="Daily"/> Daily</label><label class="r-item"><input type="radio" name="watering" value="Alternate days"/> Alternate days</label><label class="r-item"><input type="radio" name="watering" value="Weekly"/> Weekly</label><label class="r-item"><input type="radio" name="watering" value="Depends on rainfall"/> Depends on rainfall</label></div></div><div class="fg"><label class="fl">26. Frequency of weeding and field cleaning</label><div class="radio-grp"><label class="r-item"><input type="radio" name="weeding" value="Monthly"/> Monthly</label><label class="r-item"><input type="radio" name="weeding" value="Once in 2–3 months"/> Once in 2–3 months</label><label class="r-item"><input type="radio" name="weeding" value="Rarely"/> Rarely</label><label class="r-item"><input type="radio" name="weeding" value="Not done"/> Not done</label></div></div>`},
   { id:'F', icon:'🎓', name:'Capacity Building', desc:'Training attended, topics, helpfulness', q:4,
-    html:`<div class="fg"><label class="fl">27. Attended any training or awareness program?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="training" value="Yes" onchange="showSub('train-sub',true)"/> Yes</label><label class="r-item"><input type="radio" name="training" value="No" onchange="showSub('train-sub',false)"/> No</label></div><div class="sub-f" id="train-sub"><div class="fg"><label class="fl">28. Training details</label><textarea class="ft" id="train_details" placeholder="e.g. Date, location, organiser, topics covered…" style="min-height:70px"></textarea></div></div></div><div class="fg"><label class="fl">29. Topics covered (tick all applicable)</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Plantation methods"/> Plantation methods</label><label class="c-item"><input type="checkbox" value="Crop-specific care (Papaya/Mulberry/Banana)"/> Crop-specific care</label><label class="c-item"><input type="checkbox" value="Pest and disease management"/> Pest and disease management</label><label class="c-item"><input type="checkbox" value="Pruning / harvesting practices"/> Pruning / harvesting practices</label></div></div><div class="fg"><label class="fl">30. Has training helped in better sapling maintenance?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="train_help" value="Yes, significantly"/> Yes, significantly</label><label class="r-item"><input type="radio" name="train_help" value="Yes, to some extent"/> To some extent</label><label class="r-item"><input type="radio" name="train_help" value="No"/> No</label></div></div>`},
+    html:`<div class="fg"><label class="fl">27. Attended any training or awareness program?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="training" value="Yes" onchange="showSub('train-sub',true)"/> Yes</label><label class="r-item"><input type="radio" name="training" value="No" onchange="showSub('train-sub',false)"/> No</label></div><div class="sub-f" id="train-sub"><div class="fg"><label class="fl">28. Training details (if attended)</label><div class="row2" style="margin-top:.5rem"><div class="fg" style="margin-bottom:0"><label class="fl" style="font-weight:500;font-size:.78rem;margin-bottom:.3rem">Month &amp; Year (MM/YY)</label><input class="fi" id="train_mmyy" placeholder="e.g. 03/25" maxlength="5" style="letter-spacing:.05em"/></div><div class="fg" style="margin-bottom:0"><label class="fl" style="font-weight:500;font-size:.78rem;margin-bottom:.3rem">Location</label><input class="fi" id="train_location" placeholder="e.g. Shirpur, Dhule"/></div></div></div></div></div><div class="fg"><label class="fl">29. Topics covered (tick all applicable)</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Plantation methods"/> Plantation methods</label><label class="c-item"><input type="checkbox" value="Crop-specific care (Papaya/Mulberry/Banana)"/> Crop-specific care</label><label class="c-item"><input type="checkbox" value="Pest and disease management"/> Pest and disease management</label><label class="c-item"><input type="checkbox" value="Pruning / harvesting practices"/> Pruning / harvesting practices</label></div></div><div class="fg"><label class="fl">30. Has training helped in better sapling maintenance?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="train_help" value="Yes, significantly"/> Yes, significantly</label><label class="r-item"><input type="radio" name="train_help" value="Yes, to some extent"/> To some extent</label><label class="r-item"><input type="radio" name="train_help" value="No"/> No</label></div></div>`},
   { id:'G', icon:'🏕️', name:'Field Support', desc:'GVT field team visits and issue resolution', q:5,
     html:`<div class="fg"><label class="fl">31. Did GVT field team visit your farm after planting?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="team_visit" value="Yes" onchange="showSub('visit-sub',true)"/> Yes</label><label class="r-item"><input type="radio" name="team_visit" value="No" onchange="showSub('visit-sub',false)"/> No</label></div><div class="sub-f" id="visit-sub"><label class="fl">32. Number of visits</label><div class="radio-grp"><label class="r-item"><input type="radio" name="num_visits" value="1 time"/> 1 time</label><label class="r-item"><input type="radio" name="num_visits" value="2–3 times"/> 2–3 times</label><label class="r-item"><input type="radio" name="num_visits" value="More than 3 times"/> More than 3 times</label></div></div></div><div class="fg"><label class="fl">33. Did the field team provide technical guidance?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="tech_guidance" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="tech_guidance" value="No"/> No</label></div></div><div class="fg"><label class="fl">34. If you faced issues, did you know whom to contact?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="know_contact" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="know_contact" value="No"/> No</label></div></div><div class="fg"><label class="fl">35. Were your concerns resolved on time?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="resolved" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="resolved" value="No"/> No</label><label class="r-item"><input type="radio" name="resolved" value="Not applicable"/> Not applicable</label></div></div>`},
   { id:'H', icon:'🔍', name:'Duplication Check', desc:'Other CSR or government scheme benefits', q:2,
@@ -395,8 +418,10 @@ const SECTIONS = [
     html:`<div class="fg"><label class="fl">38. Net profit from sale of fruits — Current Year (Jan 25 – Dec 25)</label><div style="position:relative"><span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-weight:600;color:var(--grey);font-size:.9rem;pointer-events:none">₹</span><input class="fi" id="profit_cy" type="text" inputmode="numeric" placeholder="e.g. 45000" style="padding-left:28px"/></div><span style="font-size:.74rem;color:var(--grey);margin-top:.25rem;display:block">Enter amount in INR. Type 0 if no income yet.</span></div><div class="fg"><label class="fl">39. Net profit from sale of fruits — Last Year (Jan 24 – Dec 24)</label><div style="position:relative"><span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-weight:600;color:var(--grey);font-size:.9rem;pointer-events:none">₹</span><input class="fi" id="profit_ly" type="text" inputmode="numeric" placeholder="e.g. 38000" style="padding-left:28px"/></div><span style="font-size:.74rem;color:var(--grey);margin-top:.25rem;display:block">Enter amount in INR. Type 0 if no income yet.</span></div><div class="fg"><label class="fl">40. Factors affecting income change (multiple allowed)</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Yield improvement"/> Yield improvement</label><label class="c-item"><input type="checkbox" value="Market price changes"/> Market price changes</label><label class="c-item"><input type="checkbox" value="Input cost variation"/> Input cost variation</label><label class="c-item"><input type="checkbox" value="Pest/disease loss"/> Pest/disease loss</label><label class="c-item"><input type="checkbox" value="Weather conditions"/> Weather conditions</label><label class="c-item"><input type="checkbox" value="Others"/> Others</label></div></div>`},
   { id:'J', icon:'🪧', name:'Branding & Visibility', desc:'CSR awareness and branding materials', q:2,
     html:`<div class="fg"><label class="fl">41. Informed that plantation is CSR-supported by Sun Pharmaceuticals?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="csr_informed" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="csr_informed" value="No"/> No</label></div></div><div class="fg"><label class="fl">42. Have you seen any branding material?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="branding" value="Signboards"/> Signboards</label><label class="r-item"><input type="radio" name="branding" value="Banners"/> Banners</label><label class="r-item"><input type="radio" name="branding" value="Both"/> Both</label><label class="r-item"><input type="radio" name="branding" value="None"/> None</label></div></div>`},
-  { id:'K', icon:'⭐', name:'Farmer Feedback', desc:'Satisfaction, challenges and suggestions', q:5,
-    html:`<div class="fg"><label class="fl">43. Overall satisfaction with tree plantation support</label><div class="radio-grp"><label class="r-item"><input type="radio" name="satisfaction" value="Very satisfied"/> Very satisfied</label><label class="r-item"><input type="radio" name="satisfaction" value="Satisfied"/> Satisfied</label><label class="r-item"><input type="radio" name="satisfaction" value="Neutral"/> Neutral</label><label class="r-item"><input type="radio" name="satisfaction" value="Dissatisfied"/> Dissatisfied</label><label class="r-item"><input type="radio" name="satisfaction" value="Very dissatisfied"/> Very dissatisfied</label></div></div><div class="fg"><label class="fl">44. Most helpful aspects (multiple allowed)</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Quality of saplings"/> Quality of saplings</label><label class="c-item"><input type="checkbox" value="Timely distribution"/> Timely distribution</label><label class="c-item"><input type="checkbox" value="Training and awareness"/> Training and awareness</label><label class="c-item"><input type="checkbox" value="Field staff support"/> Field staff support</label><label class="c-item"><input type="checkbox" value="Technical guidance"/> Technical guidance</label><label class="c-item"><input type="checkbox" value="Improvement in income/livelihood"/> Improvement in income/livelihood</label></div></div><div class="fg"><label class="fl">45. Challenges faced (multiple allowed)</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Water availability"/> Water availability</label><label class="c-item"><input type="checkbox" value="Pest/disease issues"/> Pest/disease issues</label><label class="c-item"><input type="checkbox" value="Lack of technical knowledge"/> Lack of technical knowledge</label><label class="c-item"><input type="checkbox" value="Labour constraints"/> Labour constraints</label><label class="c-item"><input type="checkbox" value="Animal grazing"/> Animal grazing</label><label class="c-item"><input type="checkbox" value="No major challenges"/> No major challenges</label></div></div><div class="fg"><label class="fl">46. Suggestions for improvement in future programs</label><textarea class="ft" id="suggestions" placeholder="Your suggestions…"></textarea></div><div class="fg"><label class="fl">47. Would you recommend this program to other farmers?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="recommend" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="recommend" value="No"/> No</label><label class="r-item"><input type="radio" name="recommend" value="Maybe"/> Maybe</label></div></div>`}
+  { id:'K', icon:'⭐', name:'Farmer Feedback', desc:'Satisfaction, challenges and suggestions', q:5, isUpload:false,
+    html:`<div class="fg"><label class="fl">43. Overall satisfaction with tree plantation support</label><div class="radio-grp"><label class="r-item"><input type="radio" name="satisfaction" value="Very satisfied"/> Very satisfied</label><label class="r-item"><input type="radio" name="satisfaction" value="Satisfied"/> Satisfied</label><label class="r-item"><input type="radio" name="satisfaction" value="Neutral"/> Neutral</label><label class="r-item"><input type="radio" name="satisfaction" value="Dissatisfied"/> Dissatisfied</label><label class="r-item"><input type="radio" name="satisfaction" value="Very dissatisfied"/> Very dissatisfied</label></div></div><div class="fg"><label class="fl">44. Most helpful aspects (multiple allowed)</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Quality of saplings"/> Quality of saplings</label><label class="c-item"><input type="checkbox" value="Timely distribution"/> Timely distribution</label><label class="c-item"><input type="checkbox" value="Training and awareness"/> Training and awareness</label><label class="c-item"><input type="checkbox" value="Field staff support"/> Field staff support</label><label class="c-item"><input type="checkbox" value="Technical guidance"/> Technical guidance</label><label class="c-item"><input type="checkbox" value="Improvement in income/livelihood"/> Improvement in income/livelihood</label></div></div><div class="fg"><label class="fl">45. Challenges faced (multiple allowed)</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Water availability"/> Water availability</label><label class="c-item"><input type="checkbox" value="Pest/disease issues"/> Pest/disease issues</label><label class="c-item"><input type="checkbox" value="Lack of technical knowledge"/> Lack of technical knowledge</label><label class="c-item"><input type="checkbox" value="Labour constraints"/> Labour constraints</label><label class="c-item"><input type="checkbox" value="Animal grazing"/> Animal grazing</label><label class="c-item"><input type="checkbox" value="No major challenges"/> No major challenges</label></div></div><div class="fg"><label class="fl">46. Suggestions for improvement in future programs</label><textarea class="ft" id="suggestions" placeholder="Your suggestions…"></textarea></div><div class="fg"><label class="fl">47. Would you recommend this program to other farmers?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="recommend" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="recommend" value="No"/> No</label><label class="r-item"><input type="radio" name="recommend" value="Maybe"/> Maybe</label></div></div>`},
+  { id:'L', icon:'📎', name:'Photo & Document Upload', desc:'Field photos and supporting documents', q:1, isUpload:true,
+    html:`<div class="fg"><label class="fl">48. Upload field photographs or documents</label><p style="font-size:.8rem;color:var(--grey);margin-bottom:1rem;line-height:1.6">Upload images (JPG, PNG, WEBP, HEIC) or PDFs · Max 5 files<br/>Files upload directly to server. Requires internet connection.</p><div id="upload-drop-zone" class="upload-drop-zone" onclick="document.getElementById('file-input').click()" ondragover="event.preventDefault();this.classList.add('drag-over')" ondragleave="this.classList.remove('drag-over')" ondrop="handleDrop(event)"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color:var(--leaf);margin-bottom:.6rem"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg><div style="font-weight:600;font-size:.9rem;color:var(--dark)">Tap to select files</div><div style="font-size:.76rem;color:var(--grey);margin-top:.25rem">or drag &amp; drop here</div></div><input type="file" id="file-input" multiple accept="image/jpeg,image/jpg,image/png,image/webp,image/heic,application/pdf" style="display:none" onchange="handleFileSelect(this.files)"/><div id="upload-file-list" class="upload-file-list"></div></div>`}
 ];
 
 const SEC_META = {
@@ -405,7 +430,7 @@ const SEC_META = {
   E:{icon:'📊',name:'Survival & Maintenance'},F:{icon:'🎓',name:'Capacity Building'},
   G:{icon:'🏕️',name:'Field Support'},H:{icon:'🔍',name:'Duplication Check'},
   I:{icon:'💰',name:'Outcome & Impact'},J:{icon:'🧧',name:'Branding & Visibility'},
-  K:{icon:'⭐',name:'Farmer Feedback'},
+  K:{icon:'⭐',name:'Farmer Feedback'},L:{icon:'📎',name:'Photo & Document Upload'},
 };
 const F_LABELS = {
   name:'Beneficiary Name',age:'Age',gender:'Gender',mobile:'Mobile',marital:'Marital Status',
@@ -417,7 +442,7 @@ const F_LABELS = {
   plant_month:'Planting Month',plant_year:'Planting Year',pit_size:'Pit Size & Spacing',manure:'Manure Applied',
   surv_papaya:'Surviving – Papaya',surv_mulberry:'Surviving – Mulberry',surv_banana:'Surviving – Banana',
   watering:'Watering Frequency',weeding:'Weeding Frequency',training:'Attended Training',
-  train_details:'Training Details',train_help:'Training Helped',
+  train_mmyy:'Training Month & Year (MM/YY)',train_location:'Training Location',train_help:'Training Helped',
   team_visit:'Field Team Visit',num_visits:'No. of Visits',tech_guidance:'Technical Guidance',
   know_contact:'Knew Whom to Contact',resolved:'Concerns Resolved',other_csr:'Another CSR Program',
   csr_partner:'CSR Partner',govt_scheme:'Govt Scheme',scheme_name:'Scheme Name',
@@ -538,16 +563,33 @@ function renderCards() {
 }
 
 function updateProgress() {
-  const done = SECTIONS.filter(s => savedData[s.id]).length;
-  document.getElementById('prog-fill').style.width = (done/11*100)+'%';
-  document.getElementById('prog-count').textContent = `${done} / 11`;
+  const total    = SECTIONS.length; // 12
+  const nonUpload = SECTIONS.filter(s => !s.isUpload).length; // 11 form sections
+  const done     = SECTIONS.filter(s => savedData[s.id]).length;
+  const formDone = SECTIONS.filter(s => !s.isUpload && savedData[s.id]).length;
 
-  const hasSections = done > 0;
-  document.getElementById('submit-btn').disabled  = !hasSections;
-  document.getElementById('export-btn').disabled  = !hasSections;
-  document.getElementById('action-note').textContent = hasSections
-    ? `${done} section${done>1?'s':''} filled — submit when done, or export a draft Excel.`
-    : 'Fill at least one section to enable submit and export.';
+  document.getElementById('prog-fill').style.width = (done/total*100)+'%';
+  document.getElementById('prog-count').textContent = `${done} / ${total}`;
+
+  const hasSections  = done > 0;
+  const allDone      = formDone === nonUpload; // all 11 form sections filled
+  const uploadDone   = !!savedData['L'];       // upload section saved too
+
+  // Export enabled as soon as any section is filled
+  document.getElementById('export-btn').disabled = !hasSections;
+
+  // Submit requires ALL 12 sections saved
+  const canSubmit = allDone && uploadDone;
+  document.getElementById('submit-btn').disabled = !canSubmit;
+
+  if (!hasSections) {
+    document.getElementById('action-note').textContent = 'Fill at least one section to enable export.';
+  } else if (!canSubmit) {
+    const missing = SECTIONS.filter(s => !savedData[s.id]).map(s => `${s.id}`).join(', ');
+    document.getElementById('action-note').textContent = `⚠️ Complete all 12 sections to submit. Missing: ${missing}`;
+  } else {
+    document.getElementById('action-note').textContent = 'All 12 sections complete — ready to submit!';
+  }
 }
 
 renderCards();
@@ -592,6 +634,10 @@ async function restoreFromServer() {
         savedData[id] = serverSecs[id];
       }
     });
+    // Also restore Section L file metadata from server if not pending
+    if (serverSecs['L'] && !pending.includes('L')) {
+      savedData['L'] = serverSecs['L'];
+    }
     localStorage.setItem(SEC_KEY, JSON.stringify(savedData));
     renderCards();
     updateProgress();
@@ -613,7 +659,18 @@ async function syncToServer(sectionsToSync) {
   setSyncStatus('syncing');
 
   const payload = {};
-  sectionsToSync.forEach(id => { if (savedData[id]) payload[id] = savedData[id]; });
+  sectionsToSync.forEach(id => {
+    if (!savedData[id]) return;
+    if (id === 'L') {
+      // Section L: only sync file metadata (upload_ids), never binary data
+      payload[id] = { files: (savedData[id].files || []).map(f => ({
+        upload_id: f.upload_id, filename: f.filename,
+        content_type: f.content_type, size: f.size
+      }))};
+    } else {
+      payload[id] = savedData[id];
+    }
+  });
 
   try {
     const res = await fetch('/api/submissions/sync', {
@@ -651,6 +708,215 @@ async function syncAllPending() {
 }
 
 // ─────────────────────────────────────────────────────────────
+// SECTION L — FILE UPLOAD
+// ─────────────────────────────────────────────────────────────
+// uploadedFiles: { upload_id, filename, content_type, size, status }[]
+// Stored in savedData['L'] = { files: [...uploadedFiles] }
+let currentUploadFiles = [];  // files in the currently-open modal
+
+function openSectionL() {
+  // Load existing uploaded files for today
+  currentUploadFiles = (savedData['L']?.files || []).map(f => ({ ...f, status: 'done' }));
+  renderUploadList();
+}
+
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('upload-drop-zone').classList.remove('drag-over');
+  handleFileSelect(e.dataTransfer.files);
+}
+
+function handleFileSelect(fileList) {
+  if (!fileList || fileList.length === 0) return;
+  const MAX = 5;
+  const existing = currentUploadFiles.filter(f => f.status === 'done').length;
+  const allowed  = MAX - existing;
+  if (allowed <= 0) {
+    toast('Maximum 5 files allowed per submission.', 3000);
+    return;
+  }
+  const toAdd = Array.from(fileList).slice(0, allowed);
+  toAdd.forEach(file => uploadSingleFile(file));
+  // Reset input so same file can be re-selected if needed
+  document.getElementById('file-input').value = '';
+}
+
+async function uploadSingleFile(file) {
+  const ALLOWED = ['image/jpeg','image/jpg','image/png','image/webp','image/heic','application/pdf'];
+  const MAX_SIZE = 10 * 1024 * 1024;
+
+  if (!ALLOWED.includes(file.type)) {
+    toast(`"${file.name}" — unsupported type. Use JPG, PNG, WEBP, HEIC, or PDF.`, 3500);
+    return;
+  }
+  if (file.size > MAX_SIZE) {
+    toast(`"${file.name}" is too large. Max 10 MB.`, 3500);
+    return;
+  }
+  if (!navigator.onLine) {
+    toast('Internet required to upload files. Connect and try again.', 3500);
+    return;
+  }
+
+  const token = localStorage.getItem('access_token');
+  if (!token) { toast('Not authenticated.', 2500); return; }
+
+  // Add a "uploading" placeholder to the list
+  const tempId = 'tmp_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+  currentUploadFiles.push({
+    upload_id: tempId,
+    filename:  file.name,
+    content_type: file.type,
+    size:      file.size,
+    status:    'uploading',
+  });
+  renderUploadList();
+
+  try {
+    const fd = new FormData();
+    fd.append('file', file);
+    fd.append('date', TODAY);
+
+    const res = await fetch('/api/files/upload', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + token },
+      body: fd,
+    });
+
+    if (res.status === 401) {
+      const refreshed = await tryRefreshToken();
+      if (refreshed) { uploadSingleFile(file); return; }
+    }
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.detail || 'Upload failed');
+    }
+
+    const data = await res.json();
+    // Replace temp placeholder with real data
+    const idx = currentUploadFiles.findIndex(f => f.upload_id === tempId);
+    if (idx !== -1) {
+      currentUploadFiles[idx] = { ...data, status: 'done' };
+    }
+    renderUploadList();
+    // Auto-save Section L data whenever a file finishes uploading
+    autoSaveSectionL();
+
+  } catch (err) {
+    const idx = currentUploadFiles.findIndex(f => f.upload_id === tempId);
+    if (idx !== -1) currentUploadFiles[idx].status = 'error';
+    renderUploadList();
+    toast('Upload failed: ' + err.message, 3500);
+  }
+}
+
+async function deleteUploadedFile(upload_id) {
+  const token = localStorage.getItem('access_token');
+  if (!token) return;
+  try {
+    await fetch(`/api/files/${upload_id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': 'Bearer ' + token },
+    });
+  } catch {}
+  currentUploadFiles = currentUploadFiles.filter(f => f.upload_id !== upload_id);
+  renderUploadList();
+  autoSaveSectionL();
+}
+
+function autoSaveSectionL() {
+  const doneFiles = currentUploadFiles.filter(f => f.status === 'done');
+  if (doneFiles.length > 0) {
+    savedData['L'] = { files: doneFiles };
+    localStorage.setItem(SEC_KEY, JSON.stringify(savedData));
+    // Sync L section metadata (not binaries) to server
+    if (navigator.onLine) syncToServer(['L']);
+    renderCards();
+    updateProgress();
+  } else {
+    // No done files — remove section L from savedData
+    delete savedData['L'];
+    localStorage.setItem(SEC_KEY, JSON.stringify(savedData));
+    renderCards();
+    updateProgress();
+  }
+}
+
+function renderUploadList() {
+  const container = document.getElementById('upload-file-list');
+  if (!container) return;
+
+  const doneCount = currentUploadFiles.filter(f => f.status === 'done').length;
+  // Update drop zone label
+  const dz = document.getElementById('upload-drop-zone');
+  if (dz) {
+    const remaining = 5 - doneCount;
+    dz.querySelector('div').textContent = remaining > 0
+      ? `Tap to add more files (${remaining} remaining)`
+      : 'Maximum 5 files reached';
+    if (remaining === 0) dz.style.opacity = '.5';
+    else dz.style.opacity = '1';
+  }
+
+  if (!currentUploadFiles.length) {
+    container.innerHTML = '';
+    return;
+  }
+
+  container.innerHTML = currentUploadFiles.map(f => {
+    const icon = f.content_type?.startsWith('image/') ? '🖼️' : '📄';
+    const sizeStr = f.size ? (f.size > 1024*1024
+      ? (f.size/1024/1024).toFixed(1)+' MB'
+      : Math.round(f.size/1024)+' KB') : '';
+
+    let statusHtml = '';
+    let itemClass  = 'upload-file-item';
+    if (f.status === 'done') {
+      statusHtml = '<span class="upload-file-status ok">✓ Uploaded</span>';
+      itemClass += ' done';
+    } else if (f.status === 'uploading') {
+      statusHtml = '<span class="upload-file-status pending">⏳ Uploading…</span>';
+      itemClass += ' uploading';
+    } else if (f.status === 'error') {
+      statusHtml = '<span class="upload-file-status err">✗ Failed</span>';
+      itemClass += ' error';
+    }
+
+    const canDelete = f.status === 'done' || f.status === 'error';
+    const delBtn = canDelete
+      ? `<button class="upload-del-btn" onclick="deleteUploadedFile('${f.upload_id}')" title="Remove">
+           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+         </button>`
+      : '';
+
+    return `<div class="${itemClass}">
+      <span class="upload-file-icon">${icon}</span>
+      <div class="upload-file-info">
+        <div class="upload-file-name">${f.filename}</div>
+        <div class="upload-file-size">${sizeStr}</div>
+        ${f.status === 'uploading' ? '<div class="upload-progress"><div class="upload-progress-fill" style="width:60%"></div></div>' : ''}
+      </div>
+      ${statusHtml}
+      ${delBtn}
+    </div>`;
+  }).join('');
+}
+
+// Override saveSection for Section L — it auto-saves on upload, but we still
+// need to handle the "Save Section" button click gracefully
+function saveSectionL() {
+  const doneFiles = currentUploadFiles.filter(f => f.status === 'done');
+  if (doneFiles.length === 0) {
+    toast('Please upload at least one file before saving.', 2500);
+    return;
+  }
+  // Data is already saved via autoSaveSectionL(); just close
+  closeModal();
+  toast(`Section L saved — ${doneFiles.length} file${doneFiles.length > 1 ? 's' : ''} uploaded ✓`);
+}
+
+// ─────────────────────────────────────────────────────────────
 // MODAL
 // ─────────────────────────────────────────────────────────────
 function openSection(id) {
@@ -659,8 +925,18 @@ function openSection(id) {
   document.getElementById('m-icon').textContent  = s.icon;
   document.getElementById('m-title').textContent = `Section ${s.id}: ${s.name}`;
   document.getElementById('modal-body').innerHTML = s.html;
-  initFields();
-  if (savedData[id]) restoreValues(id);
+
+  if (s.isUpload) {
+    // Upload section — special init
+    openSectionL();
+    // Change save button label
+    document.getElementById('save-btn').querySelector('.lbl').textContent = 'Done';
+  } else {
+    document.getElementById('save-btn').querySelector('.lbl').textContent = 'Save Section';
+    initFields();
+    if (savedData[id]) restoreValues(id);
+  }
+
   document.getElementById('modal-bg').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
@@ -734,6 +1010,8 @@ function restoreValues(id) {
 // ─────────────────────────────────────────────────────────────
 function saveSection() {
   if (!currentSec) return;
+  // Upload section has its own save handler
+  if (currentSec.isUpload) { saveSectionL(); return; }
   const btn = document.getElementById('save-btn');
   btn.classList.add('busy');
 
@@ -820,8 +1098,13 @@ function exportToday() {
 // SUBMIT FLOW
 // ─────────────────────────────────────────────────────────────
 function openConfirm() {
+  // Guard: all 12 sections must be saved
+  const missing = SECTIONS.filter(s => !savedData[s.id]).map(s => s.id);
+  if (missing.length > 0) {
+    toast(`⚠️ Complete all sections first. Missing: ${missing.join(', ')}`, 3500);
+    return;
+  }
   const secIds = Object.keys(savedData).sort();
-  if (!secIds.length) return;
   document.getElementById('confirm-count').textContent = secIds.length;
   document.getElementById('confirm-sections').innerHTML = secIds.map(id => {
     const m = SEC_META[id];

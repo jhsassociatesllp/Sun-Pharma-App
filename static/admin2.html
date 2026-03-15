@@ -8,6 +8,7 @@
   <link rel="manifest" href="/manifest.json"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <!-- SheetJS for Excel export -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -18,6 +19,7 @@
     }
     html,body{font-family:'DM Sans',sans-serif;background:var(--cream);min-height:100vh}
 
+    /* ── NAV ── */
     nav{background:var(--forest);height:56px;display:flex;align-items:center;padding:0 1.5rem;gap:.75rem;position:sticky;top:0;z-index:200}
     .nav-logo{font-family:'Fraunces',serif;color:#fff;font-size:1.05rem;text-decoration:none}
     .nav-logo span{color:var(--mint)}
@@ -29,13 +31,16 @@
     .logout-btn{background:none;border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.45);padding:5px 11px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.78rem;cursor:pointer;transition:all .18s}
     .logout-btn:hover{border-color:rgba(255,255,255,.3);color:#fff}
 
+    /* ── TABS ── */
     .tabs-bar{background:#fff;border-bottom:1.5px solid var(--border);padding:0 1.5rem;display:flex;gap:0;position:sticky;top:56px;z-index:150}
     .tab-btn{padding:.9rem 1.25rem;border:none;border-bottom:2.5px solid transparent;background:none;font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:600;color:var(--grey);cursor:pointer;transition:color .18s,border-color .18s;margin-bottom:-1.5px}
     .tab-btn.active{color:var(--green);border-bottom-color:var(--green)}
     .tab-btn:hover:not(.active){color:var(--dark)}
 
+    /* ── MAIN ── */
     .main{max-width:1020px;margin:0 auto;padding:1.75rem 1.5rem 4rem}
 
+    /* ── SEARCH + EXPORT BAR ── */
     .toolbar{display:flex;gap:.75rem;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap}
     .search-wrap{position:relative;flex:1;min-width:200px}
     .search-wrap svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--grey);pointer-events:none}
@@ -45,11 +50,13 @@
     .export-all-btn:hover{background:var(--leaf)}
     .export-all-btn svg{width:15px;height:15px}
 
+    /* ── STATS ROW ── */
     .stats-row{display:flex;gap:.75rem;margin-bottom:1.5rem;flex-wrap:wrap}
     .stat-card{background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:.85rem 1.1rem;flex:1;min-width:120px}
     .stat-n{font-family:'Fraunces',serif;font-size:1.6rem;font-weight:700;color:var(--green)}
     .stat-l{font-size:.72rem;color:var(--grey);margin-top:2px;text-transform:uppercase;letter-spacing:.05em}
 
+    /* ── EMPLOYEE GRID ── */
     .emp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem}
     .emp-card{background:#fff;border:1.5px solid var(--border);border-radius:14px;overflow:hidden;transition:box-shadow .2s,border-color .2s;cursor:pointer}
     .emp-card:hover{box-shadow:0 6px 20px rgba(0,0,0,.09);border-color:var(--leaf)}
@@ -64,6 +71,7 @@
     .emp-export-btn:hover{background:#c3e6c9}
     .emp-export-btn svg{width:12px;height:12px}
 
+    /* ── EMPLOYEE DETAIL VIEW ── */
     .detail-view{display:none}
     .detail-view.open{display:block}
     .list-view{display:block}
@@ -76,6 +84,7 @@
     .detail-title{font-family:'Fraunces',serif;font-size:1.25rem;color:var(--forest)}
     .detail-sub{font-size:.82rem;color:var(--grey);margin-top:2px}
 
+    /* date accordion */
     .date-acc{background:#fff;border:1.5px solid var(--border);border-radius:14px;margin-bottom:.85rem;overflow:hidden}
     .date-acc-hdr{display:flex;align-items:center;gap:.75rem;padding:1rem 1.2rem;cursor:pointer;user-select:none;transition:background .15s}
     .date-acc-hdr:hover{background:#fafafa}
@@ -89,9 +98,11 @@
     .date-chev{color:var(--grey);transition:transform .22s;flex-shrink:0}
     .date-chev svg{width:16px;height:16px;display:block}
     .date-acc.open .date-chev{transform:rotate(180deg)}
+
     .date-acc-body{display:none;border-top:1.5px solid var(--border)}
     .date-acc.open .date-acc-body{display:block}
 
+    /* section tabs inside date */
     .sec-tabs{display:flex;gap:0;overflow-x:auto;border-bottom:1px solid var(--border);padding:0 1.1rem;background:#fafffe;scrollbar-width:none}
     .sec-tabs::-webkit-scrollbar{display:none}
     .sec-tab{padding:.6rem .9rem;border:none;border-bottom:2px solid transparent;background:none;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:600;color:var(--grey);cursor:pointer;white-space:nowrap;transition:color .15s,border-color .15s;margin-bottom:-1px}
@@ -106,21 +117,13 @@
     .field-val{font-size:.84rem;color:var(--dark);font-weight:500;line-height:1.4}
     .field-val.na{color:#c4c9d4;font-style:italic;font-weight:400}
 
-    /* Section L file list */
-    .file-list{display:flex;flex-direction:column;gap:.5rem}
-    .file-item{display:flex;align-items:center;gap:.75rem;background:#fff;border:1px solid var(--border);border-radius:9px;padding:.55rem .85rem}
-    .file-icon{font-size:1.15rem;flex-shrink:0}
-    .file-info{flex:1;min-width:0}
-    .file-name{font-size:.84rem;font-weight:600;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .file-size{font-size:.71rem;color:var(--grey);margin-top:1px}
-    .file-view-btn{display:flex;align-items:center;gap:4px;background:var(--pale);color:var(--green);border:none;padding:5px 10px;border-radius:7px;font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:600;cursor:pointer;white-space:nowrap;text-decoration:none;transition:background .15s}
-    .file-view-btn:hover{background:#c3e6c9}
-
+    /* ── ANALYSIS TAB ── */
     .analysis-placeholder{text-align:center;padding:5rem 2rem}
     .analysis-placeholder .icon{font-size:3rem;margin-bottom:1rem}
     .analysis-placeholder h3{font-family:'Fraunces',serif;font-size:1.2rem;color:var(--forest);margin-bottom:.5rem}
     .analysis-placeholder p{color:var(--grey);font-size:.88rem}
 
+    /* loading / empty */
     .loading-state{text-align:center;padding:4rem 1rem;color:var(--grey)}
     @keyframes rot{to{transform:rotate(360deg)}}.rot{animation:rot .8s linear infinite}
     .empty-state{text-align:center;padding:4rem 1rem}
@@ -152,19 +155,23 @@
 </nav>
 
 <div class="tabs-bar">
-  <button class="tab-btn active" id="tab-search"   onclick="switchTab('search')">🔍 Search & Employees</button>
-  <button class="tab-btn"        id="tab-analysis" onclick="switchTab('analysis')">📊 Analysis</button>
+  <button class="tab-btn active" id="tab-search" onclick="switchTab('search')">🔍 Search & Employees</button>
+  <button class="tab-btn" id="tab-analysis" onclick="switchTab('analysis')">📊 Analysis</button>
 </div>
 
 <main class="main">
 
+  <!-- ── SEARCH TAB ── -->
   <div id="view-search">
+
+    <!-- List View -->
     <div class="list-view" id="list-view">
       <div class="stats-row" id="stats-row">
         <div class="stat-card"><div class="stat-n" id="stat-employees">—</div><div class="stat-l">Employees</div></div>
         <div class="stat-card"><div class="stat-n" id="stat-submissions">—</div><div class="stat-l">Total Days Logged</div></div>
         <div class="stat-card"><div class="stat-n" id="stat-last">—</div><div class="stat-l">Latest Activity</div></div>
       </div>
+
       <div class="toolbar">
         <div class="search-wrap">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -175,6 +182,7 @@
           Export All
         </button>
       </div>
+
       <div class="emp-grid" id="emp-grid">
         <div class="loading-state">
           <svg class="rot" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
@@ -183,6 +191,7 @@
       </div>
     </div>
 
+    <!-- Detail View -->
     <div class="detail-view" id="detail-view">
       <div class="back-row">
         <button class="back-row-btn" onclick="showList()">
@@ -191,7 +200,7 @@
         </button>
         <div>
           <div class="detail-title" id="detail-name">Employee</div>
-          <div class="detail-sub"  id="detail-sub"></div>
+          <div class="detail-sub" id="detail-sub"></div>
         </div>
         <div style="margin-left:auto">
           <button class="export-all-btn" onclick="exportEmployee(currentEmployee)" style="font-size:.78rem;padding:8px 13px">
@@ -202,8 +211,10 @@
       </div>
       <div id="date-cards-container"></div>
     </div>
+
   </div>
 
+  <!-- ── ANALYSIS TAB ── -->
   <div id="view-analysis" style="display:none">
     <div class="analysis-placeholder">
       <div class="icon">📊</div>
@@ -215,11 +226,12 @@
 </main>
 
 <script>
-const user  = JSON.parse(localStorage.getItem('user') || 'null');
+// ── Auth guard ──────────────────────────────────────────────
+const user = JSON.parse(localStorage.getItem('user') || 'null');
 const token = localStorage.getItem('access_token');
 if (!user || !user.is_admin) { window.location.href = '/'; throw 0; }
 
-let allEmployees    = [];
+let allEmployees = [];  // full list from server
 let currentEmployee = null;
 
 const SEC_META = {
@@ -228,28 +240,26 @@ const SEC_META = {
   E:{icon:'📊',name:'Survival & Maintenance'},F:{icon:'🎓',name:'Capacity Building'},
   G:{icon:'🏕️',name:'Field Support'},H:{icon:'🔍',name:'Duplication Check'},
   I:{icon:'💰',name:'Outcome & Impact'},J:{icon:'🧧',name:'Branding & Visibility'},
-  K:{icon:'⭐',name:'Farmer Feedback'},L:{icon:'📎',name:'Photo & Document Upload'},
+  K:{icon:'⭐',name:'Farmer Feedback'},
 };
 
 const F_LABELS = {
   name:'Beneficiary Name',age:'Age',gender:'Gender',mobile:'Mobile',
   marital:'Marital Status',location:'Location',landsize:'Landholding Size',
   landown:'Land Ownership',irrigation:'Irrigation Access',times_received:'Times Received Saplings',
-  sapling_cond:'Sapling Condition',sapling_height:'Sapling Height at Distribution',
-  sapling_age_yrs:'Sapling Age at Distribution (yrs)',sapling_suit:'Suitable for Soil/Climate',
+  sapling_cond:'Sapling Condition',sapling_age:'Appropriate Height/Age',sapling_suit:'Suitable for Soil/Climate',
   mis_match:'Received as per MIS',
   sup_papaya:'Supposed – Papaya',sup_mulberry:'Supposed – Mulberry',sup_banana:'Supposed – Banana',
   rcv_papaya:'Received – Papaya',rcv_mulberry:'Received – Mulberry',rcv_banana:'Received – Banana',
-  approved_land:'Planted on Approved Land',plant_month:'Planting Month',plant_year:'Planting Year',
+  approved_land:'Planted on Approved Land',plant_season:'Recommended Season',
   pit_size:'Pit Size & Spacing',manure:'Manure Applied',
   surv_papaya:'Surviving – Papaya',surv_mulberry:'Surviving – Mulberry',surv_banana:'Surviving – Banana',
   watering:'Watering Frequency',weeding:'Weeding Frequency',
-  training:'Attended Training',
-  train_mmyy:'Training Month & Year (MM/YY)',train_location:'Training Location',train_help:'Training Helped',
+  training:'Attended Training',train_date:'Training Date',train_loc:'Training Location',train_help:'Training Helped',
   team_visit:'Field Team Visit',num_visits:'No. of Visits',tech_guidance:'Technical Guidance',
   know_contact:'Knew Whom to Contact',resolved:'Concerns Resolved',
   other_csr:'Another CSR Program',csr_partner:'CSR Partner',govt_scheme:'Govt Scheme',scheme_name:'Scheme Name',
-  profit_cy:'Net Profit CY (INR)',profit_ly:'Net Profit LY (INR)',
+  profit_cy:'Income – Current Year',profit_ly:'Income – Last Year',
   csr_informed:'Informed of CSR Support',branding:'Branding Material Seen',
   satisfaction:'Overall Satisfaction',suggestions:'Suggestions',recommend:'Would Recommend',
 };
@@ -259,6 +269,7 @@ const CHK_LABELS = {
   E:['Mortality Reasons'],F:['Topics Covered'],I:['Income Factors'],K:['Helpful Aspects','Challenges Faced'],
 };
 
+// ── Tabs ────────────────────────────────────────────────────
 function switchTab(tab) {
   document.getElementById('view-search').style.display   = tab === 'search'   ? '' : 'none';
   document.getElementById('view-analysis').style.display = tab === 'analysis' ? '' : 'none';
@@ -266,6 +277,7 @@ function switchTab(tab) {
   document.getElementById('tab-analysis').classList.toggle('active', tab === 'analysis');
 }
 
+// ── Helpers ─────────────────────────────────────────────────
 function fmtDate(dateStr) {
   if (!dateStr) return '—';
   const [y,m,d] = dateStr.split('-');
@@ -287,61 +299,7 @@ function renderVal(val) {
   return `<span class="field-val">${val}</span>`;
 }
 
-function fmtSize(bytes) {
-  if (!bytes) return '';
-  return bytes > 1024*1024 ? (bytes/1024/1024).toFixed(1)+' MB' : Math.round(bytes/1024)+' KB';
-}
-
-// Section L — file list with View buttons
-function buildFilesSection(data) {
-  const files = data?.files || [];
-  if (!files.length) return '<p style="color:var(--grey);font-size:.82rem;padding:.25rem 0">No files uploaded.</p>';
-  return `<div class="file-list">${files.map(f => {
-    const icon = f.content_type?.startsWith('image/') ? '🖼️' : '📄';
-    return `<div class="file-item">
-      <span class="file-icon">${icon}</span>
-      <div class="file-info">
-        <div class="file-name">${f.filename || 'File'}</div>
-        <div class="file-size">${fmtSize(f.size)}</div>
-      </div>
-      <a class="file-view-btn" href="/api/files/${f.upload_id}" target="_blank" rel="noopener"
-         onclick="event.stopPropagation(); openFileWithAuth('${f.upload_id}'); return false;">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-        View
-      </a>
-    </div>`;
-  }).join('')}</div>`;
-}
-
-// Fetch file as blob and open in new tab (carries auth header)
-async function openFileWithAuth(uploadId) {
-  try {
-    const res = await fetch(`/api/files/${uploadId}`, {
-      headers: { 'Authorization': 'Bearer ' + token }
-    });
-    if (!res.ok) { alert('Could not load file.'); return; }
-    const blob = await res.blob();
-    const url  = URL.createObjectURL(blob);
-    window.open(url, '_blank');
-    setTimeout(() => URL.revokeObjectURL(url), 60000);
-  } catch {
-    alert('Could not load file.');
-  }
-}
-
-function buildFieldGrid(secId, data) {
-  if (secId === 'L') return buildFilesSection(data);
-  if (!data) return '<p style="color:var(--grey);font-size:.82rem;padding:.25rem 0">No data available.</p>';
-  const chkLabels = CHK_LABELS[secId] || [];
-  const items = Object.entries(data).map(([key, val]) => {
-    const label = key.startsWith('chk_')
-      ? (chkLabels[parseInt(key.split('_')[1])] || `Multi-select ${+key.split('_')[1]+1}`)
-      : (F_LABELS[key] || key.replace(/_/g, ' '));
-    return `<div class="field-item"><div class="field-key">${label}</div>${renderVal(val)}</div>`;
-  });
-  return `<div class="field-grid">${items.join('')}</div>`;
-}
-
+// ── Load employees ──────────────────────────────────────────
 async function loadEmployees() {
   try {
     const res = await fetch('/api/admin/employees', { headers: { Authorization: 'Bearer ' + token } });
@@ -359,7 +317,7 @@ async function loadEmployees() {
 function renderEmployeeStats() {
   const totalSubs = allEmployees.reduce((s, e) => s + e.submission_count, 0);
   const lastDate  = allEmployees.reduce((max, e) => e.last_date > max ? e.last_date : max, '');
-  document.getElementById('stat-employees').textContent  = allEmployees.length;
+  document.getElementById('stat-employees').textContent = allEmployees.length;
   document.getElementById('stat-submissions').textContent = totalSubs;
   document.getElementById('stat-last').textContent = lastDate ? fmtDate(lastDate).replace(/^[A-Za-z]+, /, '') : '—';
 }
@@ -392,12 +350,17 @@ function renderEmployeeGrid(list) {
 
 function filterEmployees() {
   const q = document.getElementById('search-input').value.trim().toLowerCase();
-  renderEmployeeGrid(q ? allEmployees.filter(e => (e.employee_name||'').toLowerCase().includes(q)) : allEmployees);
+  const filtered = q
+    ? allEmployees.filter(e => (e.employee_name || '').toLowerCase().includes(q))
+    : allEmployees;
+  renderEmployeeGrid(filtered);
 }
 
+// ── Employee Detail ─────────────────────────────────────────
 async function openEmployee(empId) {
   currentEmployee = empId;
   const emp = allEmployees.find(e => e.employee_id === empId);
+
   document.getElementById('list-view').classList.add('hidden');
   document.getElementById('detail-view').classList.add('open');
   document.getElementById('detail-name').textContent = emp ? emp.employee_name : 'Employee';
@@ -408,7 +371,8 @@ async function openEmployee(empId) {
   try {
     const res = await fetch(`/api/admin/employee/${empId}`, { headers: { Authorization: 'Bearer ' + token } });
     if (!res.ok) throw new Error();
-    renderDateCards(await res.json(), empId);
+    const docs = await res.json();
+    renderDateCards(docs, empId);
   } catch {
     document.getElementById('date-cards-container').innerHTML =
       '<p style="color:var(--grey);font-size:.88rem">Could not load data.</p>';
@@ -423,7 +387,8 @@ function showList() {
 
 function renderDateCards(docs, empId) {
   if (!docs.length) {
-    document.getElementById('date-cards-container').innerHTML = '<div class="empty-state"><h3>No submissions yet</h3></div>';
+    document.getElementById('date-cards-container').innerHTML =
+      '<div class="empty-state"><h3>No submissions yet</h3></div>';
     return;
   }
   document.getElementById('date-cards-container').innerHTML = docs.map((doc, i) => {
@@ -434,27 +399,27 @@ function renderDateCards(docs, empId) {
       return m ? `<span class="date-sec-tag">${m.icon} ${m.name}</span>` : '';
     }).join('');
 
+    // Section tabs + panes
     const tabsHtml = secIds.map((id, si) => {
       const m = SEC_META[id];
-      return `<button class="sec-tab ${si===0?'active':''}" id="stab-${empId}-${i}-${id}"
+      return `<button class="sec-tab ${si === 0 ? 'active' : ''}" id="stab-${empId}-${i}-${id}"
         onclick="switchSecTab('${empId}','${i}','${id}','${secIds.join(',')}')">
-        ${m ? m.icon+' '+id : id}</button>`;
+        ${m ? m.icon + ' ' + id : id}</button>`;
     }).join('');
 
-    const panesHtml = secIds.map((id, si) =>
-      `<div class="sec-pane ${si===0?'active':''}" id="spane-${empId}-${i}-${id}">
+    const panesHtml = secIds.map((id, si) => {
+      return `<div class="sec-pane ${si === 0 ? 'active' : ''}" id="spane-${empId}-${i}-${id}">
         ${buildFieldGrid(id, sections[id])}
-      </div>`
-    ).join('');
+      </div>`;
+    }).join('');
 
     const accId = `dacc-${empId}-${i}`;
-    const docJson = JSON.stringify(doc).replace(/"/g, '&quot;');
     return `<div class="date-acc" id="${accId}">
       <div class="date-acc-hdr" onclick="toggleDateAcc('${accId}')">
         <span class="date-pill">📅 ${fmtDate(doc.date)}</span>
         <div class="date-acc-sections">${tags}</div>
         <div class="date-acc-right">
-          <button class="date-export-btn" onclick="event.stopPropagation(); exportDate('${empId}','${doc.date}','${docJson}')">
+          <button class="date-export-btn" onclick="event.stopPropagation(); exportDate('${empId}','${doc.date}', ${JSON.stringify(doc).replace(/"/g,'&quot;')})">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
             Excel
           </button>
@@ -469,7 +434,9 @@ function renderDateCards(docs, empId) {
   }).join('');
 }
 
-function toggleDateAcc(id) { document.getElementById(id)?.classList.toggle('open'); }
+function toggleDateAcc(id) {
+  document.getElementById(id)?.classList.toggle('open');
+}
 
 function switchSecTab(empId, i, activeId, allIds) {
   allIds.split(',').forEach(id => {
@@ -478,12 +445,21 @@ function switchSecTab(empId, i, activeId, allIds) {
   });
 }
 
-// Excel export
+function buildFieldGrid(secId, data) {
+  if (!data) return '<p style="color:var(--grey);font-size:.82rem;padding:.25rem 0">No data available.</p>';
+  const chkLabels = CHK_LABELS[secId] || [];
+  const items = Object.entries(data).map(([key, val]) => {
+    const label = key.startsWith('chk_')
+      ? (chkLabels[parseInt(key.split('_')[1])] || `Multi-select ${+key.split('_')[1]+1}`)
+      : (F_LABELS[key] || key.replace(/_/g, ' '));
+    return `<div class="field-item"><div class="field-key">${label}</div>${renderVal(val)}</div>`;
+  });
+  return `<div class="field-grid">${items.join('')}</div>`;
+}
+
+// ── Excel Export ────────────────────────────────────────────
 function flattenSection(secId, data, meta) {
-  if (secId === 'L') {
-    const files = data?.files || [];
-    return { ...meta, 'Uploaded Files': files.map(f => f.filename).join(', '), 'File Count': files.length };
-  }
+  // Returns a flat row object for Excel
   const row = { ...meta };
   if (!data) return row;
   const chkLabels = CHK_LABELS[secId] || [];
@@ -498,22 +474,35 @@ function flattenSection(secId, data, meta) {
 
 function docsToWorkbook(docs, label) {
   const wb = XLSX.utils.book_new();
-  const sectionData = {};
+  // One sheet per section
+  const sectionData = {};  // { A: [rows...], B: [rows...], ... }
+
   docs.forEach(doc => {
-    const meta = { 'Employee Name': doc.employee_name || '', 'Date': doc.date || '' };
-    Object.entries(doc.sections || {}).forEach(([secId, data]) => {
+    const meta = {
+      'Employee Name': doc.employee_name || '',
+      'Date':          doc.date || '',
+    };
+    const sections = doc.sections || {};
+    Object.entries(sections).forEach(([secId, data]) => {
       if (!sectionData[secId]) sectionData[secId] = [];
       sectionData[secId].push(flattenSection(secId, data, meta));
     });
   });
+
+  // Add a sheet per section
   Object.entries(sectionData).sort().forEach(([secId, rows]) => {
     const m = SEC_META[secId];
-    const sheetName = `${secId} - ${m ? m.name : secId}`.slice(0, 31);
-    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), sheetName);
+    const sheetName = `${secId} - ${m ? m.name : secId}`.slice(0, 31); // Excel 31 char limit
+    const ws = XLSX.utils.json_to_sheet(rows);
+    // Bold header row style hint
+    XLSX.utils.book_append_sheet(wb, ws, sheetName);
   });
+
   if (!Object.keys(sectionData).length) {
-    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet([{Note:'No data available'}]), 'No Data');
+    const ws = XLSX.utils.json_to_sheet([{Note: 'No data available'}]);
+    XLSX.utils.book_append_sheet(wb, ws, 'No Data');
   }
+
   XLSX.writeFile(wb, `${label}.xlsx`);
 }
 
@@ -521,27 +510,33 @@ async function exportAll() {
   try {
     const res = await fetch('/api/admin/all-submissions', { headers: { Authorization: 'Bearer ' + token } });
     if (!res.ok) throw new Error();
-    docsToWorkbook(await res.json(), 'Tree_Plantation_All_Employees');
-  } catch { alert('Export failed. Please try again.'); }
+    const docs = await res.json();
+    docsToWorkbook(docs, 'Tree_Plantation_All_Employees');
+  } catch {
+    alert('Export failed. Please try again.');
+  }
 }
 
 async function exportEmployee(empId) {
-  const emp  = allEmployees.find(e => e.employee_id === empId);
-  const name = (emp?.employee_name || empId).replace(/\s+/g,'_');
+  const emp = allEmployees.find(e => e.employee_id === empId);
+  const name = (emp?.employee_name || empId).replace(/\s+/g, '_');
   try {
     const res = await fetch(`/api/admin/employee/${empId}`, { headers: { Authorization: 'Bearer ' + token } });
     if (!res.ok) throw new Error();
-    docsToWorkbook(await res.json(), `Tree_Plantation_${name}`);
-  } catch { alert('Export failed. Please try again.'); }
+    const docs = await res.json();
+    docsToWorkbook(docs, `Tree_Plantation_${name}`);
+  } catch {
+    alert('Export failed. Please try again.');
+  }
 }
 
-function exportDate(empId, date, docJson) {
-  const doc  = JSON.parse(docJson.replace(/&quot;/g, '"'));
-  const emp  = allEmployees.find(e => e.employee_id === empId);
-  const name = (emp?.employee_name || empId).replace(/\s+/g,'_');
+function exportDate(empId, date, doc) {
+  const emp = allEmployees.find(e => e.employee_id === empId);
+  const name = (emp?.employee_name || empId).replace(/\s+/g, '_');
   docsToWorkbook([doc], `Tree_Plantation_${name}_${date}`);
 }
 
+// ── Auth ────────────────────────────────────────────────────
 function logout() {
   localStorage.removeItem('access_token');
   localStorage.removeItem('refresh_token');
@@ -549,6 +544,7 @@ function logout() {
   window.location.href = '/';
 }
 
+// ── Init ────────────────────────────────────────────────────
 loadEmployees();
 </script>
 </body>
