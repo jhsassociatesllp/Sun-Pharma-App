@@ -3,166 +3,143 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-  <meta name="theme-color" content="#1a3a2a"/>
-  <title>Control Panel — Tree Plantation</title>
+  <meta name="theme-color" content="#0f1525"/>
+  <title>Control Panel — JHS Tree Plantation</title>
   <link rel="manifest" href="/manifest.json"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    :root{
-      --forest:#1a3a2a;--green:#2d6a4f;--leaf:#52b788;--mint:#95d5b2;
-      --pale:#d8f3dc;--cream:#f8f6f1;--dark:#111827;--grey:#6b7280;
-      --border:#e5e7eb;--red:#ef4444;--amber:#f59e0b;--amber-bg:#fffbeb;
-    }
+    :root{--navy:#0f1525;--navy2:#1a2240;--navy3:#243060;--gold:#c9a84c;--gold2:#e2c97e;--goldp:rgba(201,168,76,.12);--goldpd:rgba(201,168,76,.06);--cream:#f5f3ee;--dark:#111827;--grey:#6b7280;--border:#e5e7eb;--red:#ef4444;--amber:#f59e0b}
     html,body{font-family:'DM Sans',sans-serif;background:var(--cream);min-height:100vh}
-
-    nav{background:var(--forest);height:56px;display:flex;align-items:center;padding:0 1.5rem;gap:.75rem;position:sticky;top:0;z-index:200}
-    .nav-logo{font-family:'Fraunces',serif;color:#fff;font-size:1.05rem;text-decoration:none}
-    .nav-logo span{color:var(--mint)}
-    .nav-badge{background:rgba(245,158,11,.2);border:1px solid rgba(245,158,11,.35);color:#fbbf24;font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:100px;letter-spacing:.05em;text-transform:uppercase}
+    nav{background:var(--navy);height:58px;display:flex;align-items:center;padding:0 1.5rem;gap:.75rem;position:sticky;top:0;z-index:200;border-bottom:1px solid rgba(201,168,76,.1)}
+    .nav-logo{font-family:'Playfair Display',serif;color:#fff;font-size:1.05rem;text-decoration:none;display:flex;align-items:center;gap:.5rem}
+    .nav-logo .logo-jhs{color:var(--gold);font-weight:900}
+    .nav-badge{background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.3);color:var(--gold2);font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:100px;text-transform:uppercase}
     .nav-right{margin-left:auto;display:flex;align-items:center;gap:.5rem}
-    .nav-back{display:flex;align-items:center;gap:5px;background:rgba(149,213,178,.1);border:1px solid rgba(149,213,178,.2);color:var(--mint);padding:5px 11px;border-radius:8px;font-size:.78rem;font-weight:600;cursor:pointer;text-decoration:none;transition:background .18s}
-    .nav-back:hover{background:rgba(149,213,178,.2)}
+    .nav-back{display:flex;align-items:center;gap:5px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.2);color:var(--gold);padding:5px 11px;border-radius:8px;font-size:.78rem;font-weight:600;cursor:pointer;text-decoration:none;transition:background .18s}
+    .nav-back:hover{background:rgba(201,168,76,.2)}
     .nav-back svg{width:13px;height:13px}
     .logout-btn{background:none;border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.45);padding:5px 11px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.78rem;cursor:pointer;transition:all .18s}
     .logout-btn:hover{border-color:rgba(255,255,255,.3);color:#fff}
-
-    .tabs-bar{background:#fff;border-bottom:1.5px solid var(--border);padding:0 1.5rem;display:flex;gap:0;position:sticky;top:56px;z-index:150}
-    .tab-btn{padding:.9rem 1.25rem;border:none;border-bottom:2.5px solid transparent;background:none;font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:600;color:var(--grey);cursor:pointer;transition:color .18s,border-color .18s;margin-bottom:-1.5px}
-    .tab-btn.active{color:var(--green);border-bottom-color:var(--green)}
+    .tabs-bar{background:#fff;border-bottom:1.5px solid var(--border);padding:0 1.5rem;display:flex;position:sticky;top:58px;z-index:150}
+    .tab-btn{padding:.9rem 1.2rem;border:none;border-bottom:2.5px solid transparent;background:none;font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:600;color:var(--grey);cursor:pointer;transition:color .18s,border-color .18s;margin-bottom:-1.5px}
+    .tab-btn.active{color:var(--navy);border-bottom-color:var(--gold)}
     .tab-btn:hover:not(.active){color:var(--dark)}
-
     .main{max-width:1020px;margin:0 auto;padding:1.75rem 1.5rem 4rem}
-
     .toolbar{display:flex;gap:.75rem;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap}
     .search-wrap{position:relative;flex:1;min-width:200px}
     .search-wrap svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--grey);pointer-events:none}
-    .search-input{width:100%;padding:10px 12px 10px 38px;border:1.5px solid var(--border);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.9rem;background:#fff;color:var(--dark);outline:none;transition:border-color .18s,box-shadow .18s}
-    .search-input:focus{border-color:var(--leaf);box-shadow:0 0 0 3px rgba(82,183,136,.12)}
-    .export-all-btn{display:flex;align-items:center;gap:6px;background:var(--green);color:#fff;border:none;padding:10px 16px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;white-space:nowrap;transition:background .18s}
-    .export-all-btn:hover{background:var(--leaf)}
+    .search-input{width:100%;padding:10px 12px 10px 38px;border:1.5px solid var(--border);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.9rem;background:#fff;color:var(--dark);outline:none;transition:border-color .18s}
+    .search-input:focus{border-color:var(--gold)}
+    .export-all-btn{display:flex;align-items:center;gap:6px;background:var(--navy);color:#fff;border:none;padding:10px 16px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;white-space:nowrap;transition:background .18s}
+    .export-all-btn:hover{background:var(--navy3)}
     .export-all-btn svg{width:15px;height:15px}
-
     .stats-row{display:flex;gap:.75rem;margin-bottom:1.5rem;flex-wrap:wrap}
     .stat-card{background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:.85rem 1.1rem;flex:1;min-width:120px}
-    .stat-n{font-family:'Fraunces',serif;font-size:1.6rem;font-weight:700;color:var(--green)}
+    .stat-n{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:var(--gold)}
     .stat-l{font-size:.72rem;color:var(--grey);margin-top:2px;text-transform:uppercase;letter-spacing:.05em}
-
     .emp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem}
     .emp-card{background:#fff;border:1.5px solid var(--border);border-radius:14px;overflow:hidden;transition:box-shadow .2s,border-color .2s;cursor:pointer}
-    .emp-card:hover{box-shadow:0 6px 20px rgba(0,0,0,.09);border-color:var(--leaf)}
+    .emp-card:hover{box-shadow:0 6px 20px rgba(0,0,0,.09);border-color:var(--gold)}
     .emp-card-top{padding:1.1rem 1.2rem .8rem;display:flex;align-items:flex-start;gap:.85rem}
-    .emp-avatar{width:42px;height:42px;border-radius:50%;background:var(--pale);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-weight:700;font-size:1rem;color:var(--green);flex-shrink:0}
+    .emp-avatar{width:42px;height:42px;border-radius:50%;background:var(--goldp);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:700;font-size:1rem;color:var(--gold);flex-shrink:0}
     .emp-info{flex:1;min-width:0}
     .emp-name{font-weight:700;font-size:.95rem;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .emp-sub{font-size:.75rem;color:var(--grey);margin-top:2px}
     .emp-card-foot{padding:.65rem 1.2rem .85rem;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border)}
     .emp-date{font-size:.73rem;color:var(--grey)}
-    .emp-export-btn{display:flex;align-items:center;gap:4px;background:var(--pale);color:var(--green);border:none;padding:5px 10px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:600;cursor:pointer;transition:background .15s}
-    .emp-export-btn:hover{background:#c3e6c9}
+    .emp-export-btn{display:flex;align-items:center;gap:4px;background:var(--goldp);color:var(--gold);border:none;padding:5px 10px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:600;cursor:pointer;transition:background .15s}
+    .emp-export-btn:hover{background:rgba(201,168,76,.25)}
     .emp-export-btn svg{width:12px;height:12px}
-
-    .detail-view{display:none}
-    .detail-view.open{display:block}
-    .list-view{display:block}
+    /* DETAIL */
+    .detail-view{display:none}.detail-view.open{display:block}
     .list-view.hidden{display:none}
-
     .back-row{display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem}
     .back-row-btn{display:flex;align-items:center;gap:5px;background:#fff;border:1.5px solid var(--border);color:var(--dark);padding:7px 14px;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:.84rem;font-weight:600;cursor:pointer;transition:background .18s}
-    .back-row-btn:hover{background:var(--pale);border-color:var(--leaf);color:var(--green)}
+    .back-row-btn:hover{background:var(--goldp);border-color:var(--gold);color:var(--gold)}
     .back-row-btn svg{width:14px;height:14px}
-    .detail-title{font-family:'Fraunces',serif;font-size:1.25rem;color:var(--forest)}
+    .detail-title{font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--navy)}
     .detail-sub{font-size:.82rem;color:var(--grey);margin-top:2px}
-
-    .date-acc{background:#fff;border:1.5px solid var(--border);border-radius:14px;margin-bottom:.85rem;overflow:hidden}
-    .date-acc-hdr{display:flex;align-items:center;gap:.75rem;padding:1rem 1.2rem;cursor:pointer;user-select:none;transition:background .15s}
-    .date-acc-hdr:hover{background:#fafafa}
-    .date-pill{background:var(--pale);color:var(--green);font-size:.76rem;font-weight:700;padding:4px 12px;border-radius:100px}
-    .date-acc-sections{display:flex;flex-wrap:wrap;gap:.3rem;flex:1}
-    .date-sec-tag{font-size:.68rem;font-weight:600;padding:2px 8px;border-radius:100px;background:#f3f4f6;color:var(--grey)}
-    .date-acc-right{display:flex;align-items:center;gap:.55rem;flex-shrink:0}
-    .date-export-btn{display:flex;align-items:center;gap:3px;background:var(--pale);color:var(--green);border:none;padding:4px 9px;border-radius:7px;font-family:'DM Sans',sans-serif;font-size:.7rem;font-weight:600;cursor:pointer;transition:background .15s;white-space:nowrap}
-    .date-export-btn:hover{background:#c3e6c9}
-    .date-export-btn svg{width:11px;height:11px}
-    .date-chev{color:var(--grey);transition:transform .22s;flex-shrink:0}
-    .date-chev svg{width:16px;height:16px;display:block}
-    .date-acc.open .date-chev{transform:rotate(180deg)}
-    .date-acc-body{display:none;border-top:1.5px solid var(--border)}
-    .date-acc.open .date-acc-body{display:block}
-
-    .sec-tabs{display:flex;gap:0;overflow-x:auto;border-bottom:1px solid var(--border);padding:0 1.1rem;background:#fafffe;scrollbar-width:none}
-    .sec-tabs::-webkit-scrollbar{display:none}
-    .sec-tab{padding:.6rem .9rem;border:none;border-bottom:2px solid transparent;background:none;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:600;color:var(--grey);cursor:pointer;white-space:nowrap;transition:color .15s,border-color .15s;margin-bottom:-1px}
-    .sec-tab.active{color:var(--green);border-bottom-color:var(--green)}
+    .date-group{margin-bottom:1.5rem}
+    .date-group-hdr{display:flex;align-items:center;gap:.75rem;padding:.75rem 0;border-bottom:1.5px solid var(--border);margin-bottom:.75rem}
+    .date-pill{background:var(--goldp);color:var(--gold);border:1px solid rgba(201,168,76,.2);font-size:.76rem;font-weight:700;padding:5px 13px;border-radius:100px}
+    .date-form-count{font-size:.75rem;color:var(--grey)}
+    .date-exp-btn{margin-left:auto;display:flex;align-items:center;gap:4px;background:#fff;color:var(--navy);border:1.5px solid var(--border);padding:5px 11px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:600;cursor:pointer;transition:background .15s}
+    .date-exp-btn:hover{background:var(--goldp);border-color:var(--gold);color:var(--gold)}
+    .date-exp-btn svg{width:11px;height:11px}
+    .form-acc{background:#fff;border:1.5px solid var(--border);border-radius:14px;margin-bottom:.75rem;overflow:hidden}
+    .form-acc-hdr{display:flex;align-items:center;gap:.75rem;padding:.9rem 1.2rem;cursor:pointer;transition:background .15s}
+    .form-acc-hdr:hover{background:#fafafa}
+    .form-num{width:30px;height:30px;border-radius:8px;background:var(--goldp);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:.88rem;font-weight:700;color:var(--gold);flex-shrink:0}
+    .form-acc-info{flex:1;min-width:0}
+    .form-acc-name{font-weight:700;font-size:.88rem;color:var(--dark)}
+    .form-acc-sub{font-size:.72rem;color:var(--grey);margin-top:1px}
+    .form-acc-right{display:flex;align-items:center;gap:.5rem}
+    .form-exp-btn{display:flex;align-items:center;gap:3px;background:var(--goldp);color:var(--gold);border:none;padding:4px 9px;border-radius:7px;font-family:'DM Sans',sans-serif;font-size:.7rem;font-weight:600;cursor:pointer;transition:background .15s}
+    .form-exp-btn:hover{background:rgba(201,168,76,.25)}
+    .form-exp-btn svg{width:11px;height:11px}
+    .form-chev{color:var(--grey);transition:transform .22s}
+    .form-chev svg{width:15px;height:15px;display:block}
+    .form-acc.open .form-acc-hdr{background:var(--goldpd)}
+    .form-acc.open .form-chev{transform:rotate(180deg)}
+    .form-acc-body{display:none;border-top:1.5px solid var(--border)}
+    .form-acc.open .form-acc-body{display:block}
+    .sec-tabs-row{display:flex;overflow-x:auto;border-bottom:1px solid var(--border);padding:0 1.1rem;background:#fafffe;scrollbar-width:none}
+    .sec-tabs-row::-webkit-scrollbar{display:none}
+    .sec-tab{padding:.55rem .85rem;border:none;border-bottom:2px solid transparent;background:none;font-family:'DM Sans',sans-serif;font-size:.77rem;font-weight:600;color:var(--grey);cursor:pointer;white-space:nowrap;transition:color .15s,border-color .15s;margin-bottom:-1px}
+    .sec-tab.active{color:var(--navy);border-bottom-color:var(--gold)}
     .sec-tab:hover:not(.active){color:var(--dark)}
-
-    .sec-pane{display:none;padding:1rem 1.1rem 1.25rem}
+    .sec-pane{display:none;padding:.9rem 1.1rem 1.1rem}
     .sec-pane.active{display:block}
-    .field-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:.5rem}
-    .field-item{background:#fff;border:1px solid var(--border);border-radius:9px;padding:.55rem .8rem}
-    .field-key{font-size:.65rem;color:var(--grey);margin-bottom:3px;text-transform:uppercase;letter-spacing:.04em;line-height:1.3}
-    .field-val{font-size:.84rem;color:var(--dark);font-weight:500;line-height:1.4}
+    .field-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:.45rem}
+    .field-item{background:#fff;border:1px solid var(--border);border-radius:9px;padding:.5rem .75rem}
+    .field-key{font-size:.65rem;color:var(--grey);margin-bottom:2px;text-transform:uppercase;letter-spacing:.04em}
+    .field-val{font-size:.83rem;color:var(--dark);font-weight:500;line-height:1.4}
     .field-val.na{color:#c4c9d4;font-style:italic;font-weight:400}
-
-    /* Section L file list */
-    .file-list{display:flex;flex-direction:column;gap:.5rem}
-    .file-item{display:flex;align-items:center;gap:.75rem;background:#fff;border:1px solid var(--border);border-radius:9px;padding:.55rem .85rem}
-    .file-icon{font-size:1.15rem;flex-shrink:0}
-    .file-info{flex:1;min-width:0}
-    .file-name{font-size:.84rem;font-weight:600;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .file-size{font-size:.71rem;color:var(--grey);margin-top:1px}
-    .file-view-btn{display:flex;align-items:center;gap:4px;background:var(--pale);color:var(--green);border:none;padding:5px 10px;border-radius:7px;font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:600;cursor:pointer;white-space:nowrap;text-decoration:none;transition:background .15s}
-    .file-view-btn:hover{background:#c3e6c9}
-
-    .analysis-placeholder{text-align:center;padding:5rem 2rem}
-    .analysis-placeholder .icon{font-size:3rem;margin-bottom:1rem}
-    .analysis-placeholder h3{font-family:'Fraunces',serif;font-size:1.2rem;color:var(--forest);margin-bottom:.5rem}
-    .analysis-placeholder p{color:var(--grey);font-size:.88rem}
-
+    .upload-card{background:#fff;border:1.5px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:1.5rem}
+    .upload-card h2{font-family:'Playfair Display',serif;font-size:1.15rem;color:var(--navy);margin-bottom:.5rem}
+    .upload-card p{color:var(--grey);font-size:.88rem;margin-bottom:1.25rem}
+    .excel-stats{display:flex;gap:1rem;margin-bottom:1.5rem}
+    .excel-stat{background:var(--goldp);padding:1rem;border-radius:8px;flex:1;text-align:center}
+    .excel-stat-n{font-size:1.5rem;font-weight:700;color:var(--gold)}
+    .excel-stat-l{font-size:.75rem;color:var(--grey)}
+    .tbl-wrap{border:1px solid var(--border);border-radius:8px;overflow:auto;max-height:60vh}
+    .tbl-wrap table{width:100%;border-collapse:collapse;font-size:.82rem}
+    .tbl-wrap th{background:var(--cream);padding:8px 10px;text-align:left;border-bottom:1px solid var(--border);font-weight:600;color:var(--dark);white-space:nowrap;position:sticky;top:0}
+    .tbl-wrap td{padding:8px 10px;border-bottom:1px solid var(--border);white-space:nowrap;max-width:180px;overflow:hidden;text-overflow:ellipsis}
+    .tbl-wrap tr:nth-child(even){background:#f9fafb}
     .loading-state{text-align:center;padding:4rem 1rem;color:var(--grey)}
     @keyframes rot{to{transform:rotate(360deg)}}.rot{animation:rot .8s linear infinite}
     .empty-state{text-align:center;padding:4rem 1rem}
-    .empty-state svg{width:44px;height:44px;margin:0 auto 1rem;display:block;opacity:.2}
-    .empty-state h3{font-family:'Fraunces',serif;font-size:1.05rem;color:var(--dark);margin-bottom:.35rem}
+    .empty-state h3{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--dark);margin-bottom:.35rem}
     .empty-state p{color:var(--grey);font-size:.85rem}
-
-    @media(max-width:640px){
-      .main{padding:1.25rem 1rem 3rem}
-      nav{padding:0 1rem}
-      .emp-grid{grid-template-columns:1fr}
-      .field-grid{grid-template-columns:1fr 1fr}
-      .stats-row .stat-card{min-width:80px}
-    }
+    @media(max-width:640px){.main{padding:1.25rem 1rem 3rem}nav{padding:0 1rem}.emp-grid{grid-template-columns:1fr}.field-grid{grid-template-columns:1fr 1fr}}
   </style>
 </head>
 <body>
-
 <nav>
-  <a href="/dashboard.html" class="nav-logo">🌳 Tree<span>App</span></a>
+  <a href="/dashboard.html" class="nav-logo">🌳 <span class="logo-jhs">JHS</span>&nbsp;Tree</a>
   <span class="nav-badge">Admin</span>
   <div class="nav-right">
-    <a href="/dashboard.html" class="nav-back">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
-      Back to Field App
-    </a>
+    <a href="/dashboard.html" class="nav-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>Back to Field App</a>
     <button class="logout-btn" onclick="logout()">Sign out</button>
   </div>
 </nav>
-
 <div class="tabs-bar">
-  <button class="tab-btn active" id="tab-search"   onclick="switchTab('search')">🔍 Search & Employees</button>
-  <button class="tab-btn"        id="tab-analysis" onclick="switchTab('analysis')">📊 Analysis</button>
+  <button class="tab-btn active" id="tab-search" onclick="switchTab('search')">🔍 Search & Employees</button>
+  <button class="tab-btn" id="tab-upload" onclick="switchTab('upload')">📤 Excel Upload</button>
+  <button class="tab-btn" id="tab-employees" onclick="switchTab('employees')">👥 Employees</button>
+  <button class="tab-btn" id="tab-analysis" onclick="switchTab('analysis')">📊 Analysis</button>
 </div>
-
 <main class="main">
-
+  <!-- SEARCH TAB -->
   <div id="view-search">
     <div class="list-view" id="list-view">
-      <div class="stats-row" id="stats-row">
+      <div class="stats-row">
         <div class="stat-card"><div class="stat-n" id="stat-employees">—</div><div class="stat-l">Employees</div></div>
-        <div class="stat-card"><div class="stat-n" id="stat-submissions">—</div><div class="stat-l">Total Days Logged</div></div>
+        <div class="stat-card"><div class="stat-n" id="stat-submissions">—</div><div class="stat-l">Forms Submitted</div></div>
         <div class="stat-card"><div class="stat-n" id="stat-last">—</div><div class="stat-l">Latest Activity</div></div>
       </div>
       <div class="toolbar">
@@ -171,384 +148,160 @@
           <input class="search-input" id="search-input" type="text" placeholder="Search employees by name…" oninput="filterEmployees()"/>
         </div>
         <button class="export-all-btn" onclick="exportAll()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Export All
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Export All
         </button>
       </div>
-      <div class="emp-grid" id="emp-grid">
-        <div class="loading-state">
-          <svg class="rot" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
-          <p style="margin-top:.75rem">Loading employees…</p>
-        </div>
-      </div>
+      <div class="emp-grid" id="emp-grid"><div class="loading-state"><svg class="rot" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg><p style="margin-top:.75rem">Loading…</p></div></div>
     </div>
-
     <div class="detail-view" id="detail-view">
       <div class="back-row">
-        <button class="back-row-btn" onclick="showList()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
-          All Employees
-        </button>
-        <div>
-          <div class="detail-title" id="detail-name">Employee</div>
-          <div class="detail-sub"  id="detail-sub"></div>
-        </div>
-        <div style="margin-left:auto">
-          <button class="export-all-btn" onclick="exportEmployee(currentEmployee)" style="font-size:.78rem;padding:8px 13px">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            Export Employee
-          </button>
-        </div>
+        <button class="back-row-btn" onclick="showList()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>All Employees</button>
+        <div><div class="detail-title" id="detail-name">Employee</div><div class="detail-sub" id="detail-sub"></div></div>
+        <div style="margin-left:auto"><button class="export-all-btn" onclick="exportEmployee(currentEmpId)" style="font-size:.78rem;padding:8px 13px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Export Employee</button></div>
       </div>
-      <div id="date-cards-container"></div>
+      <div id="detail-container"></div>
     </div>
   </div>
-
+  <!-- UPLOAD TAB -->
+  <div id="view-upload" style="display:none">
+    <div class="upload-card">
+      <h2>📤 Excel Upload</h2>
+      <p>Upload an Excel file with farmer MIS data. This auto-populates beneficiary name search in the field app.</p>
+      <div style="margin-bottom:1rem"><label style="display:block;font-weight:600;color:var(--dark);margin-bottom:.5rem">Select Excel File</label><input type="file" id="excel-file" accept=".xlsx,.xls" style="width:100%;padding:10px;border:1.5px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif"></div>
+      <button id="upload-btn" onclick="processExcelUpload()" disabled style="background:var(--navy);color:#fff;border:none;padding:10px 20px;border-radius:8px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;transition:background .18s">Upload Excel File</button>
+    </div>
+  </div>
+  <!-- EMPLOYEES TAB -->
+  <div id="view-employees" style="display:none">
+    <div class="upload-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+        <h2>👥 Excel Employee Data</h2>
+        <button onclick="loadExcelData()" style="background:var(--navy);color:#fff;border:none;padding:7px 14px;border-radius:8px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;font-size:.84rem">Refresh</button>
+      </div>
+      <div class="excel-stats">
+        <div class="excel-stat"><div class="excel-stat-n" id="excel-count">—</div><div class="excel-stat-l">Total Records</div></div>
+        <div class="excel-stat"><div class="excel-stat-n" id="excel-upload-date">—</div><div class="excel-stat-l">Last Upload</div></div>
+      </div>
+    </div>
+    <div class="upload-card">
+      <h3 style="font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--navy);margin-bottom:1rem">📋 Employee Records</h3>
+      <div id="excel-table-container"><div class="loading-state"><svg class="rot" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg><p style="margin-top:.75rem">Loading…</p></div></div>
+    </div>
+  </div>
+  <!-- ANALYSIS TAB -->
   <div id="view-analysis" style="display:none">
-    <div class="analysis-placeholder">
-      <div class="icon">📊</div>
-      <h3>Analysis — Coming Soon</h3>
-      <p>Charts and insights will appear here in a future update.</p>
-    </div>
+    <div style="text-align:center;padding:5rem 2rem"><div style="font-size:3rem;margin-bottom:1rem">📊</div><h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--navy);margin-bottom:.5rem">Analysis — Coming Soon</h3><p style="color:var(--grey);font-size:.88rem">Charts and insights will appear here in a future update.</p></div>
   </div>
-
 </main>
-
 <script>
-const user  = JSON.parse(localStorage.getItem('user') || 'null');
-const token = localStorage.getItem('access_token');
-if (!user || !user.is_admin) { window.location.href = '/'; throw 0; }
+const user=JSON.parse(localStorage.getItem('user')||'null');
+const token=localStorage.getItem('access_token');
+if(!user||!user.is_admin){window.location.href='/';throw 0;}
+let allEmployees=[],currentEmpId=null;
+const SEC_META={A:{icon:'👤',name:'Respondent Profile'},B:{icon:'🌱',name:'Sapling Survivality'},C:{icon:'🎓',name:'Training & Convergence'},D:{icon:'💰',name:'Outcome & Impact'}};
+const F_LABELS={name:'Name',age:'Age',gender:'Gender',mobile:'Mobile',marital:'Marital Status',location:'Location',landsize:'Landholding',landown:'Land Ownership',irrigation:'Irrigation',times_received:'Times Received',sapling_cond:'Sapling Condition',sapling_height:'Sapling Height',sapling_age_yrs:'Sapling Age (yrs)',sapling_suit:'Suitable for Soil',mis_match:'MIS Match',sup_papaya:'Supposed Papaya',sup_mulberry:'Supposed Mulberry',sup_banana:'Supposed Banana',rcv_papaya:'Received Papaya',rcv_mulberry:'Received Mulberry',rcv_banana:'Received Banana',approved_land:'Approved Land',plant_month:'Plant Month',plant_year:'Plant Year',pit_size:'Pit Size',manure:'Manure',surv_papaya:'Surviving Papaya',surv_mulberry:'Surviving Mulberry',surv_banana:'Surviving Banana',watering:'Watering',weeding:'Weeding',training:'Training',train_mmyy:'Training MM/YY',train_location:'Training Location',train_help:'Training Helped',team_visit:'Team Visit',num_visits:'Visits',tech_guidance:'Tech Guidance',know_contact:'Knew Contact',resolved:'Resolved',other_csr:'Other CSR',csr_partner:'CSR Partner',govt_scheme:'Govt Scheme',scheme_name:'Scheme Name',profit_cy:'Profit CY (₹)',profit_ly:'Profit LY (₹)',csr_informed:'CSR Informed',branding:'Branding Seen',satisfaction:'Satisfaction',suggestions:'Suggestions',recommend:'Recommend'};
 
-let allEmployees    = [];
-let currentEmployee = null;
+function switchTab(tab){
+  ['search','upload','employees','analysis'].forEach(t=>{document.getElementById('view-'+t).style.display=t===tab?'':'none';document.getElementById('tab-'+t).classList.toggle('active',t===tab);});
+  if(tab==='employees')loadExcelData();
+}
+function fmtDate(s){if(!s)return'—';const[y,m,d]=s.split('-');const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];const dt=new Date(+y,+m-1,+d);return`${days[dt.getDay()]}, ${d} ${months[+m-1]} ${y}`;}
+function initials(name){return(name||'?').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);}
+function renderVal(val){if(val===undefined||val===null||val==='')return'<span class="field-val na">—</span>';if(Array.isArray(val))return val.length===0?'<span class="field-val na">None selected</span>':`<span class="field-val">${val.join(', ')}</span>`;return`<span class="field-val">${val}</span>`;}
 
-const SEC_META = {
-  A:{icon:'👤',name:'Respondent Profile'},B:{icon:'🌱',name:'Sapling Quality'},
-  C:{icon:'📦',name:'Sapling Distribution'},D:{icon:'🪴',name:'Plantation Process'},
-  E:{icon:'📊',name:'Survival & Maintenance'},F:{icon:'🎓',name:'Capacity Building'},
-  G:{icon:'🏕️',name:'Field Support'},H:{icon:'🔍',name:'Duplication Check'},
-  I:{icon:'💰',name:'Outcome & Impact'},J:{icon:'🧧',name:'Branding & Visibility'},
-  K:{icon:'⭐',name:'Farmer Feedback'},L:{icon:'📎',name:'Photo & Document Upload'},
-};
-
-const F_LABELS = {
-  name:'Beneficiary Name',age:'Age',gender:'Gender',mobile:'Mobile',
-  marital:'Marital Status',location:'Location',landsize:'Landholding Size',
-  landown:'Land Ownership',irrigation:'Irrigation Access',times_received:'Times Received Saplings',
-  sapling_cond:'Sapling Condition',sapling_height:'Sapling Height at Distribution',
-  sapling_age_yrs:'Sapling Age at Distribution (yrs)',sapling_suit:'Suitable for Soil/Climate',
-  mis_match:'Received as per MIS',
-  sup_papaya:'Supposed – Papaya',sup_mulberry:'Supposed – Mulberry',sup_banana:'Supposed – Banana',
-  rcv_papaya:'Received – Papaya',rcv_mulberry:'Received – Mulberry',rcv_banana:'Received – Banana',
-  approved_land:'Planted on Approved Land',plant_month:'Planting Month',plant_year:'Planting Year',
-  pit_size:'Pit Size & Spacing',manure:'Manure Applied',
-  surv_papaya:'Surviving – Papaya',surv_mulberry:'Surviving – Mulberry',surv_banana:'Surviving – Banana',
-  watering:'Watering Frequency',weeding:'Weeding Frequency',
-  training:'Attended Training',
-  train_mmyy:'Training Month & Year (MM/YY)',train_location:'Training Location',train_help:'Training Helped',
-  team_visit:'Field Team Visit',num_visits:'No. of Visits',tech_guidance:'Technical Guidance',
-  know_contact:'Knew Whom to Contact',resolved:'Concerns Resolved',
-  other_csr:'Another CSR Program',csr_partner:'CSR Partner',govt_scheme:'Govt Scheme',scheme_name:'Scheme Name',
-  profit_cy:'Net Profit CY (INR)',profit_ly:'Net Profit LY (INR)',
-  csr_informed:'Informed of CSR Support',branding:'Branding Material Seen',
-  satisfaction:'Overall Satisfaction',suggestions:'Suggestions',recommend:'Would Recommend',
-};
-
-const CHK_LABELS = {
-  A:['Irrigation Source'],D:['Manure Type','Protective Measures','Photos Taken'],
-  E:['Mortality Reasons'],F:['Topics Covered'],I:['Income Factors'],K:['Helpful Aspects','Challenges Faced'],
-};
-
-function switchTab(tab) {
-  document.getElementById('view-search').style.display   = tab === 'search'   ? '' : 'none';
-  document.getElementById('view-analysis').style.display = tab === 'analysis' ? '' : 'none';
-  document.getElementById('tab-search').classList.toggle('active',   tab === 'search');
-  document.getElementById('tab-analysis').classList.toggle('active', tab === 'analysis');
+async function loadEmployees(){
+  try{
+    const res=await fetch('/api/admin/employees',{headers:{Authorization:'Bearer '+token}});if(!res.ok)throw 0;
+    allEmployees=await res.json();
+    const totalSubs=allEmployees.reduce((s,e)=>s+e.submission_count,0);const lastDate=allEmployees.reduce((mx,e)=>e.last_date>mx?e.last_date:mx,'');
+    document.getElementById('stat-employees').textContent=allEmployees.length;document.getElementById('stat-submissions').textContent=totalSubs;document.getElementById('stat-last').textContent=lastDate?fmtDate(lastDate).replace(/^[A-Za-z]+, /,''):'—';
+    renderEmpGrid(allEmployees);
+  }catch{document.getElementById('emp-grid').innerHTML='<div class="empty-state"><h3>Could not load employees</h3><p>Check connection or permissions.</p></div>';}
 }
 
-function fmtDate(dateStr) {
-  if (!dateStr) return '—';
-  const [y,m,d] = dateStr.split('-');
-  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const days   = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-  const dt = new Date(+y, +m-1, +d);
-  return `${days[dt.getDay()]}, ${d} ${months[+m-1]} ${y}`;
-}
-
-function initials(name) {
-  return (name || '?').split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
-}
-
-function renderVal(val) {
-  if (val === undefined || val === null || val === '') return '<span class="field-val na">—</span>';
-  if (Array.isArray(val)) return val.length === 0
-    ? '<span class="field-val na">None selected</span>'
-    : `<span class="field-val">${val.join(', ')}</span>`;
-  return `<span class="field-val">${val}</span>`;
-}
-
-function fmtSize(bytes) {
-  if (!bytes) return '';
-  return bytes > 1024*1024 ? (bytes/1024/1024).toFixed(1)+' MB' : Math.round(bytes/1024)+' KB';
-}
-
-// Section L — file list with View buttons
-function buildFilesSection(data) {
-  const files = data?.files || [];
-  if (!files.length) return '<p style="color:var(--grey);font-size:.82rem;padding:.25rem 0">No files uploaded.</p>';
-  return `<div class="file-list">${files.map(f => {
-    const icon = f.content_type?.startsWith('image/') ? '🖼️' : '📄';
-    return `<div class="file-item">
-      <span class="file-icon">${icon}</span>
-      <div class="file-info">
-        <div class="file-name">${f.filename || 'File'}</div>
-        <div class="file-size">${fmtSize(f.size)}</div>
-      </div>
-      <a class="file-view-btn" href="/api/files/${f.upload_id}" target="_blank" rel="noopener"
-         onclick="event.stopPropagation(); openFileWithAuth('${f.upload_id}'); return false;">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-        View
-      </a>
-    </div>`;
-  }).join('')}</div>`;
-}
-
-// Fetch file as blob and open in new tab (carries auth header)
-async function openFileWithAuth(uploadId) {
-  try {
-    const res = await fetch(`/api/files/${uploadId}`, {
-      headers: { 'Authorization': 'Bearer ' + token }
-    });
-    if (!res.ok) { alert('Could not load file.'); return; }
-    const blob = await res.blob();
-    const url  = URL.createObjectURL(blob);
-    window.open(url, '_blank');
-    setTimeout(() => URL.revokeObjectURL(url), 60000);
-  } catch {
-    alert('Could not load file.');
-  }
-}
-
-function buildFieldGrid(secId, data) {
-  if (secId === 'L') return buildFilesSection(data);
-  if (!data) return '<p style="color:var(--grey);font-size:.82rem;padding:.25rem 0">No data available.</p>';
-  const chkLabels = CHK_LABELS[secId] || [];
-  const items = Object.entries(data).map(([key, val]) => {
-    const label = key.startsWith('chk_')
-      ? (chkLabels[parseInt(key.split('_')[1])] || `Multi-select ${+key.split('_')[1]+1}`)
-      : (F_LABELS[key] || key.replace(/_/g, ' '));
-    return `<div class="field-item"><div class="field-key">${label}</div>${renderVal(val)}</div>`;
-  });
-  return `<div class="field-grid">${items.join('')}</div>`;
-}
-
-async function loadEmployees() {
-  try {
-    const res = await fetch('/api/admin/employees', { headers: { Authorization: 'Bearer ' + token } });
-    if (!res.ok) throw new Error();
-    allEmployees = await res.json();
-    renderEmployeeStats();
-    renderEmployeeGrid(allEmployees);
-  } catch {
-    document.getElementById('emp-grid').innerHTML = `<div class="empty-state">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-      <h3>Could not load employees</h3><p>Check your connection or permissions.</p></div>`;
-  }
-}
-
-function renderEmployeeStats() {
-  const totalSubs = allEmployees.reduce((s, e) => s + e.submission_count, 0);
-  const lastDate  = allEmployees.reduce((max, e) => e.last_date > max ? e.last_date : max, '');
-  document.getElementById('stat-employees').textContent  = allEmployees.length;
-  document.getElementById('stat-submissions').textContent = totalSubs;
-  document.getElementById('stat-last').textContent = lastDate ? fmtDate(lastDate).replace(/^[A-Za-z]+, /, '') : '—';
-}
-
-function renderEmployeeGrid(list) {
-  if (!list.length) {
-    document.getElementById('emp-grid').innerHTML = `<div class="empty-state" style="grid-column:1/-1">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-      <h3>No employees found</h3><p>No submissions have been recorded yet.</p></div>`;
-    return;
-  }
-  document.getElementById('emp-grid').innerHTML = list.map(emp => `
+function renderEmpGrid(list){
+  if(!list.length){document.getElementById('emp-grid').innerHTML='<div class="empty-state" style="grid-column:1/-1"><h3>No employees found</h3><p>No submissions recorded yet.</p></div>';return;}
+  document.getElementById('emp-grid').innerHTML=list.map(emp=>`
     <div class="emp-card" onclick="openEmployee('${emp.employee_id}')">
-      <div class="emp-card-top">
-        <div class="emp-avatar">${initials(emp.employee_name)}</div>
-        <div class="emp-info">
-          <div class="emp-name">${emp.employee_name || 'Unknown'}</div>
-          <div class="emp-sub">${emp.submission_count} day${emp.submission_count !== 1 ? 's' : ''} logged</div>
-        </div>
-      </div>
-      <div class="emp-card-foot">
-        <span class="emp-date">Last: ${fmtDate(emp.last_date)}</span>
-        <button class="emp-export-btn" onclick="event.stopPropagation(); exportEmployee('${emp.employee_id}')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Export
-        </button>
-      </div>
+      <div class="emp-card-top"><div class="emp-avatar">${initials(emp.employee_name)}</div><div class="emp-info"><div class="emp-name">${emp.employee_name||'Unknown'}</div><div class="emp-sub">${emp.submission_count} form${emp.submission_count!==1?'s':''} submitted</div></div></div>
+      <div class="emp-card-foot"><span class="emp-date">Last: ${fmtDate(emp.last_date)}</span><button class="emp-export-btn" onclick="event.stopPropagation();exportEmployee('${emp.employee_id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Export</button></div>
     </div>`).join('');
 }
 
-function filterEmployees() {
-  const q = document.getElementById('search-input').value.trim().toLowerCase();
-  renderEmployeeGrid(q ? allEmployees.filter(e => (e.employee_name||'').toLowerCase().includes(q)) : allEmployees);
+function filterEmployees(){const q=document.getElementById('search-input').value.trim().toLowerCase();renderEmpGrid(q?allEmployees.filter(e=>(e.employee_name||'').toLowerCase().includes(q)):allEmployees);}
+
+async function openEmployee(empId){
+  currentEmpId=empId;const emp=allEmployees.find(e=>e.employee_id===empId);
+  document.getElementById('list-view').classList.add('hidden');document.getElementById('detail-view').classList.add('open');
+  document.getElementById('detail-name').textContent=emp?emp.employee_name:'Employee';document.getElementById('detail-sub').textContent=emp?emp.submission_count+' forms submitted':'';
+  document.getElementById('detail-container').innerHTML='<div class="loading-state"><svg class="rot" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></div>';
+  try{const res=await fetch('/api/admin/employee/'+empId,{headers:{Authorization:'Bearer '+token}});if(!res.ok)throw 0;const docs=await res.json();renderDetailView(docs,empId);}
+  catch{document.getElementById('detail-container').innerHTML='<p style="color:var(--grey)">Could not load data.</p>';}
 }
 
-async function openEmployee(empId) {
-  currentEmployee = empId;
-  const emp = allEmployees.find(e => e.employee_id === empId);
-  document.getElementById('list-view').classList.add('hidden');
-  document.getElementById('detail-view').classList.add('open');
-  document.getElementById('detail-name').textContent = emp ? emp.employee_name : 'Employee';
-  document.getElementById('detail-sub').textContent  = `${emp ? emp.submission_count : '?'} days logged`;
-  document.getElementById('date-cards-container').innerHTML =
-    '<div class="loading-state"><svg class="rot" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></div>';
-
-  try {
-    const res = await fetch(`/api/admin/employee/${empId}`, { headers: { Authorization: 'Bearer ' + token } });
-    if (!res.ok) throw new Error();
-    renderDateCards(await res.json(), empId);
-  } catch {
-    document.getElementById('date-cards-container').innerHTML =
-      '<p style="color:var(--grey);font-size:.88rem">Could not load data.</p>';
-  }
+function renderDetailView(docs,empId){
+  if(!docs.length){document.getElementById('detail-container').innerHTML='<div class="empty-state"><h3>No submissions</h3></div>';return;}
+  const byDate={};docs.forEach(doc=>{const d=doc.date||'Unknown';if(!byDate[d])byDate[d]=[];byDate[d].push(doc);});
+  const dates=Object.keys(byDate).sort().reverse();let html='';
+  dates.forEach(date=>{const group=byDate[date];html+=`<div class="date-group"><div class="date-group-hdr"><span class="date-pill">📅 ${fmtDate(date)}</span><span class="date-form-count">${group.length} form${group.length>1?'s':''}</span><button class="date-exp-btn" onclick="exportDateGroup('${empId}','${date}',${JSON.stringify(group).replace(/"/g,'&quot;')})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Export Day</button></div>${group.map((doc,fi)=>buildFormAcc(doc,empId+'_'+date+'_'+fi)).join('')}</div>`;});
+  document.getElementById('detail-container').innerHTML=html;
 }
 
-function showList() {
-  currentEmployee = null;
-  document.getElementById('detail-view').classList.remove('open');
-  document.getElementById('list-view').classList.remove('hidden');
+function buildFormAcc(doc,uid){
+  const sections=doc.sections||{};const secIds=Object.keys(sections).sort();const name=sections.A?.name||('Form #'+(doc.form_number||'?'));const loc=sections.A?.location||'';
+  const tabsHtml=secIds.map((id,i)=>{const m=SEC_META[id];return`<button class="sec-tab ${i===0?'active':''}" onclick="switchSecTab('${uid}','${id}','${secIds.join(',')}')">${m?m.icon+' '+id:id}</button>`;}).join('');
+  const panesHtml=secIds.map((id,i)=>`<div class="sec-pane ${i===0?'active':''}" id="spane-${uid}-${id}">${buildFieldGrid(id,sections[id])}</div>`).join('');
+  const accId='facc-'+uid;
+  return`<div class="form-acc" id="${accId}"><div class="form-acc-hdr" onclick="document.getElementById('${accId}').classList.toggle('open')"><div class="form-num">${doc.form_number||'?'}</div><div class="form-acc-info"><div class="form-acc-name">${name}${loc?' · '+loc:''}</div><div class="form-acc-sub">${secIds.length}/4 tabs</div></div><div class="form-acc-right"><button class="form-exp-btn" onclick="event.stopPropagation();exportFormDoc(${JSON.stringify(doc).replace(/"/g,'&quot;')})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Excel</button><span class="form-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span></div></div><div class="form-acc-body"><div class="sec-tabs-row">${tabsHtml}</div><div>${panesHtml}</div></div></div>`;
 }
 
-function renderDateCards(docs, empId) {
-  if (!docs.length) {
-    document.getElementById('date-cards-container').innerHTML = '<div class="empty-state"><h3>No submissions yet</h3></div>';
-    return;
-  }
-  document.getElementById('date-cards-container').innerHTML = docs.map((doc, i) => {
-    const sections = doc.sections || {};
-    const secIds   = Object.keys(sections).sort();
-    const tags     = secIds.map(id => {
-      const m = SEC_META[id];
-      return m ? `<span class="date-sec-tag">${m.icon} ${m.name}</span>` : '';
-    }).join('');
-
-    const tabsHtml = secIds.map((id, si) => {
-      const m = SEC_META[id];
-      return `<button class="sec-tab ${si===0?'active':''}" id="stab-${empId}-${i}-${id}"
-        onclick="switchSecTab('${empId}','${i}','${id}','${secIds.join(',')}')">
-        ${m ? m.icon+' '+id : id}</button>`;
-    }).join('');
-
-    const panesHtml = secIds.map((id, si) =>
-      `<div class="sec-pane ${si===0?'active':''}" id="spane-${empId}-${i}-${id}">
-        ${buildFieldGrid(id, sections[id])}
-      </div>`
-    ).join('');
-
-    const accId = `dacc-${empId}-${i}`;
-    const docJson = JSON.stringify(doc).replace(/"/g, '&quot;');
-    return `<div class="date-acc" id="${accId}">
-      <div class="date-acc-hdr" onclick="toggleDateAcc('${accId}')">
-        <span class="date-pill">📅 ${fmtDate(doc.date)}</span>
-        <div class="date-acc-sections">${tags}</div>
-        <div class="date-acc-right">
-          <button class="date-export-btn" onclick="event.stopPropagation(); exportDate('${empId}','${doc.date}','${docJson}')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            Excel
-          </button>
-          <span class="date-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></span>
-        </div>
-      </div>
-      <div class="date-acc-body">
-        <div class="sec-tabs">${tabsHtml}</div>
-        <div>${panesHtml}</div>
-      </div>
-    </div>`;
-  }).join('');
+function switchSecTab(uid,activeId,allIds){
+  allIds.split(',').forEach(id=>{document.getElementById('spane-'+uid+'-'+id)?.classList.toggle('active',id===activeId);const container=document.getElementById('spane-'+uid+'-'+activeId)?.closest('.form-acc-body');container?.querySelectorAll('.sec-tab').forEach(btn=>{btn.classList.toggle('active',btn.textContent.trim().endsWith(activeId));});});
 }
 
-function toggleDateAcc(id) { document.getElementById(id)?.classList.toggle('open'); }
-
-function switchSecTab(empId, i, activeId, allIds) {
-  allIds.split(',').forEach(id => {
-    document.getElementById(`stab-${empId}-${i}-${id}`)?.classList.toggle('active', id === activeId);
-    document.getElementById(`spane-${empId}-${i}-${id}`)?.classList.toggle('active', id === activeId);
-  });
+function buildFieldGrid(secId,data){
+  if(!data)return'<p style="color:var(--grey);font-size:.82rem;padding:.25rem 0">No data.</p>';
+  const items=Object.entries(data).map(([k,v])=>{const label=k.startsWith('chk_')?('Multi-select '+(+k.split('_')[1]+1)):(F_LABELS[k]||k.replace(/_/g,' '));return`<div class="field-item"><div class="field-key">${label}</div>${renderVal(v)}</div>`;});
+  return`<div class="field-grid">${items.join('')}</div>`;
 }
 
-// Excel export
-function flattenSection(secId, data, meta) {
-  if (secId === 'L') {
-    const files = data?.files || [];
-    return { ...meta, 'Uploaded Files': files.map(f => f.filename).join(', '), 'File Count': files.length };
-  }
-  const row = { ...meta };
-  if (!data) return row;
-  const chkLabels = CHK_LABELS[secId] || [];
-  Object.entries(data).forEach(([key, val]) => {
-    const label = key.startsWith('chk_')
-      ? (chkLabels[parseInt(key.split('_')[1])] || `Multi-select ${+key.split('_')[1]+1}`)
-      : (F_LABELS[key] || key);
-    row[label] = Array.isArray(val) ? val.join(', ') : (val ?? '');
-  });
-  return row;
+function showList(){currentEmpId=null;document.getElementById('detail-view').classList.remove('open');document.getElementById('list-view').classList.remove('hidden');}
+
+function docsToWb(docs,filename){
+  const wb=XLSX.utils.book_new();const secData={};
+  docs.forEach(doc=>{const meta={'Employee':doc.employee_name||'','Date':doc.date||'','Form #':doc.form_number||1};Object.entries(doc.sections||{}).forEach(([secId,data])=>{if(!secData[secId])secData[secId]=[];const row={...meta};Object.entries(data||{}).forEach(([k,v])=>{const label=k.startsWith('chk_')?('Multi-select '+(+k.split('_')[1]+1)):(F_LABELS[k]||k);row[label]=Array.isArray(v)?v.join(', '):(v??'');});secData[secId].push(row);});});
+  if(!Object.keys(secData).length){XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet([{Note:'No data'}]),'No Data');}
+  else{Object.entries(secData).sort().forEach(([secId,rows])=>{const m=SEC_META[secId];XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(rows),('Tab '+secId+' '+(m?m.name:secId)).slice(0,31));});}
+  XLSX.writeFile(wb,filename+'.xlsx');
 }
 
-function docsToWorkbook(docs, label) {
-  const wb = XLSX.utils.book_new();
-  const sectionData = {};
-  docs.forEach(doc => {
-    const meta = { 'Employee Name': doc.employee_name || '', 'Date': doc.date || '' };
-    Object.entries(doc.sections || {}).forEach(([secId, data]) => {
-      if (!sectionData[secId]) sectionData[secId] = [];
-      sectionData[secId].push(flattenSection(secId, data, meta));
-    });
-  });
-  Object.entries(sectionData).sort().forEach(([secId, rows]) => {
-    const m = SEC_META[secId];
-    const sheetName = `${secId} - ${m ? m.name : secId}`.slice(0, 31);
-    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), sheetName);
-  });
-  if (!Object.keys(sectionData).length) {
-    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet([{Note:'No data available'}]), 'No Data');
-  }
-  XLSX.writeFile(wb, `${label}.xlsx`);
-}
+async function exportAll(){try{const res=await fetch('/api/admin/all-submissions',{headers:{Authorization:'Bearer '+token}});if(!res.ok)throw 0;docsToWb(await res.json(),'JHSTree_All');}catch{alert('Export failed.');}}
+async function exportEmployee(empId){const emp=allEmployees.find(e=>e.employee_id===empId);const name=(emp?.employee_name||empId).replace(/\s+/g,'_');try{const res=await fetch('/api/admin/employee/'+empId,{headers:{Authorization:'Bearer '+token}});if(!res.ok)throw 0;docsToWb(await res.json(),'JHSTree_'+name);}catch{alert('Export failed.');}}
+function exportDateGroup(empId,date,docs){const emp=allEmployees.find(e=>e.employee_id===empId);const name=(emp?.employee_name||empId).replace(/\s+/g,'_');docsToWb(docs,'JHSTree_'+name+'_'+date);}
+function exportFormDoc(doc){docsToWb([doc],'JHSTree_'+(doc.employee_name||'').replace(/\s+/g,'_')+'_'+doc.date+'_Form'+(doc.form_number||1));}
 
-async function exportAll() {
-  try {
-    const res = await fetch('/api/admin/all-submissions', { headers: { Authorization: 'Bearer ' + token } });
-    if (!res.ok) throw new Error();
-    docsToWorkbook(await res.json(), 'Tree_Plantation_All_Employees');
-  } catch { alert('Export failed. Please try again.'); }
+document.getElementById('excel-file')?.addEventListener('change',function(e){document.getElementById('upload-btn').disabled=!e.target.files[0];});
+async function processExcelUpload(){
+  const file=document.getElementById('excel-file').files[0];if(!file)return;
+  const btn=document.getElementById('upload-btn');btn.disabled=true;btn.textContent='Uploading…';
+  try{
+    const data=await new Promise((res,rej)=>{const reader=new FileReader();reader.onload=e=>{try{const wb=XLSX.read(new Uint8Array(e.target.result),{type:'array'});res(XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]));}catch(err){rej(err);}};reader.onerror=rej;reader.readAsArrayBuffer(file);});
+    const response=await fetch('/api/admin/excel-upload',{method:'POST',headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify(data)});
+    if(!response.ok)throw new Error('Upload failed');const result=await response.json();alert('✅ '+result.message);document.getElementById('excel-file').value='';btn.disabled=true;btn.textContent='Upload Excel File';switchTab('employees');
+  }catch(err){alert('Upload error: '+err.message);btn.disabled=false;btn.textContent='Upload Excel File';}
 }
-
-async function exportEmployee(empId) {
-  const emp  = allEmployees.find(e => e.employee_id === empId);
-  const name = (emp?.employee_name || empId).replace(/\s+/g,'_');
-  try {
-    const res = await fetch(`/api/admin/employee/${empId}`, { headers: { Authorization: 'Bearer ' + token } });
-    if (!res.ok) throw new Error();
-    docsToWorkbook(await res.json(), `Tree_Plantation_${name}`);
-  } catch { alert('Export failed. Please try again.'); }
+async function loadExcelData(){
+  const container=document.getElementById('excel-table-container');container.innerHTML='<div class="loading-state"><svg class="rot" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg><p style="margin-top:.75rem">Loading…</p></div>';
+  try{
+    const res=await fetch('/api/admin/excel-data',{headers:{Authorization:'Bearer '+token}});if(!res.ok)throw 0;const data=await res.json();
+    document.getElementById('excel-count').textContent=data.length;if(data.length&&data[0].upload_date){document.getElementById('excel-upload-date').textContent=new Date(data[0].upload_date).toLocaleDateString();}else{document.getElementById('excel-upload-date').textContent='—';}
+    if(!data.length){container.innerHTML='<div class="empty-state"><h3>No Excel data</h3><p>Upload a file in the Excel Upload tab.</p></div>';return;}
+    const skipCols=new Set(['upload_date','row_index']);const allKeys=new Set();data.forEach(row=>Object.keys(row).forEach(k=>{if(!skipCols.has(k))allKeys.add(k);}));const cols=[...allKeys];const fmtCol=c=>c.replace(/_/g,' ').replace(/\b\w/g,l=>l.toUpperCase());
+    let tbl=`<table><thead><tr>${cols.map(c=>`<th>${fmtCol(c)}</th>`).join('')}</tr></thead><tbody>`;data.forEach(row=>{tbl+=`<tr>${cols.map(c=>`<td title="${row[c]||''}">${row[c]||''}</td>`).join('')}</tr>`;});tbl+='</tbody></table>';
+    container.innerHTML='<div class="tbl-wrap">'+tbl+'</div>';
+  }catch{container.innerHTML='<div class="empty-state"><h3>Could not load Excel data</h3><p>Check connection or upload a file first.</p></div>';document.getElementById('excel-count').textContent='—';}
 }
-
-function exportDate(empId, date, docJson) {
-  const doc  = JSON.parse(docJson.replace(/&quot;/g, '"'));
-  const emp  = allEmployees.find(e => e.employee_id === empId);
-  const name = (emp?.employee_name || empId).replace(/\s+/g,'_');
-  docsToWorkbook([doc], `Tree_Plantation_${name}_${date}`);
-}
-
-function logout() {
-  localStorage.removeItem('access_token');
-  localStorage.removeItem('refresh_token');
-  localStorage.removeItem('user');
-  window.location.href = '/';
-}
-
+function logout(){localStorage.removeItem('access_token');localStorage.removeItem('refresh_token');localStorage.removeItem('user');window.location.href='/';}
 loadEmployees();
 </script>
 </body>

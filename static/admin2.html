@@ -156,6 +156,8 @@
 
 <div class="tabs-bar">
   <button class="tab-btn active" id="tab-search" onclick="switchTab('search')">🔍 Search & Employees</button>
+  <button class="tab-btn" id="tab-upload" onclick="switchTab('upload')">📤 Excel Upload</button>
+  <button class="tab-btn" id="tab-employees" onclick="switchTab('employees')">👥 Employees</button>
   <button class="tab-btn" id="tab-analysis" onclick="switchTab('analysis')">📊 Analysis</button>
 </div>
 
@@ -212,6 +214,72 @@
       <div id="date-cards-container"></div>
     </div>
 
+  </div>
+
+  <!-- ── UPLOAD TAB ── -->
+  <div id="view-upload" style="display:none">
+    <div style="background:#fff;border:1.5px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:1.5rem">
+      <h2 style="font-family:'Fraunces',serif;font-size:1.15rem;color:var(--forest);margin-bottom:.5rem">📤 Excel Upload</h2>
+      <p style="color:var(--grey);font-size:.88rem;margin-bottom:1.25rem">
+        Upload an Excel file with farmer data to auto-populate beneficiary information. The system will match farmer names with existing beneficiaries and populate their details.
+      </p>
+      
+      <div style="margin-bottom:1rem">
+        <label style="display:block;font-weight:600;color:var(--dark);margin-bottom:.5rem">Select Excel File</label>
+        <input type="file" id="excel-file" accept=".xlsx,.xls" style="width:100%;padding:10px;border:1.5px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;">
+      </div>
+      
+      <button id="upload-btn" onclick="processExcelUpload()" disabled style="background:var(--green);color:#fff;border:none;padding:10px 20px;border-radius:8px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;transition:background .18s">
+        Process Excel File
+      </button>
+    </div>
+
+    <!-- Match Results -->
+    <div id="match-results" style="display:none">
+      <div style="background:#fff;border:1.5px solid var(--border);border-radius:14px;padding:1.5rem">
+        <h3 style="font-family:'Fraunces',serif;font-size:1.05rem;color:var(--forest);margin-bottom:1rem">🎯 Match Results</h3>
+        <div id="match-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── EMPLOYEES TAB ── -->
+  <div id="view-employees" style="display:none">
+    <div style="background:#fff;border:1.5px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:1.5rem">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+        <h2 style="font-family:'Fraunces',serif;font-size:1.15rem;color:var(--forest)">👥 Excel Employee Data</h2>
+        <div>
+          <button onclick="loadExcelData()" style="background:var(--green);color:#fff;border:none;padding:8px 16px;border-radius:8px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;margin-right:0.5rem">
+            Refresh Data
+          </button>
+          <button onclick="testDatabase()" style="background:var(--orange);color:#fff;border:none;padding:8px 16px;border-radius:8px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;">
+            Test DB
+          </button>
+        </div>
+      </div>
+      
+      <div id="excel-stats" style="display:flex;gap:1rem;margin-bottom:1.5rem">
+        <div style="background:var(--pale);padding:1rem;border-radius:8px;flex:1;text-align:center">
+          <div style="font-size:1.5rem;font-weight:700;color:var(--green)" id="excel-count">—</div>
+          <div style="font-size:.75rem;color:var(--grey)">Total Records</div>
+        </div>
+        <div style="background:var(--pale);padding:1rem;border-radius:8px;flex:1;text-align:center">
+          <div style="font-size:1.5rem;font-weight:700;color:var(--green)" id="excel-upload-date">—</div>
+          <div style="font-size:.75rem;color:var(--grey)">Last Upload</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Excel Data Table -->
+    <div style="background:#fff;border:1.5px solid var(--border);border-radius:14px;padding:1.5rem">
+      <h3 style="font-family:'Fraunces',serif;font-size:1.05rem;color:var(--forest);margin-bottom:1rem">📋 Employee Records</h3>
+      <div id="excel-table-container" style="overflow-x:auto">
+        <div class="loading-state">
+          <svg class="rot" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+          <p style="margin-top:.75rem">Loading Excel data…</p>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- ── ANALYSIS TAB ── -->
@@ -271,10 +339,19 @@ const CHK_LABELS = {
 
 // ── Tabs ────────────────────────────────────────────────────
 function switchTab(tab) {
-  document.getElementById('view-search').style.display   = tab === 'search'   ? '' : 'none';
-  document.getElementById('view-analysis').style.display = tab === 'analysis' ? '' : 'none';
-  document.getElementById('tab-search').classList.toggle('active',   tab === 'search');
-  document.getElementById('tab-analysis').classList.toggle('active', tab === 'analysis');
+  document.getElementById('view-search').style.display    = tab === 'search'    ? '' : 'none';
+  document.getElementById('view-upload').style.display    = tab === 'upload'    ? '' : 'none';
+  document.getElementById('view-employees').style.display = tab === 'employees' ? '' : 'none';
+  document.getElementById('view-analysis').style.display  = tab === 'analysis'  ? '' : 'none';
+  document.getElementById('tab-search').classList.toggle('active',    tab === 'search');
+  document.getElementById('tab-upload').classList.toggle('active',    tab === 'upload');
+  document.getElementById('tab-employees').classList.toggle('active', tab === 'employees');
+  document.getElementById('tab-analysis').classList.toggle('active',  tab === 'analysis');
+  
+  // Load Excel data when employees tab is opened
+  if (tab === 'employees') {
+    loadExcelData();
+  }
 }
 
 // ── Helpers ─────────────────────────────────────────────────
@@ -544,8 +621,235 @@ function logout() {
   window.location.href = '/';
 }
 
+// ── Excel Upload Functionality ────────────────────────────────
+// File input change handler
+document.getElementById('excel-file')?.addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  const uploadBtn = document.getElementById('upload-btn');
+  if (file) {
+    uploadBtn.disabled = false;
+    uploadBtn.textContent = 'Upload Excel File';
+  } else {
+    uploadBtn.disabled = true;
+    uploadBtn.textContent = 'Upload Excel File';
+  }
+});
+
+// Main Excel processing function
+async function processExcelUpload() {
+  const fileInput = document.getElementById('excel-file');
+  const file = fileInput.files[0];
+  
+  if (!file) {
+    alert('Please select an Excel file first.');
+    return;
+  }
+
+  const uploadBtn = document.getElementById('upload-btn');
+  uploadBtn.disabled = true;
+  uploadBtn.textContent = 'Uploading...';
+
+  try {
+    // Read Excel file
+    const data = await readExcelFile(file);
+    
+    // Upload to database
+    const response = await fetch('/api/admin/excel-upload', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+    
+    if (!response.ok) {
+      throw new Error('Upload failed');
+    }
+    
+    const result = await response.json();
+    alert(`✅ ${result.message}`);
+    
+    // Clear file input
+    fileInput.value = '';
+    uploadBtn.disabled = true;
+    uploadBtn.textContent = 'Upload Excel File';
+    
+    // Switch to employees tab to show uploaded data
+    switchTab('employees');
+    
+  } catch (error) {
+    console.error('Error uploading Excel:', error);
+    alert('Error uploading Excel file. Please check the file format and try again.');
+  } finally {
+    uploadBtn.disabled = false;
+    uploadBtn.textContent = 'Upload Excel File';
+  }
+}
+
+// Read Excel file using SheetJS
+function readExcelFile(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+        const jsonData = XLSX.utils.sheet_to_json(firstSheet);
+        console.log('DEBUG: Excel data read:', jsonData.length, 'rows');
+        console.log('DEBUG: First row:', jsonData[0]);
+        resolve(jsonData);
+      } catch (error) {
+        console.error('DEBUG: Error reading Excel file:', error);
+        reject(error);
+      }
+    };
+    reader.onerror = function(e) {
+      console.error('DEBUG: FileReader error:', e);
+      reject(e);
+    };
+    reader.readAsArrayBuffer(file);
+  });
+}
+
+// ── Excel Data Display Functions ─────────────────────────────────
+async function loadExcelData() {
+  const container = document.getElementById('excel-table-container');
+  const countEl = document.getElementById('excel-count');
+  const dateEl = document.getElementById('excel-upload-date');
+  
+  container.innerHTML = '<div class="loading-state"><svg class="rot" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg><p style="margin-top:.75rem">Loading Excel data…</p></div>';
+  
+  try {
+    console.log('DEBUG: Loading Excel data...');
+    const response = await fetch('/api/admin/excel-data', {
+      headers: { Authorization: 'Bearer ' + token }
+    });
+    
+    console.log('DEBUG: Response status:', response.status);
+    if (!response.ok) throw new Error('Failed to load data');
+    
+    const excelData = await response.json();
+    console.log('DEBUG: Excel data loaded:', excelData.length, 'records');
+    console.log('DEBUG: Sample record:', excelData[0]);
+    
+    // Update stats
+    countEl.textContent = excelData.length;
+    if (excelData.length > 0) {
+      const lastUpload = excelData[0].upload_date;
+      if (lastUpload) {
+        const date = new Date(lastUpload);
+        dateEl.textContent = date.toLocaleDateString();
+      } else {
+        dateEl.textContent = '—';
+      }
+    } else {
+      dateEl.textContent = '—';
+    }
+    
+    // Render table
+    renderExcelTable(excelData);
+    
+  } catch (error) {
+    console.error('DEBUG: Error loading Excel data:', error);
+    container.innerHTML = '<div class="empty-state"><h3>Could not load Excel data</h3><p>Check your connection or try uploading a file first.</p></div>';
+    countEl.textContent = '—';
+    dateEl.textContent = '—';
+  }
+}
+
+function renderExcelTable(data) {
+  const container = document.getElementById('excel-table-container');
+  
+  if (!data || data.length === 0) {
+    container.innerHTML = '<div class="empty-state"><h3>No Excel data found</h3><p>Upload an Excel file to see employee records here.</p></div>';
+    return;
+  }
+  
+  // Detect columns dynamically from data, excluding internal fields
+  const skipCols = new Set(['upload_date', 'row_index']);
+  const allKeys = new Set();
+  data.forEach(row => Object.keys(row).forEach(k => { if (!skipCols.has(k)) allKeys.add(k); }));
+  const columns = [...allKeys];
+  
+  let tableHTML = `
+    <table style="width:100%;border-collapse:collapse;font-size:.82rem">
+      <thead style="background:var(--cream);position:sticky;top:0">
+        <tr>
+          ${columns.map(col => `<th style="padding:8px 10px;text-align:left;border-bottom:1px solid var(--border);font-weight:600;color:var(--dark);white-space:nowrap">${formatColumnName(col)}</th>`).join('')}
+        </tr>
+      </thead>
+      <tbody>
+  `;
+  
+  data.forEach((row, index) => {
+    const rowStyle = index % 2 === 0 ? 'background:#f9fafb' : '';
+    tableHTML += `<tr style="${rowStyle}">`;
+    columns.forEach(col => {
+      const value = row[col] ?? '';
+      tableHTML += `<td style="padding:8px 10px;border-bottom:1px solid var(--border);white-space:nowrap;max-width:180px;overflow:hidden;text-overflow:ellipsis" title="${value}">${value}</td>`;
+    });
+    tableHTML += '</tr>';
+  });
+  
+  tableHTML += `</tbody></table>`;
+  container.innerHTML = `<div style="border:1px solid var(--border);border-radius:8px;overflow:auto;max-height:60vh">${tableHTML}</div>`;
+}
+function formatColumnName(col) {
+  const names = {
+    sr_no: 'Sr No',
+    booking_id: 'Booking ID',
+    farmer_name: 'Farmer Name',
+    farmer_contact: 'Contact',
+    crop_name: 'Crop',
+    plantation_type: 'Type',
+    delivery_date: 'Delivery Date',
+    plantation_quantity: 'Quantity',
+    technical_verification: 'Tech Verif',
+    accounts_verification: 'Acc Verif'
+  };
+  return names[col] || col.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+}
+
+// ── Auth ────────────────────────────────────────────────────
+function logout() {
+  localStorage.removeItem('access_token');
+  localStorage.removeItem('refresh_token');
+  localStorage.removeItem('user');
+  window.location.href = '/';
+}
+
 // ── Init ────────────────────────────────────────────────────
 loadEmployees();
+
+// Test database connection
+async function testDatabase() {
+  try {
+    console.log('DEBUG: Testing database connection...');
+    const response = await fetch('/api/debug/collections', {
+      headers: { Authorization: 'Bearer ' + token }
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to test database');
+    }
+    
+    const result = await response.json();
+    console.log('DEBUG: Database test result:', result);
+    
+    alert(`Database Test Results:
+Collections: ${result.collections?.join(', ') || 'None'}
+Excel Data Count: ${result.excel_data_count || 0}
+Users Count: ${result.users_count || 0}
+Submissions Count: ${result.submissions_count || 0}
+Sample Excel Records: ${result.excel_sample?.length || 0}`);
+    
+  } catch (error) {
+    console.error('DEBUG: Database test error:', error);
+    alert('Database test failed: ' + error.message);
+  }
+}
 </script>
 </body>
 </html>

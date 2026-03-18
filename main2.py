@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
@@ -27,6 +27,7 @@ users       = db["users"]
 submissions = db["submissions"]        # ── MAIN (submitted) collection
 temp_submissions = db["temp_submissions"]  # ── TEMP (in-progress) collection
 admin_col   = db["admin"]
+excel_data  = db["excel_data"]         # ── Excel uploaded data collection
 
 # ── Indexes ─────────────────────────────────────────────────
 users.create_index("email",   unique=True)
@@ -110,6 +111,25 @@ class SubmitIn(BaseModel):
 
 class AddAdminIn(BaseModel):
     email: EmailStr
+
+
+class ExcelUploadIn(BaseModel):
+    sr_no: Optional[str] = None
+    booking_id: Optional[str] = None
+    farmer_name: Optional[str] = None
+    district: Optional[str] = None
+    taluka: Optional[str] = None
+    village: Optional[str] = None
+    farmer_contact: Optional[str] = None
+    crop_name: Optional[str] = None
+    acre: Optional[str] = None
+    plantation_type: Optional[str] = None
+    delivery_date: Optional[str] = None
+    plantation_quantity: Optional[str] = None
+    sericulture: Optional[str] = None
+    technical_verification: Optional[str] = None
+    accounts_verification: Optional[str] = None
+    gender: Optional[str] = None
 
 
 # ── Helpers ──────────────────────────────────────────────────
@@ -403,6 +423,202 @@ def bootstrap_admin(email: str):
 def health():
     return {"status": "ok"}
 
+
+@app.get("/api/debug/collections")
+def debug_collections(u=Depends(require_admin)):
+    """Debug endpoint to check database collections."""
+    print(f"DEBUG: Checking collections for user: {u['email']}")
+
+    # Check if collections exist
+    collections = db.list_collection_names()
+    print(f"DEBUG: Available collections: {collections}")
+
+    # Check counts
+    excel_count = excel_data.count_documents({})
+    users_count = users.count_documents({})
+    submissions_count = submissions.count_documents({})
+
+    print(f"DEBUG: Excel data count: {excel_count}")
+    print(f"DEBUG: Users count: {users_count}")
+    print(f"DEBUG: Submissions count: {submissions_count}")
+
+    return {
+        "collections": collections,
+        "excel_data_count": excel_count,
+        "users_count": users_count,
+        "submissions_count": submissions_count,
+        "excel_sample": list(excel_data.find({}).limit(2)) if excel_count > 0 else []
+    }
+
+
+@app.post("/api/admin/excel-upload", status_code=201)
+async def admin_upload_excel(request: Request, u=Depends(require_admin)):
+    """Upload Excel data to database — accepts any column structure."""
+    from fastapi import Request
+    data = await request.json()
+    
+    if not data or not isinstance(data, list):
+        raise HTTPException(400, "No data provided")
+    
+    print(f"DEBUG: Received {len(data)} rows, sample keys: {list(data[0].keys()) if data else []}")
+    
+    # Clear existing data
+    excel_data.delete_many({})
+    
+    now = datetime.utcnow().isoformat()
+    documents = []
+    for i, row in enumerate(data):
+        # Normalize keys: lowercase + underscores, keep all columns as-is
+        doc = {}
+        for k, v in row.items():
+            # Normalize key
+            norm_key = str(k).strip().lower().replace(' ', '_').replace('-', '_').replace('/', '_').replace('.', '_')
+            doc[norm_key] = str(v) if v is not None else ''
+        doc["upload_date"] = now
+        doc["row_index"] = i
+        documents.append(doc)
+    
+    if documents:
+        excel_data.insert_many(documents)
+    
+    return {"ok": True, "message": f"Uploaded {len(documents)} records successfully"}
+    
+@app.get("/api/admin/excel-data")
+def admin_get_excel_data(u=Depends(require_admin)):
+    """Get all Excel data."""
+    print(f"DEBUG: Getting Excel data for admin: {u['email']}")
+    docs = list(excel_data.find({}, sort=[("row_index", 1)]))
+    print(f"DEBUG: Found {len(docs)} Excel records")
+    if docs:
+        print(f"DEBUG: Sample record: {docs[0]}")
+    return [clean(d) for d in docs]
+
+
+@app.delete("/api/admin/excel-data")
+def admin_clear_excel_data(u=Depends(require_admin)):
+    """Clear all Excel data."""
+    result = excel_data.delete_many({})
+    return {"ok": True, "message": f"Cleared {result.deleted_count} records"}
+
+
+# ─────────────────────────────────────────────────────────────
+# REPLACE these two functions in main.py
+# ─────────────────────────────────────────────────────────────
+
+@app.get("/api/excel-data/search")
+def search_excel_data(q: str, u=Depends(get_user)):
+    """Search Excel data by farmer name — substring + fuzzy matching."""
+    if not q or len(q.strip()) < 1:
+        return []
+
+    query = q.strip().lower()
+
+    # Get all Excel data
+    all_docs = list(excel_data.find({}))
+
+    matches = []
+    for doc in all_docs:
+        # Support both normalized key names
+        farmer_name = (
+            doc.get("farmer_name") or
+            doc.get("name") or
+            doc.get("beneficiary_name") or ""
+        )
+        if not farmer_name:
+            continue
+
+        name_lower = farmer_name.strip().lower()
+        score = calculate_smart_similarity(query, name_lower)
+
+        if score > 0:
+            doc_copy = clean(doc)
+            doc_copy["match_score"] = score
+            matches.append(doc_copy)
+
+    # Sort: exact substring matches first, then by score
+    matches.sort(key=lambda x: x["match_score"], reverse=True)
+    return matches[:10]
+
+
+def calculate_smart_similarity(query: str, full_name: str) -> float:
+    """
+    Smart name matching that handles partial name searches properly.
+
+    Priority (highest score first):
+    1. Exact full match          → 100
+    2. Starts with query         → 95
+    3. Any word starts with query→ 90
+    4. Substring anywhere        → 85
+    5. All query words found     → 80
+    6. Levenshtein on each word  → 0–75
+    """
+    if not query or not full_name:
+        return 0.0
+
+    query = query.strip().lower()
+    full_name = full_name.strip().lower()
+
+    # 1. Exact match
+    if query == full_name:
+        return 100.0
+
+    # 2. Full name starts with query
+    if full_name.startswith(query):
+        return 95.0
+
+    # 3. Any individual word in full_name starts with query
+    name_words = full_name.split()
+    if any(w.startswith(query) for w in name_words):
+        return 90.0
+
+    # 4. Query appears anywhere as substring
+    if query in full_name:
+        return 85.0
+
+    # 5. All words in query appear somewhere in full_name
+    query_words = query.split()
+    if len(query_words) > 1 and all(qw in full_name for qw in query_words):
+        return 80.0
+
+    # 6. Fuzzy: check each name word against each query word
+    #    If any name word is fuzzy-close to any query word → partial score
+    best = 0.0
+    for nw in name_words:
+        for qw in query_words:
+            if len(qw) < 2:
+                continue
+            # Only run Levenshtein on similarly-lengthed words
+            if abs(len(nw) - len(qw)) > max(len(qw) // 2, 2):
+                continue
+            dist = levenshtein(qw, nw)
+            max_len = max(len(qw), len(nw))
+            word_sim = ((max_len - dist) / max_len) * 75  # cap at 75
+            if word_sim > best:
+                best = word_sim
+
+    return best if best >= 50 else 0.0  # only return if >= 50% word-level match
+
+
+def levenshtein(s1: str, s2: str) -> int:
+    """Standard Levenshtein distance between two strings."""
+    if s1 == s2:
+        return 0
+    if not s1:
+        return len(s2)
+    if not s2:
+        return len(s1)
+
+    prev = list(range(len(s2) + 1))
+    for i, c1 in enumerate(s1):
+        curr = [i + 1]
+        for j, c2 in enumerate(s2):
+            curr.append(min(
+                prev[j + 1] + 1,   # deletion
+                curr[j] + 1,       # insertion
+                prev[j] + (0 if c1 == c2 else 1)  # substitution
+            ))
+        prev = curr
+    return prev[len(s2)]
 
 # ── Static ────────────────────────────────────────────────────
 STATIC = Path(__file__).parent / "static"

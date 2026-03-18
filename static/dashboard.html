@@ -3,55 +3,46 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-  <meta name="theme-color" content="#1a3a2a"/>
+  <meta name="theme-color" content="#0f1525"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
-  <title>Tree Plantation — Home</title>
+  <title>JHS Tree Plantation — Home</title>
   <link rel="manifest" href="/manifest.json"/>
   <link rel="apple-touch-icon" href="/icons/icon-192.png"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
-  <!-- SheetJS for Excel export -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
-      --forest:#1a3a2a;--green:#2d6a4f;--leaf:#52b788;--mint:#95d5b2;
-      --pale:#d8f3dc;--cream:#f8f6f1;--dark:#111827;--grey:#6b7280;
-      --border:#e5e7eb;--red:#ef4444;--amber:#f59e0b;
+      --navy:#0f1525;--navy2:#1a2240;--navy3:#243060;
+      --gold:#c9a84c;--gold2:#e2c97e;--goldp:rgba(201,168,76,.12);--goldpd:rgba(201,168,76,.08);
+      --cream:#f5f3ee;--dark:#111827;--grey:#6b7280;--border:#e5e7eb;--red:#ef4444;--amber:#f59e0b
     }
     html,body{font-family:'DM Sans',sans-serif;background:var(--cream);min-height:100vh}
 
     /* ── NET BANNER ── */
     #net-banner{display:none;align-items:center;gap:8px;padding:9px 1.5rem;font-size:.82rem;font-weight:500;z-index:300}
     #net-banner.offline{display:flex;background:#1f2937;color:#f9fafb}
-    #net-banner.online-flash{display:flex;background:#166534;color:#dcfce7}
-    #net-banner svg{width:14px;height:14px;flex-shrink:0}
+    #net-banner.online-flash{display:flex;background:var(--navy2);color:var(--gold2)}
 
     /* ── NAV ── */
-    nav{background:var(--forest);height:56px;display:flex;align-items:center;padding:0 1.25rem;gap:.6rem;position:sticky;top:0;z-index:200}
-    .nav-logo{font-family:'Fraunces',serif;color:#fff;font-size:1.05rem;text-decoration:none;flex-shrink:0}
-    .nav-logo span{color:var(--mint)}
-
-    .nav-page-toggle{display:flex;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:100px;padding:3px;gap:2px;margin-left:.25rem}
-    .nav-page-btn{padding:4px 13px;border:none;background:none;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:600;color:rgba(255,255,255,.5);cursor:pointer;transition:all .18s;white-space:nowrap;text-decoration:none;display:flex;align-items:center}
-    .nav-page-btn.active{background:rgba(149,213,178,.22);color:#fff}
-    .nav-page-btn:hover:not(.active){background:rgba(149,213,178,.12);color:var(--mint)}
-
+    nav{background:var(--navy);height:58px;display:flex;align-items:center;padding:0 1.25rem;gap:.6rem;position:sticky;top:0;z-index:200;
+      border-bottom:1px solid rgba(201,168,76,.1);}
+    .nav-logo{font-family:'Playfair Display',serif;color:#fff;font-size:1.05rem;text-decoration:none;flex-shrink:0;display:flex;align-items:center;gap:.5rem}
+    .nav-logo .logo-jhs{color:var(--gold);font-weight:900}
+    .nav-page-toggle{display:flex;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:100px;padding:3px;gap:2px;margin-left:.25rem}
+    .nav-page-btn{padding:4px 13px;border:none;background:none;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:600;color:rgba(255,255,255,.45);cursor:pointer;transition:all .18s;white-space:nowrap;text-decoration:none;display:flex;align-items:center}
+    .nav-page-btn.active{background:rgba(201,168,76,.18);color:var(--gold2)}
+    .nav-page-btn:hover:not(.active){background:rgba(201,168,76,.1);color:var(--gold)}
     .nav-right{margin-left:auto;display:flex;align-items:center;gap:.45rem;flex-shrink:0}
-
-    /* Sync indicator */
-    .sync-indicator{display:flex;align-items:center;gap:5px;font-size:.75rem;font-weight:600;color:rgba(255,255,255,.4);padding:4px 8px;border-radius:100px}
-    .sync-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.2);flex-shrink:0;transition:background .3s}
+    .sync-indicator{display:flex;align-items:center;gap:5px;font-size:.75rem;font-weight:600;color:rgba(255,255,255,.35);padding:4px 8px}
+    .sync-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.15);flex-shrink:0;transition:background .3s}
     .sync-dot.syncing{background:var(--amber);animation:pulse .8s ease-in-out infinite}
-    .sync-dot.synced{background:#22c55e}
-    .sync-dot.pending{background:var(--amber)}
-    .sync-dot.offline{background:#6b7280}
+    .sync-dot.synced{background:#22c55e}.sync-dot.pending{background:var(--amber)}.sync-dot.offline{background:#6b7280}
     @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-
-    /* User icon + dropdown */
     .user-menu-wrap{position:relative}
-    .user-icon-btn{width:34px;height:34px;border-radius:50%;background:rgba(149,213,178,.15);border:1.5px solid rgba(149,213,178,.3);color:var(--mint);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .18s;flex-shrink:0}
-    .user-icon-btn:hover{background:rgba(149,213,178,.28)}
+    .user-icon-btn{width:34px;height:34px;border-radius:50%;background:rgba(201,168,76,.1);border:1.5px solid rgba(201,168,76,.25);color:var(--gold);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .18s}
+    .user-icon-btn:hover{background:rgba(201,168,76,.2)}
     .user-icon-btn svg{width:17px;height:17px}
     .user-dropdown{position:absolute;top:calc(100% + 8px);right:0;background:#fff;border:1.5px solid var(--border);border-radius:14px;min-width:200px;box-shadow:0 8px 28px rgba(0,0,0,.13);z-index:300;overflow:hidden;opacity:0;transform:translateY(-6px) scale(.97);pointer-events:none;transition:opacity .18s,transform .18s;transform-origin:top right}
     .user-dropdown.open{opacity:1;transform:translateY(0) scale(1);pointer-events:all}
@@ -59,1274 +50,533 @@
     .dropdown-name{font-weight:700;font-size:.9rem;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .dropdown-role{font-size:.72rem;color:var(--grey);margin-top:1px}
     .dropdown-item{display:flex;align-items:center;gap:.6rem;padding:.7rem 1.05rem;font-size:.85rem;font-weight:500;color:var(--dark);cursor:pointer;transition:background .15s;text-decoration:none;border:none;background:none;width:100%;font-family:'DM Sans',sans-serif}
-    .dropdown-item:hover{background:var(--pale);color:var(--green)}
+    .dropdown-item:hover{background:var(--goldpd);color:var(--navy)}
     .dropdown-item svg{width:15px;height:15px;flex-shrink:0;color:var(--grey)}
-    .dropdown-item:hover svg{color:var(--green)}
-    .dropdown-item.admin-item{color:#92400e}
-    .dropdown-item.admin-item:hover{background:#fffbeb}
-    .dropdown-item.admin-item svg{color:#f59e0b}
-    .dropdown-item.danger{color:var(--red)}
-    .dropdown-item.danger:hover{background:#fef2f2}
-    .dropdown-item.danger svg{color:var(--red)}
+    .dropdown-item.admin-item{color:#92400e}.dropdown-item.admin-item:hover{background:#fffbeb}.dropdown-item.admin-item svg{color:#f59e0b}
+    .dropdown-item.danger{color:var(--red)}.dropdown-item.danger:hover{background:#fef2f2}.dropdown-item.danger svg{color:var(--red)}
     .dropdown-divider{height:1px;background:var(--border);margin:.2rem 0}
 
     /* ── MAIN ── */
-    .main{max-width:880px;margin:0 auto;padding:1.75rem 1.5rem 5rem}
-    .page-hdr{margin-bottom:1.25rem}
-    .page-hdr h1{font-family:'Fraunces',serif;font-size:1.55rem;color:var(--forest)}
+    .main{max-width:900px;margin:0 auto;padding:1.75rem 1.5rem 5rem}
+    .page-hdr{margin-bottom:1.5rem}
+    .page-hdr h1{font-family:'Playfair Display',serif;font-size:1.55rem;color:var(--navy)}
     .page-hdr p{color:var(--grey);font-size:.85rem;margin-top:.3rem;line-height:1.6}
-    .date-badge{display:inline-flex;align-items:center;gap:6px;background:var(--pale);color:var(--green);font-size:.78rem;font-weight:600;padding:4px 12px;border-radius:100px;margin-top:.6rem}
+    .date-badge{display:inline-flex;align-items:center;gap:6px;background:var(--goldp);color:var(--gold);border:1px solid rgba(201,168,76,.2);font-size:.78rem;font-weight:600;padding:4px 12px;border-radius:100px;margin-top:.6rem}
 
-    /* ── PROGRESS ── */
-    .prog-wrap{margin-bottom:1.5rem}
-    .prog-top{display:flex;justify-content:space-between;margin-bottom:.45rem}
-    .prog-label{font-size:.82rem;font-weight:600;color:var(--dark)}
-    .prog-count{font-size:.82rem;color:var(--grey)}
-    .prog-bar{height:8px;background:var(--border);border-radius:100px;overflow:hidden}
-    .prog-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--leaf));border-radius:100px;transition:width .5s ease}
+    /* ── FORM CARDS ── */
+    .forms-list{display:flex;flex-direction:column;gap:1.25rem}
 
-    /* ── ACTION BAR ── */
-    .action-bar{display:flex;gap:.75rem;margin-top:1.75rem;flex-wrap:wrap;align-items:center}
-    .submit-btn{display:flex;align-items:center;gap:6px;background:var(--green);color:#fff;border:none;padding:11px 20px;border-radius:11px;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;transition:background .18s,box-shadow .18s;position:relative;overflow:hidden;flex:1;min-width:160px;justify-content:center}
-    .submit-btn:hover{background:var(--leaf);box-shadow:0 5px 16px rgba(45,106,79,.25)}
-    .submit-btn:disabled{opacity:.45;pointer-events:none}
-    .submit-btn svg{width:15px;height:15px;flex-shrink:0}
-    .submit-btn.busy{pointer-events:none;opacity:.7}
-    .submit-btn .s-lbl{transition:opacity .15s}
-    .submit-btn .s-sp{display:none;position:absolute;inset:0;align-items:center;justify-content:center;background:inherit}
-    .submit-btn.busy .s-lbl{opacity:0}.submit-btn.busy .s-sp{display:flex}
+    /* minimized card state */
+    .form-card{background:#fff;border:1.5px solid var(--border);border-radius:16px;overflow:hidden;transition:box-shadow .2s,border-color .2s}
+    .form-card.submitted{border-color:#c9a84c55;background:#fffdf5}
+    .form-card.minimized .form-body-wrap{display:none}
+    .form-card.minimized .form-submit-area{display:none}
 
-    .export-btn{display:flex;align-items:center;gap:6px;background:#fff;color:var(--dark);border:1.5px solid var(--border);padding:10px 16px;border-radius:11px;font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:600;cursor:pointer;transition:all .18s;white-space:nowrap}
-    .export-btn:hover{border-color:var(--leaf);color:var(--green);background:var(--pale)}
+    /* header — always visible */
+    .form-card-hdr{display:flex;align-items:center;gap:.85rem;padding:1rem 1.25rem;border-bottom:1.5px solid var(--border);background:#fafafa;cursor:pointer;user-select:none;transition:background .15s}
+    .form-card.submitted .form-card-hdr{background:#fffdf5;border-color:#c9a84c33}
+    .form-card.minimized .form-card-hdr{border-bottom:none}
+    .form-card-hdr:hover{background:#f3f4f6}
+    .form-card.submitted .form-card-hdr:hover{background:#fffbee}
+
+    .form-num-badge{width:36px;height:36px;border-radius:10px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;flex-shrink:0}
+    .form-card.submitted .form-num-badge{background:var(--gold)}
+    .form-hdr-info{flex:1;min-width:0}
+    .form-hdr-title{font-weight:700;font-size:.95rem;color:var(--dark)}
+    .form-hdr-sub{font-size:.73rem;color:var(--grey);margin-top:2px}
+    .form-hdr-right{display:flex;align-items:center;gap:.5rem;flex-shrink:0}
+    .form-submitted-badge{display:flex;align-items:center;gap:4px;background:var(--goldp);color:var(--gold);border:1px solid rgba(201,168,76,.25);font-size:.72rem;font-weight:700;padding:4px 10px;border-radius:100px}
+    .minimize-btn{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--border);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
+    .minimize-btn:hover{background:var(--goldp);border-color:var(--gold)}
+    .minimize-btn svg{width:13px;height:13px;color:var(--grey);transition:transform .25s}
+    .form-card.minimized .minimize-btn svg{transform:rotate(180deg)}
+    .discard-btn{width:28px;height:28px;border-radius:50%;border:none;background:var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s}
+    .discard-btn:hover{background:#fecaca}
+    .discard-btn svg{width:12px;height:12px;color:var(--grey)}
+    .discard-btn:hover svg{color:var(--red)}
+
+    /* body wrap (collapsible) */
+    .form-body-wrap{}
+
+    /* ── TABS ── */
+    .form-tabs-row{display:flex;overflow-x:auto;border-bottom:1.5px solid var(--border);padding:0 1.25rem;background:#fff;scrollbar-width:none}
+    .form-tabs-row::-webkit-scrollbar{display:none}
+    .form-tab-btn{padding:.6rem .85rem;border:none;border-bottom:2.5px solid transparent;background:none;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:600;color:var(--grey);cursor:pointer;white-space:nowrap;transition:color .15s,border-color .15s;margin-bottom:-1.5px;flex-shrink:0;position:relative}
+    .form-tab-btn.done{color:var(--gold)}
+    .form-tab-btn.active{color:var(--navy);border-bottom-color:var(--gold)}
+    .form-tab-btn:hover:not(.active){color:var(--dark)}
+    .tab-dot{position:absolute;top:7px;right:4px;width:6px;height:6px;border-radius:50%;background:var(--gold);display:none}
+    .form-tab-btn.done .tab-dot{display:block}
+    .form-tab-content{padding:1.25rem}
+    .form-tab-panel{display:none}
+    .form-tab-panel.active{display:block}
+
+    /* ── VERIFY BOX ── */
+    .verify-box{margin:.5rem 0 1rem;padding:.9rem 1.1rem;background:var(--cream);border:1.5px solid var(--border);border-radius:11px}
+    .verify-row{display:flex;align-items:flex-start;gap:.75rem;cursor:pointer}
+    .verify-chk{width:19px;height:19px;accent-color:var(--gold);cursor:pointer;flex-shrink:0;margin-top:2px}
+    .verify-lbl{font-size:.87rem;font-weight:600;color:var(--dark);line-height:1.5;cursor:pointer;user-select:none}
+    .verify-lbl em{color:var(--red);font-style:normal}
+    .verify-hint{font-size:.71rem;color:var(--grey);margin-top:.3rem;margin-left:1.7rem;line-height:1.5}
+
+    /* ── SUBMIT AREA ── */
+    .form-submit-area{padding:.85rem 1.25rem;border-top:1.5px solid var(--border);background:#fafafa;display:flex;align-items:center;gap:.85rem;flex-wrap:wrap}
+    .form-card.submitted .form-submit-area{display:none}
+    .form-submit-btn{display:flex;align-items:center;gap:6px;background:var(--navy);color:#fff;border:none;padding:10px 18px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:600;cursor:pointer;transition:background .18s,box-shadow .18s;position:relative;overflow:hidden}
+    .form-submit-btn:hover:not(:disabled){background:var(--navy3);box-shadow:0 4px 14px rgba(15,21,37,.25)}
+    .form-submit-btn:disabled{opacity:.38;cursor:not-allowed}
+    .form-submit-btn svg{width:14px;height:14px}
+    .form-submit-btn.busy{pointer-events:none;opacity:.7}
+    .form-submit-btn .s-lbl{transition:opacity .15s}
+    .form-submit-btn .s-sp{display:none;position:absolute;inset:0;align-items:center;justify-content:center;background:inherit}
+    .form-submit-btn.busy .s-lbl{opacity:0}.form-submit-btn.busy .s-sp{display:flex}
+    .submit-hint{font-size:.73rem;color:var(--grey)}
+    .submit-hint.warn{color:#92400e;font-weight:500}
+
+    /* ── ADD FORM BTN ── */
+    .add-form-wrap{margin-top:1rem}
+    .add-form-btn{width:100%;padding:14px;border:2px dashed var(--border);border-radius:14px;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.65rem;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:600;color:var(--grey);transition:all .18s}
+    .add-form-btn:hover{border-color:var(--gold);color:var(--gold);background:var(--goldp)}
+    .add-form-btn svg{width:18px;height:18px}
+    .export-bar{margin-top:1.25rem}
+    .export-btn{display:flex;align-items:center;gap:6px;background:#fff;color:var(--dark);border:1.5px solid var(--border);padding:10px 16px;border-radius:11px;font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:600;cursor:pointer;transition:all .18s}
+    .export-btn:hover{border-color:var(--gold);color:var(--gold);background:var(--goldp)}
     .export-btn:disabled{opacity:.4;pointer-events:none}
     .export-btn svg{width:14px;height:14px}
 
-    .action-note{font-size:.75rem;color:var(--grey);width:100%;margin-top:.4rem}
-
-    /* ── SECTION GRID ── */
-    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:1rem}
-    .sec-card{background:#fff;border:1.5px solid var(--border);border-radius:14px;padding:1.2rem;cursor:pointer;transition:transform .18s,box-shadow .18s,border-color .18s;position:relative;user-select:none}
-    .sec-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.08);border-color:var(--leaf)}
-    .sec-card:active{transform:scale(.98)}
-    .sec-card.done{border-color:#86efac;background:#f0fdf4}
-    .card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.8rem}
-    .card-icon{width:42px;height:42px;border-radius:11px;background:var(--pale);display:flex;align-items:center;justify-content:center;font-size:1.25rem}
-    .sec-card.done .card-icon{background:#dcfce7}
-    .tick-badge{width:26px;height:26px;border-radius:50%;background:#22c55e;display:none;align-items:center;justify-content:center;flex-shrink:0}
-    .tick-badge.show{display:flex;animation:pop .3s cubic-bezier(.34,1.56,.64,1)}
-    @keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
-    .tick-badge svg{width:13px;height:13px;color:#fff}
-    .card-name{font-weight:700;font-size:.93rem;color:var(--dark);margin-bottom:.2rem}
-    .card-desc{font-size:.76rem;color:var(--grey);line-height:1.55}
-    .card-q{font-size:.72rem;color:var(--leaf);font-weight:600;margin-top:.55rem}
-
-    /* ── MODAL ── */
-    .modal-bg{display:none;position:fixed;inset:0;z-index:400;background:rgba(0,0,0,.5);align-items:flex-end;backdrop-filter:blur(3px)}
-    .modal-bg.open{display:flex}
-    .modal{background:#fff;width:100%;max-width:700px;margin:0 auto;border-radius:20px 20px 0 0;max-height:92dvh;display:flex;flex-direction:column;animation:slideUp .28s ease}
-    @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-    .modal-hdr{padding:1.15rem 1.5rem;border-bottom:1.5px solid var(--border);display:flex;align-items:center;gap:.85rem;flex-shrink:0}
-    .modal-hdr-icon{width:38px;height:38px;border-radius:9px;background:var(--pale);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
-    .modal-hdr h2{font-family:'Fraunces',serif;font-size:1.05rem;flex:1;line-height:1.3}
-    .modal-close{width:30px;height:30px;border-radius:50%;border:none;background:var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .18s}
-    .modal-close:hover{background:#d1d5db}
-    .modal-close svg{width:14px;height:14px}
-    .modal-body{padding:1.4rem 1.5rem;overflow-y:auto;flex:1}
-    .modal-foot{padding:1rem 1.5rem;border-top:1.5px solid var(--border);flex-shrink:0}
-
-    /* ── FORM ELEMENTS ── */
-    .fg{margin-bottom:1.2rem}
-    .fl{display:block;font-size:.82rem;font-weight:600;margin-bottom:.45rem;color:var(--dark);line-height:1.4}
+    /* ── FORM FIELDS ── */
+    .fg{margin-bottom:1.1rem}
+    .fl{display:block;font-size:.82rem;font-weight:600;margin-bottom:.4rem;color:var(--navy2)}
     .fi,.fs,.ft{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.9rem;background:#fff;color:var(--dark);outline:none;transition:border-color .18s,box-shadow .18s}
-    .fi:focus,.fs:focus,.ft:focus{border-color:var(--leaf);box-shadow:0 0 0 3px rgba(82,183,136,.12)}
+    .fi:focus,.fs:focus,.ft:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,.1)}
     .fs{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:32px}
     .ft{resize:vertical;min-height:78px}
     .row2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-    .radio-grp{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.3rem}
-    .r-item{display:flex;align-items:center;gap:.45rem;padding:7px 13px;border-radius:100px;border:1.5px solid var(--border);background:#fff;cursor:pointer;font-size:.84rem;transition:all .15s;line-height:1}
-    .r-item:hover{border-color:var(--leaf)}
-    .r-item input{accent-color:var(--green);cursor:pointer;flex-shrink:0}
-    .r-item.sel{border-color:var(--green);background:#f0fdf4;color:var(--green);font-weight:600}
-    .chk-grp{display:flex;flex-direction:column;gap:.4rem;margin-top:.3rem}
-    .c-item{display:flex;align-items:center;gap:.55rem;padding:9px 12px;border-radius:9px;border:1.5px solid var(--border);background:#fff;cursor:pointer;font-size:.86rem;transition:all .15s}
-    .c-item:hover{border-color:var(--leaf);background:#f8fffe}
-    .c-item input{width:16px;height:16px;accent-color:var(--green);cursor:pointer;flex-shrink:0}
-    .c-item.chk{border-color:#86efac;background:#f0fdf4}
-    .sub-f{margin-top:.7rem;padding:.85rem 1rem;background:var(--cream);border-radius:10px;border:1px solid var(--border);display:none}
+    .radio-grp{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.3rem}
+    .r-item{display:flex;align-items:center;gap:.4rem;padding:7px 12px;border-radius:100px;border:1.5px solid var(--border);background:#fff;cursor:pointer;font-size:.84rem;transition:all .15s;line-height:1}
+    .r-item:hover{border-color:var(--gold)}
+    .r-item input{accent-color:var(--gold);cursor:pointer;flex-shrink:0}
+    .r-item.sel{border-color:var(--gold);background:var(--goldp);color:var(--navy);font-weight:600}
+    .chk-grp{display:flex;flex-direction:column;gap:.35rem;margin-top:.3rem}
+    .c-item{display:flex;align-items:center;gap:.5rem;padding:8px 11px;border-radius:9px;border:1.5px solid var(--border);background:#fff;cursor:pointer;font-size:.86rem;transition:all .15s}
+    .c-item:hover{border-color:var(--gold)}
+    .c-item input{width:16px;height:16px;accent-color:var(--gold);cursor:pointer;flex-shrink:0}
+    .c-item.chk{border-color:var(--gold);background:var(--goldp)}
+    .sub-f{margin-top:.6rem;padding:.8rem .9rem;background:var(--cream);border-radius:10px;border:1px solid var(--border);display:none}
     .sub-f.show{display:block}
     .s-table{width:100%;border-collapse:collapse;margin-top:.3rem}
-    .s-table th{background:var(--pale);font-size:.76rem;font-weight:600;color:var(--green);padding:7px 10px;text-align:left}
-    .s-table td{padding:5px 6px;border-bottom:1px solid var(--border)}
-    .s-table input{border:1.5px solid var(--border);border-radius:7px;padding:6px 9px;width:100%;font-family:'DM Sans',sans-serif;font-size:.87rem;outline:none}
-    .s-table input:focus{border-color:var(--leaf)}
-
-    .save-btn{width:100%;padding:12px;background:var(--green);color:#fff;border:none;border-radius:11px;font-family:'DM Sans',sans-serif;font-size:.97rem;font-weight:600;cursor:pointer;transition:background .18s,box-shadow .18s;position:relative;overflow:hidden}
-    .save-btn:hover{background:var(--leaf);box-shadow:0 6px 18px rgba(45,106,79,.25)}
-    .save-btn.busy{pointer-events:none;opacity:.75}
-    .save-btn .lbl{transition:opacity .15s}
-    .save-btn .sp{display:none;position:absolute;inset:0;align-items:center;justify-content:center}
-    .save-btn.busy .lbl{opacity:0}.save-btn.busy .sp{display:flex}
+    .s-table th{background:var(--goldp);font-size:.76rem;font-weight:600;color:var(--navy);padding:6px 9px;text-align:left}
+    .s-table td{padding:4px 5px;border-bottom:1px solid var(--border)}
+    .s-table input{border:1.5px solid var(--border);border-radius:7px;padding:5px 8px;width:100%;font-family:'DM Sans',sans-serif;font-size:.87rem;outline:none}
+    .s-table input:focus{border-color:var(--gold)}
+    .save-tab-btn{display:inline-flex;align-items:center;gap:6px;background:var(--navy);color:#fff;border:none;padding:9px 16px;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;transition:background .18s;margin-top:1rem;position:relative;overflow:hidden}
+    .save-tab-btn:hover{background:var(--navy3)}
+    .save-tab-btn.busy{pointer-events:none;opacity:.7}
+    .save-tab-btn .lbl{transition:opacity .15s}
+    .save-tab-btn .sp{display:none;position:absolute;inset:0;align-items:center;justify-content:center;background:inherit}
+    .save-tab-btn.busy .lbl{opacity:0}.save-tab-btn.busy .sp{display:flex}
     @keyframes rot{to{transform:rotate(360deg)}}.rot{animation:rot .65s linear infinite}
 
-    /* ── CONFIRM SUBMIT MODAL ── */
-    .confirm-bg{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.55);align-items:center;justify-content:center;backdrop-filter:blur(4px)}
-    .confirm-bg.open{display:flex}
-    .confirm-modal{background:#fff;border-radius:18px;padding:2rem 1.75rem;width:90%;max-width:380px;text-align:center;animation:popIn .25s cubic-bezier(.34,1.56,.64,1)}
+    /* ── AUTOCOMPLETE ── */
+    .ac-wrap{position:relative}
+    .ac-wrap .fi{padding-right:36px}
+    .ac-spinner{position:absolute;right:11px;top:50%;transform:translateY(-50%);width:16px;height:16px;display:none;pointer-events:none}
+    .ac-spinner.show{display:block}
+    .ac-spinner svg{width:16px;height:16px;color:var(--gold)}
+    .ac-clear{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:20px;height:20px;border:none;background:none;cursor:pointer;color:var(--grey);display:none;align-items:center;justify-content:center;border-radius:50%;padding:0;transition:background .15s}
+    .ac-clear:hover{background:var(--border)}
+    .ac-clear.show{display:flex}
+    .ac-clear svg{width:12px;height:12px}
+    .ac-dropdown{position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:1.5px solid var(--border);border-radius:12px;box-shadow:0 8px 28px rgba(0,0,0,.13);z-index:999;overflow:hidden;display:none;max-height:260px;overflow-y:auto}
+    .ac-dropdown.open{display:block;animation:acFade .15s ease}
+    @keyframes acFade{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+    .ac-item{display:flex;align-items:flex-start;gap:.6rem;padding:.7rem .9rem;cursor:pointer;transition:background .12s;border-bottom:1px solid var(--border)}
+    .ac-item:last-child{border-bottom:none}
+    .ac-item:hover,.ac-item.focused{background:var(--goldp)}
+    .ac-item-icon{width:30px;height:30px;border-radius:8px;background:var(--goldp);display:flex;align-items:center;justify-content:center;font-size:.8rem;flex-shrink:0;margin-top:1px}
+    .ac-item-body{flex:1;min-width:0}
+    .ac-item-name{font-weight:700;font-size:.88rem;color:var(--dark)}
+    .ac-item-name mark{background:none;color:var(--gold);font-weight:700}
+    .ac-item-sub{font-size:.71rem;color:var(--grey);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .ac-item-badge{font-size:.63rem;font-weight:700;padding:2px 6px;border-radius:100px;background:var(--goldp);color:var(--gold);flex-shrink:0;margin-top:3px}
+    .ac-no-result{padding:1rem;text-align:center;color:var(--grey);font-size:.84rem}
+    .ac-filled-badge{display:none;align-items:center;gap:5px;background:var(--goldp);border:1px solid rgba(201,168,76,.25);color:var(--gold);font-size:.73rem;font-weight:600;padding:4px 10px;border-radius:100px;margin-top:.4rem;width:fit-content}
+    .ac-filled-badge.show{display:flex}
+    .ac-filled-badge svg{width:11px;height:11px}
+
+    /* ── MODALS ── */
+    .modal-bg{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.55);align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+    .modal-bg.open{display:flex}
+    .modal-box{background:#fff;border-radius:18px;padding:2rem 1.75rem;width:90%;max-width:360px;text-align:center;animation:popIn .25s cubic-bezier(.34,1.56,.64,1)}
     @keyframes popIn{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
-    .confirm-icon{font-size:2.4rem;margin-bottom:.75rem}
-    .confirm-modal h3{font-family:'Fraunces',serif;font-size:1.15rem;color:var(--forest);margin-bottom:.4rem}
-    .confirm-modal p{color:var(--grey);font-size:.88rem;line-height:1.55;margin-bottom:.5rem}
-    .confirm-modal .sec-summary{display:flex;flex-wrap:wrap;gap:.3rem;justify-content:center;margin:.75rem 0 1.25rem}
-    .confirm-modal .sec-tag{font-size:.72rem;font-weight:600;padding:3px 9px;border-radius:100px;background:var(--pale);color:var(--green)}
-    .confirm-btns{display:flex;gap:.7rem}
-    .cbtn{flex:1;padding:10px;border-radius:10px;border:none;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .18s}
-    .cbtn.yes{background:var(--green);color:#fff}.cbtn.yes:hover{background:var(--leaf)}
-    .cbtn.no{background:var(--border);color:var(--dark)}.cbtn.no:hover{background:#d1d5db}
-
-    /* Admin confirm modal */
-    .switch-modal-bg{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.55);align-items:center;justify-content:center;backdrop-filter:blur(4px)}
-    .switch-modal-bg.open{display:flex}
-    .switch-modal{background:#fff;border-radius:18px;padding:2rem 1.75rem;width:90%;max-width:360px;text-align:center;animation:popIn .25s cubic-bezier(.34,1.56,.64,1)}
-    .switch-modal .sm-icon{font-size:2.2rem;margin-bottom:.75rem}
-    .switch-modal h3{font-family:'Fraunces',serif;font-size:1.15rem;color:var(--forest);margin-bottom:.4rem}
-    .switch-modal p{color:var(--grey);font-size:.88rem;line-height:1.55;margin-bottom:1.4rem}
-    .switch-modal .sm-btns{display:flex;gap:.7rem}
-    .sm-btn{flex:1;padding:10px;border-radius:10px;border:none;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .18s}
-    .sm-btn.yes{background:var(--green);color:#fff}.sm-btn.yes:hover{background:var(--leaf)}
-    .sm-btn.no{background:var(--border);color:var(--dark)}.sm-btn.no:hover{background:#d1d5db}
-
-    /* ── TOAST ── */
-    .toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:#111827;color:#fff;padding:10px 18px;border-radius:100px;font-size:.84rem;font-weight:500;white-space:nowrap;opacity:0;transition:opacity .28s;pointer-events:none;z-index:999;display:flex;align-items:center;gap:7px}
+    .modal-icon{font-size:2.2rem;margin-bottom:.75rem}
+    .modal-box h3{font-family:'Playfair Display',serif;font-size:1.15rem;color:var(--navy);margin-bottom:.4rem}
+    .modal-box p{color:var(--grey);font-size:.88rem;line-height:1.55;margin-bottom:1.4rem}
+    .modal-btns{display:flex;gap:.7rem}
+    .mbtn{flex:1;padding:10px;border-radius:10px;border:none;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .18s}
+    .mbtn.yes{background:var(--navy);color:#fff}.mbtn.yes:hover{background:var(--navy3)}
+    .mbtn.no{background:var(--border);color:var(--dark)}.mbtn.no:hover{background:#d1d5db}
+    .toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 18px;border-radius:100px;font-size:.84rem;font-weight:500;white-space:nowrap;opacity:0;transition:opacity .28s;pointer-events:none;z-index:9999;display:flex;align-items:center;gap:7px}
     .toast svg{width:14px;height:14px}
     .toast.show{opacity:1}
-    .toast.error-toast{background:#7f1d1d}
 
-    /* ── UPLOAD SECTION L ── */
-    .upload-drop-zone{border:2px dashed var(--border);border-radius:14px;padding:2rem 1.5rem;text-align:center;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;align-items:center;background:#fafffe;margin-bottom:.85rem}
-    .upload-drop-zone:hover,.upload-drop-zone.drag-over{border-color:var(--leaf);background:var(--pale)}
-    .upload-drop-zone.drag-over{transform:scale(1.01)}
-    .upload-file-list{display:flex;flex-direction:column;gap:.5rem}
-    .upload-file-item{display:flex;align-items:center;gap:.75rem;background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:.6rem .9rem;transition:border-color .18s}
-    .upload-file-item.done{border-color:#86efac;background:#f0fdf4}
-    .upload-file-item.error{border-color:#fca5a5;background:#fef2f2}
-    .upload-file-item.uploading{border-color:var(--amber)}
-    .upload-file-icon{font-size:1.2rem;flex-shrink:0}
-    .upload-file-info{flex:1;min-width:0}
-    .upload-file-name{font-size:.84rem;font-weight:600;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .upload-file-size{font-size:.72rem;color:var(--grey);margin-top:1px}
-    .upload-file-status{font-size:.72rem;font-weight:600;flex-shrink:0}
-    .upload-file-status.ok{color:#16a34a}
-    .upload-file-status.err{color:var(--red)}
-    .upload-file-status.pending{color:var(--amber)}
-    .upload-del-btn{width:24px;height:24px;border-radius:50%;background:var(--border);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s;color:var(--grey)}
-    .upload-del-btn:hover{background:#fecaca;color:var(--red)}
-    .upload-del-btn svg{width:11px;height:11px}
-    .upload-progress{height:3px;background:var(--border);border-radius:4px;margin-top:.35rem;overflow:hidden}
-    .upload-progress-fill{height:100%;background:var(--leaf);border-radius:4px;transition:width .3s}
-
-    @media(max-width:640px){
-      .main{padding:1.25rem 1rem 5rem}
-      nav{padding:0 1rem}
-      .grid{grid-template-columns:1fr 1fr}
-      .row2{grid-template-columns:1fr}
-      .modal{max-height:96dvh}
-      .modal-hdr,.modal-body,.modal-foot{padding-left:1.1rem;padding-right:1.1rem}
-      .action-bar{gap:.5rem}
-    }
-    @media(max-width:380px){.grid{grid-template-columns:1fr}}
+    @media(max-width:640px){.main{padding:1.25rem 1rem 5rem}nav{padding:0 1rem}.row2{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
 <div id="net-banner"></div>
-
 <nav>
-  <a href="/dashboard.html" class="nav-logo">🌳 Tree<span>App</span></a>
-
+  <a href="/dashboard.html" class="nav-logo">🌳 <span class="logo-jhs">JHS</span>&nbsp;Tree</a>
   <div class="nav-page-toggle">
     <a href="/dashboard.html" class="nav-page-btn active">Home</a>
-    <a href="/history.html"   class="nav-page-btn">History</a>
+    <a href="/history.html" class="nav-page-btn">History</a>
   </div>
-
   <div class="nav-right">
-    <div class="sync-indicator" id="sync-indicator" title="Sync status">
-      <span class="sync-dot offline" id="sync-dot"></span>
-      <span id="sync-label">—</span>
-    </div>
-
-    <div class="user-menu-wrap" id="user-menu-wrap">
-      <button class="user-icon-btn" onclick="toggleUserMenu()" title="Account">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-          <circle cx="12" cy="7" r="4"/>
-        </svg>
+    <div class="sync-indicator"><span class="sync-dot offline" id="sync-dot"></span><span id="sync-label">—</span></div>
+    <div class="user-menu-wrap" id="umw">
+      <button class="user-icon-btn" onclick="toggleUM()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       </button>
-      <div class="user-dropdown" id="user-dropdown">
-        <div class="dropdown-header">
-          <div class="dropdown-name" id="dropdown-name">…</div>
-          <div class="dropdown-role" id="dropdown-role">Field Employee</div>
-        </div>
-        <a id="admin-dropdown-item" class="dropdown-item admin-item" href="#" onclick="openSwitchModal(event)" style="display:none">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-          Control Panel
+      <div class="user-dropdown" id="udrop">
+        <div class="dropdown-header"><div class="dropdown-name" id="dname">…</div><div class="dropdown-role" id="drole">Field Employee</div></div>
+        <a id="admin-link" class="dropdown-item admin-item" href="#" onclick="openM(event,'m-admin')" style="display:none">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>Control Panel
         </a>
-        <div id="admin-divider" class="dropdown-divider" style="display:none"></div>
-        <button class="dropdown-item danger" onclick="logout()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-          Sign out
+        <div id="admin-div" class="dropdown-divider" style="display:none"></div>
+        <button class="dropdown-item danger" onclick="openM(null,'m-signout')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign out
         </button>
       </div>
     </div>
   </div>
 </nav>
-
-<!-- Submit confirmation modal -->
-<div class="confirm-bg" id="confirm-bg">
-  <div class="confirm-modal">
-    <div class="confirm-icon">📋</div>
-    <h3>Submit Today's Data?</h3>
-    <p>You've filled <strong id="confirm-count">0</strong> of 12 sections:</p>
-    <div class="sec-summary" id="confirm-sections"></div>
-    <p style="font-size:.8rem;color:#92400e;background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;padding:.6rem .8rem;margin-bottom:1.1rem">
-      ⚠️ Once submitted, today's data will be locked and cleared from this screen.
-    </p>
-    <div class="confirm-btns">
-      <button class="cbtn no" onclick="closeConfirm()">Cancel</button>
-      <button class="cbtn yes" id="confirm-submit-btn" onclick="doSubmit()">Submit Now</button>
-    </div>
-  </div>
-</div>
-
-<!-- Admin switch modal -->
-<div class="switch-modal-bg" id="switch-modal-bg">
-  <div class="switch-modal">
-    <div class="sm-icon">🛡️</div>
-    <h3>Switch to Control Panel?</h3>
-    <p>You are about to open the Admin Control Panel. You can return to the field app anytime.</p>
-    <div class="sm-btns">
-      <button class="sm-btn no" onclick="closeSwitchModal()">Cancel</button>
-      <button class="sm-btn yes" onclick="goToAdmin()">Yes, Switch</button>
-    </div>
-  </div>
-</div>
-
-<!-- Sign out confirm modal -->
-<div class="switch-modal-bg" id="signout-modal-bg">
-  <div class="switch-modal">
-    <div class="sm-icon">👋</div>
-    <h3>Sign out?</h3>
-    <p>Any unsubmitted data is safely saved on this device and will sync when you sign back in.</p>
-    <div class="sm-btns">
-      <button class="sm-btn no" onclick="closeSignoutModal()">Stay</button>
-      <button class="sm-btn yes" style="background:#ef4444" onclick="doLogout()">Yes, Sign out</button>
-    </div>
-  </div>
-</div>
-
-<!-- Exit app confirm modal -->
-<div class="switch-modal-bg" id="exit-modal-bg">
-  <div class="switch-modal">
-    <div class="sm-icon">🚪</div>
-    <h3>Leave TreeApp?</h3>
-    <p>You have unsaved data. Are you sure you want to leave the app?</p>
-    <div class="sm-btns">
-      <button class="sm-btn no" onclick="closeExitModal()">Stay</button>
-      <button class="sm-btn yes" style="background:#ef4444" onclick="confirmExit()">Leave</button>
-    </div>
-  </div>
-</div>
+<div class="modal-bg" id="m-admin"><div class="modal-box"><div class="modal-icon">🛡️</div><h3>Switch to Control Panel?</h3><p>You can return to the field app anytime.</p><div class="modal-btns"><button class="mbtn no" onclick="closeM('m-admin')">Cancel</button><button class="mbtn yes" onclick="location.href='/admin.html'">Yes, Switch</button></div></div></div>
+<div class="modal-bg" id="m-signout"><div class="modal-box"><div class="modal-icon">👋</div><h3>Sign out?</h3><p>Draft forms are saved on this device.</p><div class="modal-btns"><button class="mbtn no" onclick="closeM('m-signout')">Stay</button><button class="mbtn yes" style="background:#ef4444" onclick="doLogout()">Sign out</button></div></div></div>
+<div class="modal-bg" id="m-discard"><div class="modal-box"><div class="modal-icon">🗑️</div><h3>Discard this form?</h3><p>All data in this form will be permanently deleted.</p><div class="modal-btns"><button class="mbtn no" onclick="closeM('m-discard')">Keep it</button><button class="mbtn yes" style="background:#ef4444" onclick="confirmDiscard()">Discard</button></div></div></div>
 
 <main class="main">
   <div class="page-hdr">
     <h1>Outcome Dipstick Questionnaire</h1>
-    <p>Tree Plantation – Sustainable Livelihoods &nbsp;|&nbsp; Sun Pharma CSR<br/>
-    Tap a section to fill it. Data auto-saves and syncs when online.</p>
+    <p>Tree Plantation – Sustainable Livelihoods &nbsp;|&nbsp; Sun Pharma CSR · JHS Associates<br/>Add a separate form for each beneficiary. Save tabs, tick verification, then submit.</p>
     <div class="date-badge">📅 <span id="today-label">Loading…</span></div>
   </div>
-
-  <div class="prog-wrap">
-    <div class="prog-top">
-      <span class="prog-label">Sections completed today</span>
-      <span class="prog-count" id="prog-count">0 / 12</span>
-    </div>
-    <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
-  </div>
-
-  <div class="grid" id="cards-grid"></div>
-
-  <div class="action-bar">
-    <button class="submit-btn" id="submit-btn" onclick="openConfirm()" disabled>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-      <span class="s-lbl">Submit Day</span>
-      <span class="s-sp"><svg class="rot" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></span>
-    </button>
-    <button class="export-btn" id="export-btn" onclick="exportToday()" disabled>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      Export Excel
-    </button>
-  </div>
-  <p class="action-note" id="action-note">Fill at least one section to enable submit and export.</p>
+  <div class="forms-list" id="forms-list"></div>
+  <div class="add-form-wrap"><button class="add-form-btn" onclick="addForm()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    Add New Beneficiary Form
+  </button></div>
+  <div class="export-bar"><button class="export-btn" id="export-btn" onclick="exportDrafts()" disabled>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    Export All Drafts (Excel)
+  </button></div>
 </main>
-
-<div class="modal-bg" id="modal-bg">
-  <div class="modal">
-    <div class="modal-hdr">
-      <div class="modal-hdr-icon" id="m-icon"></div>
-      <h2 id="m-title">Section</h2>
-      <button class="modal-close" onclick="closeModal()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-        </svg>
-      </button>
-    </div>
-    <div class="modal-body" id="modal-body"></div>
-    <div class="modal-foot">
-      <button class="save-btn" id="save-btn" onclick="saveSection()">
-        <span class="lbl">Save Section</span>
-        <span class="sp"><svg class="rot" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></span>
-      </button>
-    </div>
-  </div>
-</div>
-
-<div class="toast" id="toast">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-  <span id="toast-msg"></span>
-</div>
+<div class="toast" id="toast"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span id="toast-msg"></span></div>
 
 <script>
-// ─────────────────────────────────────────────────────────────
-// SECTION DEFINITIONS
-// ─────────────────────────────────────────────────────────────
-const SECTIONS = [
-  { id:'A', icon:'👤', name:'Respondent Profile', desc:'Beneficiary details, land and irrigation', q:10,
-    html:`<div class="fg"><label class="fl">1. Name of Beneficiary</label><input class="fi" id="name" placeholder="Full name"/></div><div class="row2"><div class="fg"><label class="fl">2. Age</label><input class="fi" id="age" type="number" placeholder="Age"/></div><div class="fg"><label class="fl">3. Gender</label><div class="radio-grp"><label class="r-item"><input type="radio" name="gender" value="Male"/> Male</label><label class="r-item"><input type="radio" name="gender" value="Female"/> Female</label><label class="r-item"><input type="radio" name="gender" value="Other"/> Other</label></div></div></div><div class="row2"><div class="fg"><label class="fl">4. Mobile Number</label><input class="fi" id="mobile" type="tel" placeholder="Mobile"/></div><div class="fg"><label class="fl">5. Marital Status</label><select class="fs" id="marital"><option value="">Select</option><option>Single</option><option>Married</option><option>Widowed</option><option>Divorced</option></select></div></div><div class="fg"><label class="fl">6. Location (Village/Town, District, State)</label><input class="fi" id="location" placeholder="e.g. Shirpur, Dhule, Maharashtra"/></div><div class="fg"><label class="fl">7. Landholding size where saplings were planted</label><div class="radio-grp"><label class="r-item"><input type="radio" name="landsize" value="Less than 1 acre"/> &lt;1 acre</label><label class="r-item"><input type="radio" name="landsize" value="1–2 acres"/> 1–2 acres</label><label class="r-item"><input type="radio" name="landsize" value="2–5 acres"/> 2–5 acres</label><label class="r-item"><input type="radio" name="landsize" value="More than 5 acres"/> &gt;5 acres</label></div></div><div class="fg"><label class="fl">8. Land ownership status</label><div class="radio-grp"><label class="r-item"><input type="radio" name="landown" value="Owned"/> Owned</label><label class="r-item"><input type="radio" name="landown" value="Leased"/> Leased</label><label class="r-item"><input type="radio" name="landown" value="Shared / family land"/> Shared / family land</label></div></div><div class="fg"><label class="fl">9. Regular access to irrigation?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="irrigation" value="Yes" onchange="showSub('irr-sub',true)"/> Yes</label><label class="r-item"><input type="radio" name="irrigation" value="No" onchange="showSub('irr-sub',false)"/> No</label></div><div class="sub-f" id="irr-sub"><label class="fl">Source of irrigation (multiple allowed)</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Borewell"/> Borewell</label><label class="c-item"><input type="checkbox" value="Open well"/> Open well</label><label class="c-item"><input type="checkbox" value="Canal"/> Canal</label><label class="c-item"><input type="checkbox" value="Drip irrigation"/> Drip irrigation</label><label class="c-item"><input type="checkbox" value="Rainfed only"/> Rainfed only</label><label class="c-item"><input type="checkbox" value="Other"/> Other</label></div></div></div><div class="fg"><label class="fl">10. How many times received saplings under this program?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="times_received" value="Only once"/> Only once</label><label class="r-item"><input type="radio" name="times_received" value="More than once"/> More than once</label></div></div>`},
-  { id:'B', icon:'🌱', name:'Sapling Quality', desc:'Condition, height, suitability at distribution', q:4,
-    html:`<div class="fg"><label class="fl">11. Condition of saplings at distribution</label><div class="radio-grp"><label class="r-item"><input type="radio" name="sapling_cond" value="Healthy"/> Healthy</label><label class="r-item"><input type="radio" name="sapling_cond" value="Average"/> Average</label><label class="r-item"><input type="radio" name="sapling_cond" value="Weak"/> Weak</label><label class="r-item"><input type="radio" name="sapling_cond" value="Damaged"/> Damaged</label></div></div><div class="fg"><label class="fl">12a. Approximate height of saplings at time of distribution</label><div class="row2"><div class="fg" style="flex:1"><input class="fi" id="sapling_height" type="text" placeholder="e.g. 1.5 ft or 45 cm"/></div></div></div><div class="fg"><label class="fl">12b. Approximate age of saplings at time of distribution (in years)</label><div class="row2"><div class="fg" style="flex:1"><input class="fi" id="sapling_age_yrs" type="number" min="0" step="0.5" placeholder="e.g. 1.5"/></div></div></div><div class="fg"><label class="fl">13. Suitable for your soil and local climate?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="sapling_suit" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="sapling_suit" value="No"/> No</label><label class="r-item"><input type="radio" name="sapling_suit" value="Partially"/> Partially</label></div></div>`},
-  { id:'C', icon:'📦', name:'Sapling Distribution', desc:'Verify MIS numbers vs actual received', q:3,
-    html:`<div class="fg"><label class="fl">14. Did you receive same number of saplings as in MIS?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="mis_match" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="mis_match" value="No"/> No</label></div></div><div class="fg"><label class="fl">15. Number of saplings supposed to receive</label><table class="s-table"><thead><tr><th>Crop</th><th>Count</th></tr></thead><tbody><tr><td>Papaya</td><td><input type="number" id="sup_papaya" placeholder="0"/></td></tr><tr><td>Mulberry</td><td><input type="number" id="sup_mulberry" placeholder="0"/></td></tr><tr><td>Banana</td><td><input type="number" id="sup_banana" placeholder="0"/></td></tr></tbody></table></div><div class="fg"><label class="fl">16. Number of saplings actually received</label><table class="s-table"><thead><tr><th>Crop</th><th>Count</th></tr></thead><tbody><tr><td>Papaya</td><td><input type="number" id="rcv_papaya" placeholder="0"/></td></tr><tr><td>Mulberry</td><td><input type="number" id="rcv_mulberry" placeholder="0"/></td></tr><tr><td>Banana</td><td><input type="number" id="rcv_banana" placeholder="0"/></td></tr></tbody></table></div>`},
-  { id:'D', icon:'🪴', name:'Plantation Process', desc:'Land, season, spacing, manure, protection', q:6,
-    html:`<div class="fg"><label class="fl">17. Planted on approved land under the program?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="approved_land" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="approved_land" value="No"/> No</label></div></div><div class="fg"><label class="fl">18. In which season were the saplings planted?</label><div class="row2" style="gap:.6rem;align-items:flex-end"><div class="fg" style="flex:1"><label class="fl" style="font-weight:500;font-size:.78rem;margin-bottom:.3rem">Month</label><select class="fi fs" id="plant_month"><option value="">Select month…</option><option>January</option><option>February</option><option>March</option><option>April</option><option>May</option><option>June</option><option>July</option><option>August</option><option>September</option><option>October</option><option>November</option><option>December</option></select></div><div class="fg" style="flex:1"><label class="fl" style="font-weight:500;font-size:.78rem;margin-bottom:.3rem">Year</label><select class="fi fs" id="plant_year"><option value="">Select year…</option><option>2020</option><option>2021</option><option>2022</option><option>2023</option><option>2024</option><option>2025</option><option>2026</option></select></div></div></div><div class="fg"><label class="fl">19. Followed suggested pit size and spacing?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="pit_size" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="pit_size" value="No"/> No</label><label class="r-item"><input type="radio" name="pit_size" value="Partially"/> Partially</label></div></div><div class="fg"><label class="fl">20. Applied manure or fertilizer at time of planting?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="manure" value="Yes" onchange="showSub('manure-sub',true)"/> Yes</label><label class="r-item"><input type="radio" name="manure" value="No" onchange="showSub('manure-sub',false)"/> No</label></div><div class="sub-f" id="manure-sub"><label class="fl">Type used (multiple allowed)</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Farmyard manure (FYM)"/> Farmyard manure (FYM)</label><label class="c-item"><input type="checkbox" value="Compost"/> Compost</label><label class="c-item"><input type="checkbox" value="Chemical fertilizer"/> Chemical fertilizer</label><label class="c-item"><input type="checkbox" value="Vermicompost"/> Vermicompost</label><label class="c-item"><input type="checkbox" value="Other"/> Other</label></div></div></div><div class="fg"><label class="fl">21. Protective measures adopted (multiple allowed)</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Mulching"/> Mulching</label><label class="c-item"><input type="checkbox" value="Fencing"/> Fencing</label><label class="c-item"><input type="checkbox" value="Tree guards"/> Tree guards</label><label class="c-item"><input type="checkbox" value="None"/> None</label></div></div><div class="fg"><label class="fl">22. Photographs / geo-tagged images taken?</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Before plantation"/> Before plantation</label><label class="c-item"><input type="checkbox" value="During plantation"/> During plantation</label><label class="c-item"><input type="checkbox" value="After plantation"/> After plantation</label><label class="c-item"><input type="checkbox" value="Not taken"/> Not taken</label></div></div>`},
-  { id:'E', icon:'📊', name:'Survival & Maintenance', desc:'Survival count, mortality reasons, watering', q:4,
-    html:`<div class="fg"><label class="fl">23. Approximate number of saplings currently surviving</label><table class="s-table"><thead><tr><th>Crop</th><th>Surviving</th></tr></thead><tbody><tr><td>Papaya</td><td><input type="number" id="surv_papaya" placeholder="0"/></td></tr><tr><td>Mulberry</td><td><input type="number" id="surv_mulberry" placeholder="0"/></td></tr><tr><td>Banana</td><td><input type="number" id="surv_banana" placeholder="0"/></td></tr></tbody></table></div><div class="fg"><label class="fl">24. Main reasons for mortality (multiple allowed)</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Water shortage"/> Water shortage</label><label class="c-item"><input type="checkbox" value="Pest attack"/> Pest attack</label><label class="c-item"><input type="checkbox" value="Disease"/> Disease</label><label class="c-item"><input type="checkbox" value="Animal grazing"/> Animal grazing</label><label class="c-item"><input type="checkbox" value="Climate/weather"/> Climate/weather</label><label class="c-item"><input type="checkbox" value="Poor sapling quality"/> Poor sapling quality</label><label class="c-item"><input type="checkbox" value="No mortality"/> No mortality</label></div></div><div class="fg"><label class="fl">25. Frequency of watering</label><div class="radio-grp"><label class="r-item"><input type="radio" name="watering" value="Daily"/> Daily</label><label class="r-item"><input type="radio" name="watering" value="Alternate days"/> Alternate days</label><label class="r-item"><input type="radio" name="watering" value="Weekly"/> Weekly</label><label class="r-item"><input type="radio" name="watering" value="Depends on rainfall"/> Depends on rainfall</label></div></div><div class="fg"><label class="fl">26. Frequency of weeding and field cleaning</label><div class="radio-grp"><label class="r-item"><input type="radio" name="weeding" value="Monthly"/> Monthly</label><label class="r-item"><input type="radio" name="weeding" value="Once in 2–3 months"/> Once in 2–3 months</label><label class="r-item"><input type="radio" name="weeding" value="Rarely"/> Rarely</label><label class="r-item"><input type="radio" name="weeding" value="Not done"/> Not done</label></div></div>`},
-  { id:'F', icon:'🎓', name:'Capacity Building', desc:'Training attended, topics, helpfulness', q:4,
-    html:`<div class="fg"><label class="fl">27. Attended any training or awareness program?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="training" value="Yes" onchange="showSub('train-sub',true)"/> Yes</label><label class="r-item"><input type="radio" name="training" value="No" onchange="showSub('train-sub',false)"/> No</label></div><div class="sub-f" id="train-sub"><div class="fg"><label class="fl">28. Training details (if attended)</label><div class="row2" style="margin-top:.5rem"><div class="fg" style="margin-bottom:0"><label class="fl" style="font-weight:500;font-size:.78rem;margin-bottom:.3rem">Month &amp; Year (MM/YY)</label><input class="fi" id="train_mmyy" placeholder="e.g. 03/25" maxlength="5" style="letter-spacing:.05em"/></div><div class="fg" style="margin-bottom:0"><label class="fl" style="font-weight:500;font-size:.78rem;margin-bottom:.3rem">Location</label><input class="fi" id="train_location" placeholder="e.g. Shirpur, Dhule"/></div></div></div></div></div><div class="fg"><label class="fl">29. Topics covered (tick all applicable)</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Plantation methods"/> Plantation methods</label><label class="c-item"><input type="checkbox" value="Crop-specific care (Papaya/Mulberry/Banana)"/> Crop-specific care</label><label class="c-item"><input type="checkbox" value="Pest and disease management"/> Pest and disease management</label><label class="c-item"><input type="checkbox" value="Pruning / harvesting practices"/> Pruning / harvesting practices</label></div></div><div class="fg"><label class="fl">30. Has training helped in better sapling maintenance?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="train_help" value="Yes, significantly"/> Yes, significantly</label><label class="r-item"><input type="radio" name="train_help" value="Yes, to some extent"/> To some extent</label><label class="r-item"><input type="radio" name="train_help" value="No"/> No</label></div></div>`},
-  { id:'G', icon:'🏕️', name:'Field Support', desc:'GVT field team visits and issue resolution', q:5,
-    html:`<div class="fg"><label class="fl">31. Did GVT field team visit your farm after planting?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="team_visit" value="Yes" onchange="showSub('visit-sub',true)"/> Yes</label><label class="r-item"><input type="radio" name="team_visit" value="No" onchange="showSub('visit-sub',false)"/> No</label></div><div class="sub-f" id="visit-sub"><label class="fl">32. Number of visits</label><div class="radio-grp"><label class="r-item"><input type="radio" name="num_visits" value="1 time"/> 1 time</label><label class="r-item"><input type="radio" name="num_visits" value="2–3 times"/> 2–3 times</label><label class="r-item"><input type="radio" name="num_visits" value="More than 3 times"/> More than 3 times</label></div></div></div><div class="fg"><label class="fl">33. Did the field team provide technical guidance?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="tech_guidance" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="tech_guidance" value="No"/> No</label></div></div><div class="fg"><label class="fl">34. If you faced issues, did you know whom to contact?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="know_contact" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="know_contact" value="No"/> No</label></div></div><div class="fg"><label class="fl">35. Were your concerns resolved on time?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="resolved" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="resolved" value="No"/> No</label><label class="r-item"><input type="radio" name="resolved" value="Not applicable"/> Not applicable</label></div></div>`},
-  { id:'H', icon:'🔍', name:'Duplication Check', desc:'Other CSR or government scheme benefits', q:2,
-    html:`<div class="fg"><label class="fl">36. Received similar saplings from another CSR program?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="other_csr" value="Yes" onchange="showSub('csr-sub',true)"/> Yes</label><label class="r-item"><input type="radio" name="other_csr" value="No" onchange="showSub('csr-sub',false)"/> No</label></div><div class="sub-f" id="csr-sub"><label class="fl">Name of Implementation Partner</label><input class="fi" id="csr_partner" placeholder="Partner name"/></div></div><div class="fg"><label class="fl">37. Enrolled under any government horticulture/forestry scheme?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="govt_scheme" value="Yes" onchange="showSub('scheme-sub',true)"/> Yes</label><label class="r-item"><input type="radio" name="govt_scheme" value="No" onchange="showSub('scheme-sub',false)"/> No</label></div><div class="sub-f" id="scheme-sub"><label class="fl">Name of scheme</label><input class="fi" id="scheme_name" placeholder="Scheme name"/></div></div>`},
-  { id:'I', icon:'💰', name:'Outcome & Impact', desc:'Fruit sale income, CY and LY comparison', q:3,
-    html:`<div class="fg"><label class="fl">38. Net profit from sale of fruits — Current Year (Jan 25 – Dec 25)</label><div style="position:relative"><span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-weight:600;color:var(--grey);font-size:.9rem;pointer-events:none">₹</span><input class="fi" id="profit_cy" type="text" inputmode="numeric" placeholder="e.g. 45000" style="padding-left:28px"/></div><span style="font-size:.74rem;color:var(--grey);margin-top:.25rem;display:block">Enter amount in INR. Type 0 if no income yet.</span></div><div class="fg"><label class="fl">39. Net profit from sale of fruits — Last Year (Jan 24 – Dec 24)</label><div style="position:relative"><span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-weight:600;color:var(--grey);font-size:.9rem;pointer-events:none">₹</span><input class="fi" id="profit_ly" type="text" inputmode="numeric" placeholder="e.g. 38000" style="padding-left:28px"/></div><span style="font-size:.74rem;color:var(--grey);margin-top:.25rem;display:block">Enter amount in INR. Type 0 if no income yet.</span></div><div class="fg"><label class="fl">40. Factors affecting income change (multiple allowed)</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Yield improvement"/> Yield improvement</label><label class="c-item"><input type="checkbox" value="Market price changes"/> Market price changes</label><label class="c-item"><input type="checkbox" value="Input cost variation"/> Input cost variation</label><label class="c-item"><input type="checkbox" value="Pest/disease loss"/> Pest/disease loss</label><label class="c-item"><input type="checkbox" value="Weather conditions"/> Weather conditions</label><label class="c-item"><input type="checkbox" value="Others"/> Others</label></div></div>`},
-  { id:'J', icon:'🪧', name:'Branding & Visibility', desc:'CSR awareness and branding materials', q:2,
-    html:`<div class="fg"><label class="fl">41. Informed that plantation is CSR-supported by Sun Pharmaceuticals?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="csr_informed" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="csr_informed" value="No"/> No</label></div></div><div class="fg"><label class="fl">42. Have you seen any branding material?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="branding" value="Signboards"/> Signboards</label><label class="r-item"><input type="radio" name="branding" value="Banners"/> Banners</label><label class="r-item"><input type="radio" name="branding" value="Both"/> Both</label><label class="r-item"><input type="radio" name="branding" value="None"/> None</label></div></div>`},
-  { id:'K', icon:'⭐', name:'Farmer Feedback', desc:'Satisfaction, challenges and suggestions', q:5, isUpload:false,
-    html:`<div class="fg"><label class="fl">43. Overall satisfaction with tree plantation support</label><div class="radio-grp"><label class="r-item"><input type="radio" name="satisfaction" value="Very satisfied"/> Very satisfied</label><label class="r-item"><input type="radio" name="satisfaction" value="Satisfied"/> Satisfied</label><label class="r-item"><input type="radio" name="satisfaction" value="Neutral"/> Neutral</label><label class="r-item"><input type="radio" name="satisfaction" value="Dissatisfied"/> Dissatisfied</label><label class="r-item"><input type="radio" name="satisfaction" value="Very dissatisfied"/> Very dissatisfied</label></div></div><div class="fg"><label class="fl">44. Most helpful aspects (multiple allowed)</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Quality of saplings"/> Quality of saplings</label><label class="c-item"><input type="checkbox" value="Timely distribution"/> Timely distribution</label><label class="c-item"><input type="checkbox" value="Training and awareness"/> Training and awareness</label><label class="c-item"><input type="checkbox" value="Field staff support"/> Field staff support</label><label class="c-item"><input type="checkbox" value="Technical guidance"/> Technical guidance</label><label class="c-item"><input type="checkbox" value="Improvement in income/livelihood"/> Improvement in income/livelihood</label></div></div><div class="fg"><label class="fl">45. Challenges faced (multiple allowed)</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Water availability"/> Water availability</label><label class="c-item"><input type="checkbox" value="Pest/disease issues"/> Pest/disease issues</label><label class="c-item"><input type="checkbox" value="Lack of technical knowledge"/> Lack of technical knowledge</label><label class="c-item"><input type="checkbox" value="Labour constraints"/> Labour constraints</label><label class="c-item"><input type="checkbox" value="Animal grazing"/> Animal grazing</label><label class="c-item"><input type="checkbox" value="No major challenges"/> No major challenges</label></div></div><div class="fg"><label class="fl">46. Suggestions for improvement in future programs</label><textarea class="ft" id="suggestions" placeholder="Your suggestions…"></textarea></div><div class="fg"><label class="fl">47. Would you recommend this program to other farmers?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="recommend" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="recommend" value="No"/> No</label><label class="r-item"><input type="radio" name="recommend" value="Maybe"/> Maybe</label></div></div>`},
-  { id:'L', icon:'📎', name:'Photo & Document Upload', desc:'Field photos and supporting documents', q:1, isUpload:true,
-    html:`<div class="fg"><label class="fl">48. Upload field photographs or documents</label><p style="font-size:.8rem;color:var(--grey);margin-bottom:1rem;line-height:1.6">Upload images (JPG, PNG, WEBP, HEIC) or PDFs · Max 5 files<br/>Files upload directly to server. Requires internet connection.</p><div id="upload-drop-zone" class="upload-drop-zone" onclick="document.getElementById('file-input').click()" ondragover="event.preventDefault();this.classList.add('drag-over')" ondragleave="this.classList.remove('drag-over')" ondrop="handleDrop(event)"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color:var(--leaf);margin-bottom:.6rem"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg><div style="font-weight:600;font-size:.9rem;color:var(--dark)">Tap to select files</div><div style="font-size:.76rem;color:var(--grey);margin-top:.25rem">or drag &amp; drop here</div></div><input type="file" id="file-input" multiple accept="image/jpeg,image/jpg,image/png,image/webp,image/heic,application/pdf" style="display:none" onchange="handleFileSelect(this.files)"/><div id="upload-file-list" class="upload-file-list"></div></div>`}
-];
-
-const SEC_META = {
-  A:{icon:'👤',name:'Respondent Profile'},B:{icon:'🌱',name:'Sapling Quality'},
-  C:{icon:'📦',name:'Sapling Distribution'},D:{icon:'🪴',name:'Plantation Process'},
-  E:{icon:'📊',name:'Survival & Maintenance'},F:{icon:'🎓',name:'Capacity Building'},
-  G:{icon:'🏕️',name:'Field Support'},H:{icon:'🔍',name:'Duplication Check'},
-  I:{icon:'💰',name:'Outcome & Impact'},J:{icon:'🧧',name:'Branding & Visibility'},
-  K:{icon:'⭐',name:'Farmer Feedback'},L:{icon:'📎',name:'Photo & Document Upload'},
-};
-const F_LABELS = {
-  name:'Beneficiary Name',age:'Age',gender:'Gender',mobile:'Mobile',marital:'Marital Status',
-  location:'Location',landsize:'Landholding Size',landown:'Land Ownership',irrigation:'Irrigation Access',
-  times_received:'Times Received Saplings',sapling_cond:'Sapling Condition',sapling_height:'Sapling Height at Distribution',sapling_age_yrs:'Sapling Age at Distribution (yrs)',
-  sapling_suit:'Suitable for Soil/Climate',mis_match:'Received as per MIS',sup_papaya:'Supposed – Papaya',
-  sup_mulberry:'Supposed – Mulberry',sup_banana:'Supposed – Banana',rcv_papaya:'Received – Papaya',
-  rcv_mulberry:'Received – Mulberry',rcv_banana:'Received – Banana',approved_land:'Planted on Approved Land',
-  plant_month:'Planting Month',plant_year:'Planting Year',pit_size:'Pit Size & Spacing',manure:'Manure Applied',
-  surv_papaya:'Surviving – Papaya',surv_mulberry:'Surviving – Mulberry',surv_banana:'Surviving – Banana',
-  watering:'Watering Frequency',weeding:'Weeding Frequency',training:'Attended Training',
-  train_mmyy:'Training Month & Year (MM/YY)',train_location:'Training Location',train_help:'Training Helped',
-  team_visit:'Field Team Visit',num_visits:'No. of Visits',tech_guidance:'Technical Guidance',
-  know_contact:'Knew Whom to Contact',resolved:'Concerns Resolved',other_csr:'Another CSR Program',
-  csr_partner:'CSR Partner',govt_scheme:'Govt Scheme',scheme_name:'Scheme Name',
-  profit_cy:'Net Profit CY (INR)',profit_ly:'Net Profit LY (INR)',csr_informed:'Informed of CSR Support',
-  branding:'Branding Material Seen',satisfaction:'Overall Satisfaction',suggestions:'Suggestions',
-  recommend:'Would Recommend',
-};
-const CHK_LABELS = {
-  A:['Irrigation Source'],D:['Manure Type','Protective Measures','Photos Taken'],
-  E:['Mortality Reasons'],F:['Topics Covered'],I:['Income Factors'],K:['Helpful Aspects','Challenges Faced'],
+const TAB_HTML = {
+A: () => `<div class="fg"><label class="fl">1. Name of Beneficiary</label><div class="ac-wrap"><input class="fi" id="name" placeholder="Type name to search…" autocomplete="off"/><span class="ac-spinner" id="ac-spinner"><svg class="rot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></span><button class="ac-clear" id="ac-clear" type="button" title="Clear"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button><div class="ac-dropdown" id="ac-dropdown"></div></div><div class="ac-filled-badge" id="ac-filled-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Auto-filled from farmer records</div></div><div class="row2"><div class="fg"><label class="fl">2. Age</label><input class="fi" id="age" type="number" placeholder="Age"/></div><div class="fg"><label class="fl">3. Gender</label><div class="radio-grp"><label class="r-item"><input type="radio" name="gender" value="Male"/> Male</label><label class="r-item"><input type="radio" name="gender" value="Female"/> Female</label><label class="r-item"><input type="radio" name="gender" value="Other"/> Other</label></div></div></div><div class="row2"><div class="fg"><label class="fl">4. Mobile</label><input class="fi" id="mobile" type="tel" placeholder="Mobile"/></div><div class="fg"><label class="fl">5. Marital Status</label><select class="fs" id="marital"><option value="">Select</option><option>Single</option><option>Married</option><option>Widowed</option><option>Divorced</option></select></div></div><div class="fg"><label class="fl">6. Location (Village, District, State)</label><input class="fi" id="location" placeholder="e.g. Shirpur, Dhule, Maharashtra"/></div><div class="fg"><label class="fl">7. Landholding size</label><div class="radio-grp"><label class="r-item"><input type="radio" name="landsize" value="Less than 1 acre"/> &lt;1 acre</label><label class="r-item"><input type="radio" name="landsize" value="1–2 acres"/> 1–2 acres</label><label class="r-item"><input type="radio" name="landsize" value="2–5 acres"/> 2–5 acres</label><label class="r-item"><input type="radio" name="landsize" value="More than 5 acres"/> &gt;5 acres</label></div></div><div class="fg"><label class="fl">8. Land ownership</label><div class="radio-grp"><label class="r-item"><input type="radio" name="landown" value="Owned"/> Owned</label><label class="r-item"><input type="radio" name="landown" value="Leased"/> Leased</label><label class="r-item"><input type="radio" name="landown" value="Shared"/> Shared</label></div></div><div class="fg"><label class="fl">9. Irrigation access</label><div class="radio-grp"><label class="r-item"><input type="radio" name="irrigation" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="irrigation" value="No"/> No</label></div></div><div class="fg"><label class="fl">10. Times received saplings</label><div class="radio-grp"><label class="r-item"><input type="radio" name="times_received" value="First time"/> First time</label><label class="r-item"><input type="radio" name="times_received" value="Second time"/> Second time</label><label class="r-item"><input type="radio" name="times_received" value="More than twice"/> More than twice</label></div></div>`,
+B: () => `<div class="fg"><label class="fl">11. Sapling condition at distribution</label><div class="radio-grp"><label class="r-item"><input type="radio" name="sapling_cond" value="Healthy"/> Healthy</label><label class="r-item"><input type="radio" name="sapling_cond" value="Average"/> Average</label><label class="r-item"><input type="radio" name="sapling_cond" value="Weak"/> Weak</label><label class="r-item"><input type="radio" name="sapling_cond" value="Damaged"/> Damaged</label></div></div><div class="fg"><label class="fl">12a. Sapling height at distribution</label><input class="fi" id="sapling_height" type="text" placeholder="e.g. 1.5 ft"/></div><div class="fg"><label class="fl">12b. Sapling age at distribution (years)</label><input class="fi" id="sapling_age_yrs" type="number" min="0" step="0.5" placeholder="e.g. 1.5"/></div><div class="fg"><label class="fl">13. Suitable for soil/climate?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="sapling_suit" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="sapling_suit" value="No"/> No</label><label class="r-item"><input type="radio" name="sapling_suit" value="Partially"/> Partially</label></div></div><div class="fg"><label class="fl">14. Received same count as MIS?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="mis_match" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="mis_match" value="No"/> No</label></div></div><div class="fg"><label class="fl">15. Saplings supposed to receive</label><table class="s-table"><thead><tr><th>Crop</th><th>Count</th></tr></thead><tbody><tr><td>Papaya</td><td><input type="number" id="sup_papaya" placeholder="0"/></td></tr><tr><td>Mulberry</td><td><input type="number" id="sup_mulberry" placeholder="0"/></td></tr><tr><td>Banana</td><td><input type="number" id="sup_banana" placeholder="0"/></td></tr></tbody></table></div><div class="fg"><label class="fl">16. Saplings actually received</label><table class="s-table"><thead><tr><th>Crop</th><th>Count</th></tr></thead><tbody><tr><td>Papaya</td><td><input type="number" id="rcv_papaya" placeholder="0"/></td></tr><tr><td>Mulberry</td><td><input type="number" id="rcv_mulberry" placeholder="0"/></td></tr><tr><td>Banana</td><td><input type="number" id="rcv_banana" placeholder="0"/></td></tr></tbody></table></div><div class="fg"><label class="fl">17. Planted on approved land?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="approved_land" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="approved_land" value="No"/> No</label></div></div><div class="fg"><label class="fl">18. Planting season</label><div class="row2"><select class="fi fs" id="plant_month"><option value="">Month…</option><option>January</option><option>February</option><option>March</option><option>April</option><option>May</option><option>June</option><option>July</option><option>August</option><option>September</option><option>October</option><option>November</option><option>December</option></select><select class="fi fs" id="plant_year"><option value="">Year…</option><option>2020</option><option>2021</option><option>2022</option><option>2023</option><option>2024</option><option>2025</option><option>2026</option></select></div></div><div class="fg"><label class="fl">19. Followed pit size/spacing?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="pit_size" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="pit_size" value="No"/> No</label><label class="r-item"><input type="radio" name="pit_size" value="Partially"/> Partially</label></div></div><div class="fg"><label class="fl">20. Applied manure/fertilizer?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="manure" value="Yes" onchange="showSub('manure-sub',true)"/> Yes</label><label class="r-item"><input type="radio" name="manure" value="No" onchange="showSub('manure-sub',false)"/> No</label></div><div class="sub-f" id="manure-sub"><label class="fl">Type used</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="FYM"/> FYM</label><label class="c-item"><input type="checkbox" value="Vermicompost"/> Vermicompost</label><label class="c-item"><input type="checkbox" value="Chemical fertilizer"/> Chemical</label><label class="c-item"><input type="checkbox" value="Bio-fertilizer"/> Bio-fertilizer</label></div></div></div><div class="fg"><label class="fl">21. Protective measures</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Fencing"/> Fencing</label><label class="c-item"><input type="checkbox" value="Tree guards"/> Tree guards</label><label class="c-item"><input type="checkbox" value="Thorny branches"/> Thorny branches</label><label class="c-item"><input type="checkbox" value="No protection"/> No protection</label></div></div><div class="fg"><label class="fl">22. Photos taken?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="photos" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="photos" value="No"/> No</label></div></div><div class="fg"><label class="fl">23. Saplings currently surviving</label><table class="s-table"><thead><tr><th>Crop</th><th>Surviving</th></tr></thead><tbody><tr><td>Papaya</td><td><input type="number" id="surv_papaya" placeholder="0"/></td></tr><tr><td>Mulberry</td><td><input type="number" id="surv_mulberry" placeholder="0"/></td></tr><tr><td>Banana</td><td><input type="number" id="surv_banana" placeholder="0"/></td></tr></tbody></table></div><div class="fg"><label class="fl">24. Mortality reasons</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Water shortage"/> Water shortage</label><label class="c-item"><input type="checkbox" value="Pest attack"/> Pest attack</label><label class="c-item"><input type="checkbox" value="Disease"/> Disease</label><label class="c-item"><input type="checkbox" value="Animal grazing"/> Animal grazing</label><label class="c-item"><input type="checkbox" value="Climate/weather"/> Climate/weather</label><label class="c-item"><input type="checkbox" value="Poor sapling quality"/> Poor sapling quality</label><label class="c-item"><input type="checkbox" value="No mortality"/> No mortality</label></div></div><div class="fg"><label class="fl">25. Watering frequency</label><div class="radio-grp"><label class="r-item"><input type="radio" name="watering" value="Daily"/> Daily</label><label class="r-item"><input type="radio" name="watering" value="Alternate days"/> Alternate days</label><label class="r-item"><input type="radio" name="watering" value="Weekly"/> Weekly</label><label class="r-item"><input type="radio" name="watering" value="Depends on rainfall"/> On rainfall</label></div></div><div class="fg"><label class="fl">26. Weeding frequency</label><div class="radio-grp"><label class="r-item"><input type="radio" name="weeding" value="Monthly"/> Monthly</label><label class="r-item"><input type="radio" name="weeding" value="Fortnightly"/> Fortnightly</label><label class="r-item"><input type="radio" name="weeding" value="Weekly"/> Weekly</label><label class="r-item"><input type="radio" name="weeding" value="Rarely"/> Rarely</label></div></div>`,
+C: () => `<div class="fg"><label class="fl">27. Attended training?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="training" value="Yes" onchange="showSub('train-sub',true)"/> Yes</label><label class="r-item"><input type="radio" name="training" value="No" onchange="showSub('train-sub',false)"/> No</label></div><div class="sub-f" id="train-sub"><div class="row2"><div class="fg" style="margin-bottom:0"><label class="fl" style="font-size:.77rem;font-weight:500">MM/YY</label><input class="fi" id="train_mmyy" placeholder="03/25" maxlength="5"/></div><div class="fg" style="margin-bottom:0"><label class="fl" style="font-size:.77rem;font-weight:500">Location</label><input class="fi" id="train_location" placeholder="e.g. Shirpur"/></div></div></div></div><div class="fg"><label class="fl">29. Topics covered</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Plantation methods"/> Plantation methods</label><label class="c-item"><input type="checkbox" value="Crop-specific care"/> Crop-specific care</label><label class="c-item"><input type="checkbox" value="Pest and disease management"/> Pest & disease</label><label class="c-item"><input type="checkbox" value="Pruning / harvesting practices"/> Pruning / harvesting</label></div></div><div class="fg"><label class="fl">30. Training helped?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="train_help" value="Yes, significantly"/> Yes, significantly</label><label class="r-item"><input type="radio" name="train_help" value="Yes, to some extent"/> To some extent</label><label class="r-item"><input type="radio" name="train_help" value="Not really"/> Not really</label></div></div><div class="fg"><label class="fl">31. GVT field team visit?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="team_visit" value="Yes" onchange="showSub('visit-sub',true)"/> Yes</label><label class="r-item"><input type="radio" name="team_visit" value="No" onchange="showSub('visit-sub',false)"/> No</label></div><div class="sub-f" id="visit-sub"><label class="fl">32. Number of visits</label><div class="radio-grp"><label class="r-item"><input type="radio" name="num_visits" value="1 time"/> 1 time</label><label class="r-item"><input type="radio" name="num_visits" value="2–3 times"/> 2–3 times</label><label class="r-item"><input type="radio" name="num_visits" value="More than 3 times"/> More than 3</label></div></div></div><div class="fg"><label class="fl">33. Technical guidance?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="tech_guidance" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="tech_guidance" value="No"/> No</label></div></div><div class="fg"><label class="fl">34. Knew whom to contact?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="know_contact" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="know_contact" value="No"/> No</label></div></div><div class="fg"><label class="fl">35. Concerns resolved?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="resolved" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="resolved" value="No"/> No</label><label class="r-item"><input type="radio" name="resolved" value="Not applicable"/> N/A</label></div></div><div class="fg"><label class="fl">36. Another CSR program?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="other_csr" value="Yes" onchange="showSub('csr-sub',true)"/> Yes</label><label class="r-item"><input type="radio" name="other_csr" value="No" onchange="showSub('csr-sub',false)"/> No</label></div><div class="sub-f" id="csr-sub"><input class="fi" id="csr_partner" placeholder="Partner name"/></div></div><div class="fg"><label class="fl">37. Govt horticulture scheme?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="govt_scheme" value="Yes" onchange="showSub('scheme-sub',true)"/> Yes</label><label class="r-item"><input type="radio" name="govt_scheme" value="No" onchange="showSub('scheme-sub',false)"/> No</label></div><div class="sub-f" id="scheme-sub"><input class="fi" id="scheme_name" placeholder="Scheme name"/></div></div>`,
+D: () => `<div class="fg"><label class="fl">38. Net profit — Current Year (Jan 25–Dec 25)</label><div style="position:relative"><span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-weight:600;color:var(--grey);pointer-events:none">₹</span><input class="fi" id="profit_cy" type="text" inputmode="numeric" placeholder="e.g. 45000" style="padding-left:28px"/></div></div><div class="fg"><label class="fl">39. Net profit — Last Year (Jan 24–Dec 24)</label><div style="position:relative"><span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-weight:600;color:var(--grey);pointer-events:none">₹</span><input class="fi" id="profit_ly" type="text" inputmode="numeric" placeholder="e.g. 38000" style="padding-left:28px"/></div></div><div class="fg"><label class="fl">40. Income change factors</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Yield improvement"/> Yield improvement</label><label class="c-item"><input type="checkbox" value="Market price changes"/> Market price</label><label class="c-item"><input type="checkbox" value="Input cost variation"/> Input cost</label><label class="c-item"><input type="checkbox" value="Pest/disease loss"/> Pest/disease loss</label><label class="c-item"><input type="checkbox" value="Weather conditions"/> Weather</label><label class="c-item"><input type="checkbox" value="Others"/> Others</label></div></div><div class="fg"><label class="fl">41. Informed of CSR support (Sun Pharma)?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="csr_informed" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="csr_informed" value="No"/> No</label></div></div><div class="fg"><label class="fl">42. Branding material seen?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="branding" value="Signboards"/> Signboards</label><label class="r-item"><input type="radio" name="branding" value="Banners"/> Banners</label><label class="r-item"><input type="radio" name="branding" value="Both"/> Both</label><label class="r-item"><input type="radio" name="branding" value="None"/> None</label></div></div><div class="fg"><label class="fl">43. Overall satisfaction</label><div class="radio-grp"><label class="r-item"><input type="radio" name="satisfaction" value="Very satisfied"/> Very satisfied</label><label class="r-item"><input type="radio" name="satisfaction" value="Satisfied"/> Satisfied</label><label class="r-item"><input type="radio" name="satisfaction" value="Neutral"/> Neutral</label><label class="r-item"><input type="radio" name="satisfaction" value="Dissatisfied"/> Dissatisfied</label><label class="r-item"><input type="radio" name="satisfaction" value="Very dissatisfied"/> Very dissatisfied</label></div></div><div class="fg"><label class="fl">44. Most helpful aspects</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Quality of saplings"/> Quality of saplings</label><label class="c-item"><input type="checkbox" value="Timely distribution"/> Timely distribution</label><label class="c-item"><input type="checkbox" value="Training and awareness"/> Training</label><label class="c-item"><input type="checkbox" value="Field staff support"/> Field staff support</label><label class="c-item"><input type="checkbox" value="Technical guidance"/> Technical guidance</label><label class="c-item"><input type="checkbox" value="Improvement in income/livelihood"/> Income improvement</label></div></div><div class="fg"><label class="fl">45. Challenges faced</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Water availability"/> Water availability</label><label class="c-item"><input type="checkbox" value="Pest/disease issues"/> Pest/disease</label><label class="c-item"><input type="checkbox" value="Lack of technical knowledge"/> Lack of knowledge</label><label class="c-item"><input type="checkbox" value="Labour constraints"/> Labour</label><label class="c-item"><input type="checkbox" value="Animal damage"/> Animal damage</label><label class="c-item"><input type="checkbox" value="Market access"/> Market access</label><label class="c-item"><input type="checkbox" value="No challenges"/> No challenges</label></div></div><div class="fg"><label class="fl">46. Suggestions / Testimonials</label><textarea class="ft" id="suggestions" rows="3" placeholder="Any suggestions…"></textarea></div><div class="fg"><label class="fl">47. Would recommend this program?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="recommend" value="Definitely"/> Definitely</label><label class="r-item"><input type="radio" name="recommend" value="Probably"/> Probably</label><label class="r-item"><input type="radio" name="recommend" value="Not sure"/> Not sure</label><label class="r-item"><input type="radio" name="recommend" value="Probably not"/> Probably not</label></div></div>`
 };
 
-// ─────────────────────────────────────────────────────────────
-// AUTH & STATE
-// ─────────────────────────────────────────────────────────────
-const user = JSON.parse(localStorage.getItem('user') || 'null');
-if (!user) { window.location.href = '/'; throw 0; }
+const TABS = [{id:'A',icon:'👤',name:'Profile'},{id:'B',icon:'🌱',name:'Saplings'},{id:'C',icon:'🎓',name:'Training'},{id:'D',icon:'💰',name:'Outcome'}];
+const F_LABELS = {name:'Name',age:'Age',gender:'Gender',mobile:'Mobile',marital:'Marital Status',location:'Location',landsize:'Landholding',landown:'Land Ownership',irrigation:'Irrigation',times_received:'Times Received',sapling_cond:'Sapling Condition',sapling_height:'Sapling Height',sapling_age_yrs:'Sapling Age (yrs)',sapling_suit:'Suitable for Soil',mis_match:'MIS Match',sup_papaya:'Supposed Papaya',sup_mulberry:'Supposed Mulberry',sup_banana:'Supposed Banana',rcv_papaya:'Received Papaya',rcv_mulberry:'Received Mulberry',rcv_banana:'Received Banana',approved_land:'Approved Land',plant_month:'Plant Month',plant_year:'Plant Year',pit_size:'Pit Size',manure:'Manure',surv_papaya:'Surviving Papaya',surv_mulberry:'Surviving Mulberry',surv_banana:'Surviving Banana',watering:'Watering',weeding:'Weeding',training:'Training',train_mmyy:'Training MM/YY',train_location:'Training Location',train_help:'Training Helped',team_visit:'Team Visit',num_visits:'Visits',tech_guidance:'Tech Guidance',know_contact:'Knew Contact',resolved:'Resolved',other_csr:'Other CSR',csr_partner:'CSR Partner',govt_scheme:'Govt Scheme',scheme_name:'Scheme Name',profit_cy:'Profit CY (₹)',profit_ly:'Profit LY (₹)',csr_informed:'CSR Informed',branding:'Branding Seen',satisfaction:'Satisfaction',suggestions:'Suggestions',recommend:'Recommend'};
 
-document.getElementById('dropdown-name').textContent = user.name || '…';
-document.getElementById('dropdown-role').textContent = user.is_admin ? 'Admin · Field Employee' : 'Field Employee';
-if (user.is_admin) {
-  document.getElementById('admin-dropdown-item').style.display = 'flex';
-  document.getElementById('admin-divider').style.display = 'block';
+const user = JSON.parse(localStorage.getItem('user')||'null');
+if(!user){window.location.href='/';throw 0;}
+document.getElementById('dname').textContent=user.name||'…';
+document.getElementById('drole').textContent=user.is_admin?'Admin · Field Employee':'Field Employee';
+if(user.is_admin){document.getElementById('admin-link').style.display='flex';document.getElementById('admin-div').style.display='block';}
+
+const UID=user.user_id,STORE_KEY='tp_forms_v3_'+UID,DATE_KEY='tp_date_'+UID;
+function todayStr(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+const TODAY=todayStr(),storedDate=localStorage.getItem(DATE_KEY);
+if(storedDate&&storedDate!==TODAY)localStorage.removeItem(STORE_KEY);
+localStorage.setItem(DATE_KEY,TODAY);
+document.getElementById('today-label').textContent=new Date().toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'long',year:'numeric'});
+
+let forms=JSON.parse(localStorage.getItem(STORE_KEY)||'[]');
+function saveForms(){localStorage.setItem(STORE_KEY,JSON.stringify(forms));const hasDraft=forms.some(f=>!f.submitted&&Object.keys(f.sections||{}).length>0);document.getElementById('export-btn').disabled=!hasDraft;}
+function getF(fid){return forms.find(f=>f.form_id===fid);}
+
+// ── MINIMIZE ─────────────────────────────────────────────────
+function toggleMinimize(fid,e) {
+  if(e) e.stopPropagation();
+  const f=getF(fid);if(!f||f.submitted)return;
+  f.minimized=!f.minimized;saveForms();
+  const card=document.getElementById('fc-'+fid);if(!card)return;
+  card.classList.toggle('minimized',f.minimized);
+  const btn=card.querySelector('.minimize-btn');if(btn)btn.title=f.minimized?'Expand form':'Minimise form';
 }
 
-const UID      = user.user_id;
-const SEC_KEY  = `tp_sections_${UID}`;
-const PEND_KEY = `tp_pending_${UID}`;
-const DATE_KEY = `tp_date_${UID}`;
-
-function todayStr() {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-}
-const TODAY = todayStr();
-
-// Clear local data if it's from a different day
-const storedDate = localStorage.getItem(DATE_KEY);
-if (storedDate && storedDate !== TODAY) {
-  localStorage.removeItem(SEC_KEY);
-  localStorage.removeItem(PEND_KEY);
-}
-localStorage.setItem(DATE_KEY, TODAY);
-
-let savedData = JSON.parse(localStorage.getItem(SEC_KEY)  || '{}');
-let pending   = JSON.parse(localStorage.getItem(PEND_KEY) || '[]');
-
-// ✅ FIX: If no access token exists, the pending queue is stale — clear it
-if (!localStorage.getItem('access_token')) {
-  pending = [];
-  localStorage.removeItem(PEND_KEY);
+// ── RENDER ───────────────────────────────────────────────────
+function renderAll(){
+  const list=document.getElementById('forms-list');
+  if(!forms.length){list.innerHTML=`<div style="text-align:center;padding:3rem 1rem;color:var(--grey)"><div style="font-size:2.5rem;margin-bottom:.75rem">📋</div><div style="font-weight:600;color:var(--dark);margin-bottom:.3rem">No forms yet</div><div style="font-size:.85rem">Click "Add New Beneficiary Form" below to start.</div></div>`;saveForms();return;}
+  list.innerHTML=forms.map(f=>buildCard(f)).join('');
+  forms.forEach(f=>{if(!f.submitted&&f.activeTab==='A')setTimeout(()=>initAC(f.form_id),60);});
+  saveForms();
 }
 
-let currentSec = null;
-let isSyncing  = false;
-
-document.getElementById('today-label').textContent =
-  new Date().toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'long',year:'numeric'});
-
-// ─────────────────────────────────────────────────────────────
-// SYNC STATUS INDICATOR
-// ─────────────────────────────────────────────────────────────
-function setSyncStatus(state) {
-  const dot   = document.getElementById('sync-dot');
-  const label = document.getElementById('sync-label');
-  dot.className = 'sync-dot ' + state;
-  const labels = { offline:'Offline', syncing:'Syncing…', synced:'Synced', pending:'Pending' };
-  label.textContent = labels[state] || state;
-}
-
-// ─────────────────────────────────────────────────────────────
-// TOKEN REFRESH
-// ─────────────────────────────────────────────────────────────
-async function tryRefreshToken() {
-  const refreshToken = localStorage.getItem('refresh_token');
-  if (!refreshToken) {
-    // No refresh token — session is completely dead, redirect to login
-    window.location.href = '/';
-    return false;
+function buildCard(f){
+  const name=f.sections?.A?.name||('Beneficiary #'+f.form_number);
+  const loc=f.sections?.A?.location||'location not set';
+  const done=Object.keys(f.sections||{}).length;
+  if(f.submitted){
+    return `<div class="form-card submitted" id="fc-${f.form_id}">
+      <div class="form-card-hdr" style="cursor:default">
+        <div class="form-num-badge">${f.form_number}</div>
+        <div class="form-hdr-info"><div class="form-hdr-title">${name}</div><div class="form-hdr-sub">${loc} · ${done}/4 tabs</div></div>
+        <div class="form-hdr-right"><span class="form-submitted-badge">✓ Submitted</span></div>
+      </div></div>`;
   }
-  try {
-    const res = await fetch('/api/refresh', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ refresh_token: refreshToken })
-    });
-    if (!res.ok) {
-      // Refresh token also expired — force re-login
-      window.location.href = '/';
-      return false;
-    }
-    const data = await res.json();
-    localStorage.setItem('access_token', data.access_token);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-// ─────────────────────────────────────────────────────────────
-// RENDER
-// ─────────────────────────────────────────────────────────────
-function renderCards() {
-  document.getElementById('cards-grid').innerHTML = SECTIONS.map(s => {
-    const done = !!savedData[s.id];
-    return `<div class="sec-card ${done?'done':''}" onclick="openSection('${s.id}')">
-      <div class="card-top">
-        <div class="card-icon">${s.icon}</div>
-        <div class="tick-badge ${done?'show':''}" id="tick-${s.id}">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+  const isMin=!!f.minimized;
+  const activeTab=f.activeTab||'A';
+  const tabsHtml=TABS.map(t=>{const isDone=!!(f.sections?.[t.id]);return `<button class="form-tab-btn ${isDone?'done':''} ${t.id===activeTab?'active':''}" onclick="switchTab('${f.form_id}','${t.id}')">${t.icon} ${t.name}<span class="tab-dot"></span></button>`;}).join('');
+  const panelsHtml=TABS.map(t=>`<div class="form-tab-panel ${t.id===activeTab?'active':''}" id="panel-${f.form_id}-${t.id}"><div id="fields-${f.form_id}-${t.id}">${buildFields(t.id,f.form_id,f.sections?.[t.id]||null)}</div><button class="save-tab-btn" id="stbtn-${f.form_id}-${t.id}" onclick="saveTab('${f.form_id}','${t.id}')"><span class="lbl">💾 Save ${t.name} Tab</span><span class="sp"><svg class="rot" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></span></button></div>`).join('');
+  return `<div class="form-card ${isMin?'minimized':''}" id="fc-${f.form_id}">
+    <div class="form-card-hdr" onclick="toggleMinimize('${f.form_id}',event)">
+      <div class="form-num-badge">${f.form_number}</div>
+      <div class="form-hdr-info">
+        <div class="form-hdr-title" id="htitle-${f.form_id}">${name}</div>
+        <div class="form-hdr-sub" id="hsub-${f.form_id}">${done}/4 tabs · ${loc}</div>
+      </div>
+      <div class="form-hdr-right">
+        <button class="minimize-btn" onclick="toggleMinimize('${f.form_id}',event)" title="${isMin?'Expand form':'Minimise form'}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+        </button>
+        <button class="discard-btn" onclick="event.stopPropagation();openDiscardModal('${f.form_id}')" title="Discard">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6M9 6V4h6v2"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="form-body-wrap">
+      <div class="form-tabs-row" id="ftabs-${f.form_id}">${tabsHtml}</div>
+      <div class="form-tab-content">${panelsHtml}</div>
+      <div style="padding:0 1.25rem">
+        <div class="verify-box">
+          <label class="verify-row">
+            <input type="checkbox" class="verify-chk" id="vchk-${f.form_id}" ${f.verified?'checked':''}
+              onchange="onVerify('${f.form_id}',this.checked)"/>
+            <span class="verify-lbl">Physical verification completed <em>*</em></span>
+          </label>
+          <p class="verify-hint">I confirm I have physically visited and verified this beneficiary's plantation site.</p>
         </div>
       </div>
-      <div class="card-name">Section ${s.id}: ${s.name}</div>
-      <div class="card-desc">${s.desc}</div>
-      <div class="card-q">${s.q} questions</div>
-    </div>`;
-  }).join('');
+    </div>
+    <div class="form-submit-area">
+      <button class="form-submit-btn" id="fsbtn-${f.form_id}" onclick="submitForm('${f.form_id}')" ${f.verified?'':'disabled'}>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        <span class="s-lbl">Submit Form #${f.form_number}</span>
+        <span class="s-sp"><svg class="rot" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></span>
+      </button>
+      <span class="submit-hint ${f.verified?'':'warn'}" id="shint-${f.form_id}">${f.verified?'Ready to submit':'⚠️ Check physical verification above first'}</span>
+    </div>
+  </div>`;
 }
 
-function updateProgress() {
-  const total    = SECTIONS.length; // 12
-  const nonUpload = SECTIONS.filter(s => !s.isUpload).length; // 11 form sections
-  const done     = SECTIONS.filter(s => savedData[s.id]).length;
-  const formDone = SECTIONS.filter(s => !s.isUpload && savedData[s.id]).length;
-
-  document.getElementById('prog-fill').style.width = (done/total*100)+'%';
-  document.getElementById('prog-count').textContent = `${done} / ${total}`;
-
-  const hasSections  = done > 0;
-  const allDone      = formDone === nonUpload; // all 11 form sections filled
-  const uploadDone   = !!savedData['L'];       // upload section saved too
-
-  // Export enabled as soon as any section is filled
-  document.getElementById('export-btn').disabled = !hasSections;
-
-  // Submit requires ALL 12 sections saved
-  const canSubmit = allDone && uploadDone;
-  document.getElementById('submit-btn').disabled = !canSubmit;
-
-  if (!hasSections) {
-    document.getElementById('action-note').textContent = 'Fill at least one section to enable export.';
-  } else if (!canSubmit) {
-    const missing = SECTIONS.filter(s => !savedData[s.id]).map(s => `${s.id}`).join(', ');
-    document.getElementById('action-note').textContent = `⚠️ Complete all 12 sections to submit. Missing: ${missing}`;
-  } else {
-    document.getElementById('action-note').textContent = 'All 12 sections complete — ready to submit!';
+function buildFields(tabId,fid,saved){
+  const tmp=document.createElement('div');tmp.innerHTML=TAB_HTML[tabId]();
+  if(saved){
+    tmp.querySelectorAll('input:not([type=radio]):not([type=checkbox]),select,textarea').forEach(el=>{if(el.id&&saved[el.id]!==undefined)el.value=saved[el.id];});
+    new Set([...tmp.querySelectorAll('input[type=radio]')].map(r=>r.name)).forEach(n=>{const v=saved[n];if(!v)return;const r=tmp.querySelector(`input[name="${CSS.escape(n)}"][value="${CSS.escape(v)}"]`);if(r){r.checked=true;r.closest('.r-item')?.classList.add('sel');}});
+    tmp.querySelectorAll('.chk-grp').forEach((g,i)=>{(saved['chk_'+i]||[]).forEach(v=>{const c=g.querySelector(`input[value="${CSS.escape(v)}"]`);if(c){c.checked=true;c.closest('.c-item')?.classList.add('chk');}});});
+    if(saved.manure==='Yes')tmp.querySelector('#manure-sub')?.classList.add('show');
+    if(saved.training==='Yes')tmp.querySelector('#train-sub')?.classList.add('show');
+    if(saved.team_visit==='Yes')tmp.querySelector('#visit-sub')?.classList.add('show');
+    if(saved.other_csr==='Yes')tmp.querySelector('#csr-sub')?.classList.add('show');
+    if(saved.govt_scheme==='Yes')tmp.querySelector('#scheme-sub')?.classList.add('show');
+    if(tabId==='A'&&saved.name){tmp.querySelector('#ac-filled-badge')?.classList.add('show');tmp.querySelector('#ac-clear')?.classList.add('show');}
   }
+  return tmp.innerHTML;
 }
 
-renderCards();
-updateProgress();
-
-// ─────────────────────────────────────────────────────────────
-// RESTORE FROM SERVER (on login / page load)
-// ─────────────────────────────────────────────────────────────
-async function restoreFromServer() {
-  const token = localStorage.getItem('access_token');
-  if (!token || !navigator.onLine) {
-    setSyncStatus(navigator.onLine ? 'pending' : 'offline');
-    return;
-  }
-  try {
-    const res = await fetch(`/api/submissions/temp/today?date=${TODAY}`, {
-      headers: { 'Authorization': 'Bearer ' + token }
-    });
-
-    // ✅ FIX: Handle 401 — access token expired, attempt silent refresh
-    if (res.status === 401) {
-      const refreshed = await tryRefreshToken();
-      if (refreshed) return restoreFromServer(); // retry once with new token
-      return; // tryRefreshToken will redirect if fully expired
-    }
-
-    if (!res.ok) {
-      setSyncStatus(pending.length > 0 ? 'pending' : 'synced');
-      return;
-    }
-
-    const doc = await res.json();
-    if (!doc || !doc.sections) {
-      setSyncStatus(pending.length > 0 ? 'pending' : 'synced');
-      return;
-    }
-
-    // Merge server sections — server wins for fields not in the pending list
-    const serverSecs = doc.sections;
-    Object.keys(serverSecs).forEach(id => {
-      if (!pending.includes(id)) {
-        savedData[id] = serverSecs[id];
-      }
-    });
-    // Also restore Section L file metadata from server if not pending
-    if (serverSecs['L'] && !pending.includes('L')) {
-      savedData['L'] = serverSecs['L'];
-    }
-    localStorage.setItem(SEC_KEY, JSON.stringify(savedData));
-    renderCards();
-    updateProgress();
-    setSyncStatus(pending.length > 0 ? 'pending' : 'synced');
-  } catch {
-    setSyncStatus('offline');
-  }
-}
-restoreFromServer();
-
-// ─────────────────────────────────────────────────────────────
-// AUTO-SYNC TO SERVER (temp collection)
-// ─────────────────────────────────────────────────────────────
-async function syncToServer(sectionsToSync) {
-  const token = localStorage.getItem('access_token');
-  if (!token || !navigator.onLine || sectionsToSync.length === 0 || isSyncing) return false;
-
-  isSyncing = true;
-  setSyncStatus('syncing');
-
-  const payload = {};
-  sectionsToSync.forEach(id => {
-    if (!savedData[id]) return;
-    if (id === 'L') {
-      // Section L: only sync file metadata (upload_ids), never binary data
-      payload[id] = { files: (savedData[id].files || []).map(f => ({
-        upload_id: f.upload_id, filename: f.filename,
-        content_type: f.content_type, size: f.size
-      }))};
-    } else {
-      payload[id] = savedData[id];
-    }
-  });
-
-  try {
-    const res = await fetch('/api/submissions/sync', {
-      method: 'POST',
-      headers: { 'Content-Type':'application/json', 'Authorization':'Bearer '+token },
-      body: JSON.stringify({ date: TODAY, sections: payload })
-    });
-
-    // ✅ FIX: Handle 401 — refresh token and retry once
-    if (res.status === 401) {
-      isSyncing = false;
-      const refreshed = await tryRefreshToken();
-      if (refreshed) return syncToServer(sectionsToSync);
-      return false;
-    }
-
-    if (res.ok) {
-      const synced = Object.keys(payload);
-      pending = pending.filter(id => !synced.includes(id));
-      localStorage.setItem(PEND_KEY, JSON.stringify(pending));
-      setSyncStatus(pending.length > 0 ? 'pending' : 'synced');
-      isSyncing = false;
-      return true;
-    }
-  } catch {}
-
-  isSyncing = false;
-  setSyncStatus(pending.length > 0 ? 'pending' : 'offline');
-  return false;
+function switchTab(fid,tabId){
+  const f=getF(fid);if(!f||f.submitted)return;
+  const card=document.getElementById('fc-'+fid);if(!card)return;
+  card.querySelectorAll('.form-tab-btn').forEach((b,i)=>b.classList.toggle('active',TABS[i].id===tabId));
+  card.querySelectorAll('.form-tab-panel').forEach((p,i)=>p.classList.toggle('active',TABS[i].id===tabId));
+  f.activeTab=tabId;saveForms();
+  if(tabId==='A')setTimeout(()=>initAC(fid),60);
 }
 
-async function syncAllPending() {
-  if (pending.length === 0) return;
-  await syncToServer([...pending]);
+function collectPanel(fid,tabId){
+  const el=document.getElementById('fields-'+fid+'-'+tabId);if(!el)return{};
+  const d={};
+  el.querySelectorAll('input:not([type=radio]):not([type=checkbox]),select,textarea').forEach(e=>{if(e.id)d[e.id]=e.value;});
+  new Set([...el.querySelectorAll('input[type=radio]')].map(r=>r.name)).forEach(n=>{const c=el.querySelector(`input[name="${CSS.escape(n)}"]:checked`);d[n]=c?c.value:'';});
+  el.querySelectorAll('.chk-grp').forEach((g,i)=>{d['chk_'+i]=[...g.querySelectorAll('input:checked')].map(c=>c.value);});
+  return d;
 }
 
-// ─────────────────────────────────────────────────────────────
-// SECTION L — FILE UPLOAD
-// ─────────────────────────────────────────────────────────────
-// uploadedFiles: { upload_id, filename, content_type, size, status }[]
-// Stored in savedData['L'] = { files: [...uploadedFiles] }
-let currentUploadFiles = [];  // files in the currently-open modal
-
-function openSectionL() {
-  // Load existing uploaded files for today
-  currentUploadFiles = (savedData['L']?.files || []).map(f => ({ ...f, status: 'done' }));
-  renderUploadList();
-}
-
-function handleDrop(e) {
-  e.preventDefault();
-  document.getElementById('upload-drop-zone').classList.remove('drag-over');
-  handleFileSelect(e.dataTransfer.files);
-}
-
-function handleFileSelect(fileList) {
-  if (!fileList || fileList.length === 0) return;
-  const MAX = 5;
-  const existing = currentUploadFiles.filter(f => f.status === 'done').length;
-  const allowed  = MAX - existing;
-  if (allowed <= 0) {
-    toast('Maximum 5 files allowed per submission.', 3000);
-    return;
-  }
-  const toAdd = Array.from(fileList).slice(0, allowed);
-  toAdd.forEach(file => uploadSingleFile(file));
-  // Reset input so same file can be re-selected if needed
-  document.getElementById('file-input').value = '';
-}
-
-async function uploadSingleFile(file) {
-  const ALLOWED = ['image/jpeg','image/jpg','image/png','image/webp','image/heic','application/pdf'];
-  const MAX_SIZE = 10 * 1024 * 1024;
-
-  if (!ALLOWED.includes(file.type)) {
-    toast(`"${file.name}" — unsupported type. Use JPG, PNG, WEBP, HEIC, or PDF.`, 3500);
-    return;
-  }
-  if (file.size > MAX_SIZE) {
-    toast(`"${file.name}" is too large. Max 10 MB.`, 3500);
-    return;
-  }
-  if (!navigator.onLine) {
-    toast('Internet required to upload files. Connect and try again.', 3500);
-    return;
-  }
-
-  const token = localStorage.getItem('access_token');
-  if (!token) { toast('Not authenticated.', 2500); return; }
-
-  // Add a "uploading" placeholder to the list
-  const tempId = 'tmp_' + Date.now() + '_' + Math.random().toString(36).slice(2);
-  currentUploadFiles.push({
-    upload_id: tempId,
-    filename:  file.name,
-    content_type: file.type,
-    size:      file.size,
-    status:    'uploading',
-  });
-  renderUploadList();
-
-  try {
-    const fd = new FormData();
-    fd.append('file', file);
-    fd.append('date', TODAY);
-
-    const res = await fetch('/api/files/upload', {
-      method: 'POST',
-      headers: { 'Authorization': 'Bearer ' + token },
-      body: fd,
-    });
-
-    if (res.status === 401) {
-      const refreshed = await tryRefreshToken();
-      if (refreshed) { uploadSingleFile(file); return; }
-    }
-
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.detail || 'Upload failed');
-    }
-
-    const data = await res.json();
-    // Replace temp placeholder with real data
-    const idx = currentUploadFiles.findIndex(f => f.upload_id === tempId);
-    if (idx !== -1) {
-      currentUploadFiles[idx] = { ...data, status: 'done' };
-    }
-    renderUploadList();
-    // Auto-save Section L data whenever a file finishes uploading
-    autoSaveSectionL();
-
-  } catch (err) {
-    const idx = currentUploadFiles.findIndex(f => f.upload_id === tempId);
-    if (idx !== -1) currentUploadFiles[idx].status = 'error';
-    renderUploadList();
-    toast('Upload failed: ' + err.message, 3500);
-  }
-}
-
-async function deleteUploadedFile(upload_id) {
-  const token = localStorage.getItem('access_token');
-  if (!token) return;
-  try {
-    await fetch(`/api/files/${upload_id}`, {
-      method: 'DELETE',
-      headers: { 'Authorization': 'Bearer ' + token },
-    });
-  } catch {}
-  currentUploadFiles = currentUploadFiles.filter(f => f.upload_id !== upload_id);
-  renderUploadList();
-  autoSaveSectionL();
-}
-
-function autoSaveSectionL() {
-  const doneFiles = currentUploadFiles.filter(f => f.status === 'done');
-  if (doneFiles.length > 0) {
-    savedData['L'] = { files: doneFiles };
-    localStorage.setItem(SEC_KEY, JSON.stringify(savedData));
-    // Sync L section metadata (not binaries) to server
-    if (navigator.onLine) syncToServer(['L']);
-    renderCards();
-    updateProgress();
-  } else {
-    // No done files — remove section L from savedData
-    delete savedData['L'];
-    localStorage.setItem(SEC_KEY, JSON.stringify(savedData));
-    renderCards();
-    updateProgress();
-  }
-}
-
-function renderUploadList() {
-  const container = document.getElementById('upload-file-list');
-  if (!container) return;
-
-  const doneCount = currentUploadFiles.filter(f => f.status === 'done').length;
-  // Update drop zone label
-  const dz = document.getElementById('upload-drop-zone');
-  if (dz) {
-    const remaining = 5 - doneCount;
-    dz.querySelector('div').textContent = remaining > 0
-      ? `Tap to add more files (${remaining} remaining)`
-      : 'Maximum 5 files reached';
-    if (remaining === 0) dz.style.opacity = '.5';
-    else dz.style.opacity = '1';
-  }
-
-  if (!currentUploadFiles.length) {
-    container.innerHTML = '';
-    return;
-  }
-
-  container.innerHTML = currentUploadFiles.map(f => {
-    const icon = f.content_type?.startsWith('image/') ? '🖼️' : '📄';
-    const sizeStr = f.size ? (f.size > 1024*1024
-      ? (f.size/1024/1024).toFixed(1)+' MB'
-      : Math.round(f.size/1024)+' KB') : '';
-
-    let statusHtml = '';
-    let itemClass  = 'upload-file-item';
-    if (f.status === 'done') {
-      statusHtml = '<span class="upload-file-status ok">✓ Uploaded</span>';
-      itemClass += ' done';
-    } else if (f.status === 'uploading') {
-      statusHtml = '<span class="upload-file-status pending">⏳ Uploading…</span>';
-      itemClass += ' uploading';
-    } else if (f.status === 'error') {
-      statusHtml = '<span class="upload-file-status err">✗ Failed</span>';
-      itemClass += ' error';
-    }
-
-    const canDelete = f.status === 'done' || f.status === 'error';
-    const delBtn = canDelete
-      ? `<button class="upload-del-btn" onclick="deleteUploadedFile('${f.upload_id}')" title="Remove">
-           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-         </button>`
-      : '';
-
-    return `<div class="${itemClass}">
-      <span class="upload-file-icon">${icon}</span>
-      <div class="upload-file-info">
-        <div class="upload-file-name">${f.filename}</div>
-        <div class="upload-file-size">${sizeStr}</div>
-        ${f.status === 'uploading' ? '<div class="upload-progress"><div class="upload-progress-fill" style="width:60%"></div></div>' : ''}
-      </div>
-      ${statusHtml}
-      ${delBtn}
-    </div>`;
-  }).join('');
-}
-
-// Override saveSection for Section L — it auto-saves on upload, but we still
-// need to handle the "Save Section" button click gracefully
-function saveSectionL() {
-  const doneFiles = currentUploadFiles.filter(f => f.status === 'done');
-  if (doneFiles.length === 0) {
-    toast('Please upload at least one file before saving.', 2500);
-    return;
-  }
-  // Data is already saved via autoSaveSectionL(); just close
-  closeModal();
-  toast(`Section L saved — ${doneFiles.length} file${doneFiles.length > 1 ? 's' : ''} uploaded ✓`);
-}
-
-// ─────────────────────────────────────────────────────────────
-// MODAL
-// ─────────────────────────────────────────────────────────────
-function openSection(id) {
-  const s = SECTIONS.find(x => x.id === id);
-  currentSec = s;
-  document.getElementById('m-icon').textContent  = s.icon;
-  document.getElementById('m-title').textContent = `Section ${s.id}: ${s.name}`;
-  document.getElementById('modal-body').innerHTML = s.html;
-
-  if (s.isUpload) {
-    // Upload section — special init
-    openSectionL();
-    // Change save button label
-    document.getElementById('save-btn').querySelector('.lbl').textContent = 'Done';
-  } else {
-    document.getElementById('save-btn').querySelector('.lbl').textContent = 'Save Section';
-    initFields();
-    if (savedData[id]) restoreValues(id);
-  }
-
-  document.getElementById('modal-bg').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeModal() {
-  document.getElementById('modal-bg').classList.remove('open');
-  document.body.style.overflow = '';
-  currentSec = null;
-}
-
-document.getElementById('modal-bg').addEventListener('click', e => {
-  if (e.target.id === 'modal-bg') closeModal();
-});
-
-function initFields() {
-  document.querySelectorAll('.r-item input[type=radio]').forEach(inp => {
-    inp.addEventListener('change', () => {
-      document.querySelectorAll(`input[name="${inp.name}"]`).forEach(r => r.closest('.r-item').classList.remove('sel'));
-      inp.closest('.r-item').classList.add('sel');
-    });
-  });
-  document.querySelectorAll('.c-item input[type=checkbox]').forEach(inp => {
-    inp.addEventListener('change', () => inp.closest('.c-item').classList.toggle('chk', inp.checked));
-  });
-}
-
-function showSub(id, show) { document.getElementById(id)?.classList.toggle('show', show); }
-
-function collectValues() {
-  const body = document.getElementById('modal-body');
-  const data = {};
-  body.querySelectorAll('input:not([type=radio]):not([type=checkbox]),select,textarea').forEach(el => {
-    if (el.id) data[el.id] = el.value;
-  });
-  new Set([...body.querySelectorAll('input[type=radio]')].map(r => r.name)).forEach(name => {
-    const c = body.querySelector(`input[name="${name}"]:checked`);
-    data[name] = c ? c.value : '';
-  });
-  body.querySelectorAll('.chk-grp').forEach((grp, i) => {
-    data[`chk_${i}`] = [...grp.querySelectorAll('input:checked')].map(c => c.value);
-  });
-  return data;
-}
-
-function restoreValues(id) {
-  const d = savedData[id];
-  const body = document.getElementById('modal-body');
-  Object.entries(d).forEach(([key, val]) => {
-    if (key.startsWith('chk_')) return;
-    const el = body.querySelector(`#${CSS.escape(key)}`);
-    if (el && el.type !== 'radio' && el.type !== 'checkbox') el.value = val;
-    if (typeof val === 'string' && val) {
-      const r = body.querySelector(`input[name="${key}"][value="${CSS.escape(val)}"]`);
-      if (r) {
-        r.checked = true;
-        r.closest('.r-item')?.classList.add('sel');
-        r.dispatchEvent(new Event('change'));
-      }
-    }
-  });
-  body.querySelectorAll('.chk-grp').forEach((grp, i) => {
-    (d[`chk_${i}`]||[]).forEach(v => {
-      const c = grp.querySelector(`input[value="${CSS.escape(v)}"]`);
-      if (c) { c.checked = true; c.closest('.c-item')?.classList.add('chk'); }
-    });
-  });
-}
-
-// ─────────────────────────────────────────────────────────────
-// SAVE SECTION
-// ─────────────────────────────────────────────────────────────
-function saveSection() {
-  if (!currentSec) return;
-  // Upload section has its own save handler
-  if (currentSec.isUpload) { saveSectionL(); return; }
-  const btn = document.getElementById('save-btn');
+async function saveTab(fid,tabId){
+  const btn=document.getElementById('stbtn-'+fid+'-'+tabId);if(!btn)return;
   btn.classList.add('busy');
-
-  setTimeout(async () => {
-    const id   = currentSec.id;
-    const data = collectValues();
-
-    // Always save locally first
-    savedData[id] = data;
-    localStorage.setItem(SEC_KEY, JSON.stringify(savedData));
-
-    // Track as pending (not yet synced)
-    if (!pending.includes(id)) pending.push(id);
-    localStorage.setItem(PEND_KEY, JSON.stringify(pending));
-
-    btn.classList.remove('busy');
-    closeModal();
-    renderCards();
-    updateProgress();
-
-    if (navigator.onLine) {
-      setSyncStatus('syncing');
-      const ok = await syncToServer([id]);
-      if (ok) {
-        toast(`Section ${id} saved & synced ✓`);
-      } else {
-        toast(`Section ${id} saved locally`);
-        setSyncStatus('pending');
-      }
-    } else {
-      toast(`Section ${id} saved offline ✓`);
-      setSyncStatus('offline');
-    }
-  }, 300);
+  const data=collectPanel(fid,tabId);
+  const f=getF(fid);if(!f){btn.classList.remove('busy');return;}
+  if(!f.sections)f.sections={};f.sections[tabId]=data;saveForms();
+  try{const token=localStorage.getItem('access_token');if(token&&navigator.onLine){setSyncStatus('syncing');await fetch('/api/forms/sync',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({form_id:f.form_id,date:TODAY,sections:f.sections,form_number:f.form_number})});setSyncStatus('synced');}}catch{setSyncStatus('pending');}
+  btn.classList.remove('busy');
+  const card=document.getElementById('fc-'+fid);
+  if(card){const tbs=card.querySelectorAll('.form-tab-btn');const idx=TABS.findIndex(t=>t.id===tabId);if(tbs[idx])tbs[idx].classList.add('done');const sub=document.getElementById('hsub-'+fid);if(sub)sub.textContent=Object.keys(f.sections).length+'/4 tabs · '+(f.sections?.A?.location||'location not set');if(tabId==='A'){const title=document.getElementById('htitle-'+fid);if(title)title.textContent=data.name||'Beneficiary #'+f.form_number;}}
+  toast('Tab '+tabId+' saved ✓');
 }
 
-// ─────────────────────────────────────────────────────────────
-// EXPORT EXCEL
-// ─────────────────────────────────────────────────────────────
-function flattenSection(secId, data, meta) {
-  const row = { ...meta };
-  if (!data) return row;
-  const chkLabels = CHK_LABELS[secId] || [];
-  Object.entries(data).forEach(([key, val]) => {
-    const label = key.startsWith('chk_')
-      ? (chkLabels[parseInt(key.split('_')[1])] || `Multi-select ${+key.split('_')[1]+1}`)
-      : (F_LABELS[key] || key);
-    row[label] = Array.isArray(val) ? val.join(', ') : (val ?? '');
-  });
-  return row;
+function onVerify(fid,checked){
+  const f=getF(fid);if(!f)return;f.verified=checked;saveForms();
+  const btn=document.getElementById('fsbtn-'+fid),hint=document.getElementById('shint-'+fid);
+  if(btn)btn.disabled=!checked;
+  if(hint){hint.className=checked?'submit-hint':'submit-hint warn';hint.textContent=checked?'Ready to submit':'⚠️ Check physical verification above first';}
+  if(checked)toast('✅ Physical verification confirmed');
 }
 
-function buildWorkbook(docs) {
-  const wb = XLSX.utils.book_new();
-  const sectionData = {};
-  docs.forEach(doc => {
-    const meta = { 'Employee Name': doc.employee_name || user.name || '', 'Date': doc.date || '' };
-    const sections = doc.sections || {};
-    Object.entries(sections).forEach(([secId, data]) => {
-      if (!sectionData[secId]) sectionData[secId] = [];
-      sectionData[secId].push(flattenSection(secId, data, meta));
+async function submitForm(fid){
+  const f=getF(fid);if(!f)return;
+  if(!f.verified){toast('⚠️ Check the physical verification box first',3000);return;}
+  if(!navigator.onLine){toast('Must be online to submit',3000);return;}
+  const btn=document.getElementById('fsbtn-'+fid);btn.classList.add('busy');
+  try{
+    const token=localStorage.getItem('access_token');if(!token)throw new Error('Not authenticated');
+    await fetch('/api/forms/sync',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({form_id:f.form_id,date:TODAY,sections:f.sections||{},form_number:f.form_number})});
+    const res=await fetch('/api/forms/submit',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({form_id:f.form_id,date:TODAY})});
+    if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(e.detail||'Submit failed');}
+    f.submitted=true;saveForms();
+    const card=document.getElementById('fc-'+fid);
+    if(card){const tmp=document.createElement('div');tmp.innerHTML=buildCard(f);card.replaceWith(tmp.firstElementChild);}
+    setSyncStatus('synced');toast('✅ Form #'+f.form_number+' submitted!',3500);
+  }catch(err){btn.classList.remove('busy');toast('Submit failed: '+err.message,3500);}
+}
+
+function addForm(){
+  const fn=forms.length+1;
+  const nf={form_id:'f_'+Date.now()+'_'+Math.random().toString(36).slice(2,6),form_number:fn,sections:{},verified:false,submitted:false,activeTab:'A',minimized:false};
+  forms.push(nf);saveForms();renderAll();
+  setTimeout(()=>{document.getElementById('fc-'+nf.form_id)?.scrollIntoView({behavior:'smooth',block:'start'});initAC(nf.form_id);},120);
+  toast('Form #'+fn+' added');
+}
+
+let pendingDiscardId=null;
+function openDiscardModal(fid){pendingDiscardId=fid;document.getElementById('m-discard').classList.add('open');}
+async function confirmDiscard(){
+  closeM('m-discard');
+  const fid=pendingDiscardId;pendingDiscardId=null;if(!fid)return;
+  try{const token=localStorage.getItem('access_token');if(token&&navigator.onLine)await fetch('/api/forms/draft/'+fid,{method:'DELETE',headers:{'Authorization':'Bearer '+token}});}catch{}
+  forms=forms.filter(f=>f.form_id!==fid);forms.forEach((f,i)=>f.form_number=i+1);saveForms();renderAll();toast('Form discarded');
+}
+
+function exportDrafts(){
+  const drafts=forms.filter(f=>!f.submitted&&Object.keys(f.sections||{}).length>0);
+  if(!drafts.length){toast('No drafts to export');return;}
+  const wb=XLSX.utils.book_new();
+  drafts.forEach(f=>{
+    const bname=(f.sections?.A?.name||'Form'+f.form_number).replace(/\s+/g,'_').slice(0,15);
+    const meta={'Employee':user.name||'','Date':TODAY,'Form #':f.form_number};
+    Object.entries(f.sections||{}).forEach(([sid,data])=>{
+      const row={...meta};let ci=0;
+      Object.entries(data).forEach(([k,v])=>{const lbl=k.startsWith('chk_')?'Multi-sel '+(ci++):(F_LABELS[k]||k);row[lbl]=Array.isArray(v)?v.join(', '):(v??'');});
+      XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet([row]),(bname+'_'+sid).slice(0,31));
     });
   });
-  Object.entries(sectionData).sort().forEach(([secId, rows]) => {
-    const m = SEC_META[secId];
-    const sheetName = `${secId} - ${m ? m.name : secId}`.slice(0, 31);
-    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), sheetName);
-  });
-  if (!Object.keys(sectionData).length) {
-    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet([{Note:'No data'}]), 'No Data');
-  }
-  return wb;
+  XLSX.writeFile(wb,'JHSTree_Drafts_'+TODAY+'.xlsx');toast('Excel exported ✓');
 }
 
-function exportToday() {
-  if (!Object.keys(savedData).length) { toast('No data to export', 1800); return; }
-  const doc = { employee_name: user.name, date: TODAY, sections: savedData };
-  const wb = buildWorkbook([doc]);
-  XLSX.writeFile(wb, `TreeApp_Draft_${TODAY}.xlsx`);
-  toast('Excel exported ✓');
+// ── AUTOCOMPLETE ──────────────────────────────────────────────
+let acS={};
+function initAC(fid){
+  const panel=document.getElementById('panel-'+fid+'-A');if(!panel||!panel.classList.contains('active'))return;
+  const inp=panel.querySelector('#name');if(!inp||inp._acInit)return;
+  inp._acInit=true;if(!acS[fid])acS[fid]={results:[],locked:false,timer:null,fi:-1};
+  inp.addEventListener('input',e=>onACInput(e,fid));inp.addEventListener('keydown',e=>onACKD(e,fid));
+  inp.addEventListener('focus',()=>{const s=acS[fid];if(!s.locked&&s.results.length)showACDD(fid,s.results,inp.value);});
+  document.addEventListener('mousedown',e=>{if(!panel.querySelector('.ac-wrap')?.contains(e.target))closeACDD(fid);});
+  panel.querySelector('#ac-clear').onclick=()=>clearAC(fid);
 }
-
-// ─────────────────────────────────────────────────────────────
-// SUBMIT FLOW
-// ─────────────────────────────────────────────────────────────
-function openConfirm() {
-  // Guard: all 12 sections must be saved
-  const missing = SECTIONS.filter(s => !savedData[s.id]).map(s => s.id);
-  if (missing.length > 0) {
-    toast(`⚠️ Complete all sections first. Missing: ${missing.join(', ')}`, 3500);
-    return;
-  }
-  const secIds = Object.keys(savedData).sort();
-  document.getElementById('confirm-count').textContent = secIds.length;
-  document.getElementById('confirm-sections').innerHTML = secIds.map(id => {
-    const m = SEC_META[id];
-    return `<span class="sec-tag">${m ? m.icon+' '+m.name : id}</span>`;
-  }).join('');
-  document.getElementById('confirm-bg').classList.add('open');
+function onACInput(e,fid){
+  const val=e.target.value.trim(),s=acS[fid];
+  if(s.locked){s.locked=false;document.getElementById('panel-'+fid+'-A')?.querySelector('#ac-filled-badge')?.classList.remove('show');}
+  const cb=document.getElementById('panel-'+fid+'-A')?.querySelector('#ac-clear');
+  if(!val){closeACDD(fid);cb?.classList.remove('show');return;}cb?.classList.add('show');
+  clearTimeout(s.timer);s.timer=setTimeout(()=>fetchAC(fid,val),350);
 }
-
-function closeConfirm() {
-  document.getElementById('confirm-bg').classList.remove('open');
+function onACKD(e,fid){
+  const dd=document.getElementById('panel-'+fid+'-A')?.querySelector('#ac-dropdown');if(!dd?.classList.contains('open'))return;
+  const items=dd.querySelectorAll('.ac-item'),s=acS[fid];
+  if(e.key==='ArrowDown'){e.preventDefault();s.fi=Math.min(s.fi+1,items.length-1);items.forEach((el,i)=>el.classList.toggle('focused',i===s.fi));items[s.fi]?.scrollIntoView({block:'nearest'});}
+  else if(e.key==='ArrowUp'){e.preventDefault();s.fi=Math.max(s.fi-1,0);items.forEach((el,i)=>el.classList.toggle('focused',i===s.fi));}
+  else if(e.key==='Enter'){e.preventDefault();if(s.fi>=0)items[s.fi]?.click();}
+  else if(e.key==='Escape')closeACDD(fid);
 }
-
-document.getElementById('confirm-bg').addEventListener('click', e => {
-  if (e.target.id === 'confirm-bg') closeConfirm();
-});
-
-async function doSubmit() {
-  const btn = document.getElementById('confirm-submit-btn');
-
-  if (!navigator.onLine) {
-    closeConfirm();
-    toast('You must be online to submit. Data is saved locally.', 3000);
-    return;
-  }
-
-  btn.disabled = true;
-  btn.textContent = 'Submitting…';
-
-  try {
-    // 1. Ensure all local data is synced to temp (handles token refresh internally)
-    if (pending.length > 0) {
-      await syncToServer([...pending]);
-    }
-
-    // 2. Get a fresh token after potential refresh above
-    const token = localStorage.getItem('access_token');
-    if (!token) throw new Error('Not authenticated');
-
-    // 3. Call submit endpoint — moves temp → main collection
-    let res = await fetch('/api/submissions/submit', {
-      method: 'POST',
-      headers: { 'Content-Type':'application/json', 'Authorization':'Bearer '+token },
-      body: JSON.stringify({ date: TODAY })
-    });
-
-    // ✅ FIX: Handle 401 on submit too
-    if (res.status === 401) {
-      const refreshed = await tryRefreshToken();
-      if (!refreshed) throw new Error('Session expired. Please sign in again.');
-      const newToken = localStorage.getItem('access_token');
-      res = await fetch('/api/submissions/submit', {
-        method: 'POST',
-        headers: { 'Content-Type':'application/json', 'Authorization':'Bearer '+newToken },
-        body: JSON.stringify({ date: TODAY })
-      });
-    }
-
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.detail || 'Submit failed');
-    }
-
-    // 4. Clear ALL local data for today
-    localStorage.removeItem(SEC_KEY);
-    localStorage.removeItem(PEND_KEY);
-    savedData = {};
-    pending   = [];
-
-    closeConfirm();
-    renderCards();
-    updateProgress();
-    setSyncStatus('synced');
-    toast('✅ Submitted successfully! Check History to view.', 3500);
-
-  } catch (err) {
-    btn.disabled = false;
-    btn.textContent = 'Submit Now';
-    closeConfirm();
-    toast('Submit failed: ' + err.message, 3500);
-  }
+async function fetchAC(fid,q){
+  const panel=document.getElementById('panel-'+fid+'-A');
+  panel?.querySelector('#ac-spinner')?.classList.add('show');panel?.querySelector('#ac-clear')?.classList.remove('show');
+  try{const token=localStorage.getItem('access_token');const res=await fetch('/api/excel-data/search?q='+encodeURIComponent(q),{headers:{Authorization:'Bearer '+token}});if(!res.ok)throw 0;acS[fid].results=await res.json();showACDD(fid,acS[fid].results,q);}
+  catch{acS[fid].results=[];closeACDD(fid);}
+  finally{panel?.querySelector('#ac-spinner')?.classList.remove('show');panel?.querySelector('#ac-clear')?.classList.add('show');}
 }
-
-// ─────────────────────────────────────────────────────────────
-// NETWORK EVENTS
-// ─────────────────────────────────────────────────────────────
-function updateNetBanner() {
-  const b = document.getElementById('net-banner');
-  if (navigator.onLine) {
-    b.className = 'online-flash';
-    b.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 6s4-4 11-4 11 4 11 4M5 10s3-3 7-3 7 3 7 3M9 14s1-1 3-1 3 1 3 1M12 18h.01"/></svg>&nbsp;Back online — syncing…`;
-    setTimeout(() => { b.className=''; b.innerHTML=''; }, 3500);
-    syncAllPending();
-  } else {
-    b.className = 'offline';
-    b.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="1" y1="1" x2="23" y2="23"/><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55M5 12.55a10.94 10.94 0 0 1 5.17-2.39M10.71 5.05A16 16 0 0 1 22.56 9M1.42 9a15.91 15.91 0 0 1 4.7-2.88M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg>&nbsp;Offline — data saves locally`;
-    setSyncStatus('offline');
-  }
+function showACDD(fid,results,q){
+  const panel=document.getElementById('panel-'+fid+'-A');const dd=panel?.querySelector('#ac-dropdown');if(!dd)return;
+  acS[fid].fi=-1;
+  const hl=t=>(t+'').replace(new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi'),'<mark>$1</mark>');
+  if(!results.length){dd.innerHTML='<div class="ac-no-result">No matching farmers found</div>';dd.classList.add('open');return;}
+  dd.innerHTML=results.slice(0,8).map((r,i)=>{
+    const loc=[r.village,r.taluka,r.district].filter(Boolean).join(', ');const ph=r.farmer_contact||r.contact||'';const sc=Math.round(r.match_score||0);
+    return `<div class="ac-item" onmousedown="selectAC(event,'${fid}',${i})"><div class="ac-item-icon">🌾</div><div class="ac-item-body"><div class="ac-item-name">${hl(r.farmer_name||r.name||'')}</div><div class="ac-item-sub">${loc?'📍 '+loc:''}${ph?(loc?' · ':'')+' 📞 '+ph:''}</div></div>${sc>=95?'<span class="ac-item-badge">✓ Exact</span>':(sc>=80?'<span class="ac-item-badge" style="background:#fff3cd;color:#856404">~Match</span>':'')}</div>`;
+  }).join('');dd.classList.add('open');
 }
-window.addEventListener('online',  updateNetBanner);
-window.addEventListener('offline', updateNetBanner);
-
-// Set initial sync status
-if (!navigator.onLine) {
-  setSyncStatus('offline');
-  document.getElementById('net-banner').className = 'offline';
-  document.getElementById('net-banner').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="1" y1="1" x2="23" y2="23"/><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55M5 12.55a10.94 10.94 0 0 1 5.17-2.39M10.71 5.05A16 16 0 0 1 22.56 9M1.42 9a15.91 15.91 0 0 1 4.7-2.88M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg>&nbsp;Offline — data saves locally`;
-} else if (pending.length > 0) {
-  setSyncStatus('pending');
-} else {
-  setSyncStatus('synced');
+function selectAC(e,fid,idx){
+  e.preventDefault();const farmer=acS[fid]?.results?.[idx];if(!farmer)return;
+  acS[fid].locked=true;closeACDD(fid);
+  const panel=document.getElementById('panel-'+fid+'-A');if(!panel)return;
+  const ni=panel.querySelector('#name');if(ni)ni.value=farmer.farmer_name||farmer.name||'';
+  panel.querySelector('#ac-filled-badge')?.classList.add('show');panel.querySelector('#ac-clear')?.classList.add('show');
+  const get=(...keys)=>keys.map(k=>farmer[k]).find(v=>v&&String(v).trim())||'';
+  const age=get('age'),mob=get('farmer_contact','contact','mobile','phone'),gen=get('gender'),mar=get('marital','marital_status');
+  const vil=get('village'),tal=get('taluka','taluk'),dis=get('district');
+  if(age){const el=panel.querySelector('#age');if(el)el.value=age;}
+  if(mob){const el=panel.querySelector('#mobile');if(el)el.value=mob;}
+  if(gen){const gv=gen.toLowerCase().trim();const gval=gv==='m'||gv==='male'?'Male':gv==='f'||gv==='female'?'Female':'Other';const r=panel.querySelector(`input[name="gender"][value="${gval}"]`);if(r){r.checked=true;panel.querySelectorAll('input[name="gender"]').forEach(x=>x.closest('.r-item')?.classList.remove('sel'));r.closest('.r-item')?.classList.add('sel');}}
+  if(mar){const sel=panel.querySelector('#marital');if(sel){const opt=[...sel.options].find(o=>o.value.toLowerCase()===mar.toLowerCase());if(opt)sel.value=opt.value;}}
+  const lp=[vil,tal,dis].filter(Boolean);if(lp.length){const el=panel.querySelector('#location');if(el)el.value=lp.join(', ');}
+  toast('✅ Auto-filled from farmer records',2500);
 }
-
-// ─────────────────────────────────────────────────────────────
-// TOAST
-// ─────────────────────────────────────────────────────────────
-let toastTimer = null;
-function toast(msg, dur=2800) {
-  const t = document.getElementById('toast');
-  document.getElementById('toast-msg').textContent = msg;
-  t.classList.add('show');
-  if (toastTimer) clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), dur);
+function clearAC(fid){
+  const panel=document.getElementById('panel-'+fid+'-A');const ni=panel?.querySelector('#name');if(ni)ni.value='';
+  closeACDD(fid);if(acS[fid]){acS[fid].locked=false;acS[fid].results=[];}
+  panel?.querySelector('#ac-clear')?.classList.remove('show');panel?.querySelector('#ac-filled-badge')?.classList.remove('show');ni?.focus();
 }
+function closeACDD(fid){document.getElementById('panel-'+fid+'-A')?.querySelector('#ac-dropdown')?.classList.remove('open');if(acS[fid])acS[fid].fi=-1;}
+function showSub(id,show){document.getElementById(id)?.classList.toggle('show',show);}
 
-// ─────────────────────────────────────────────────────────────
-// USER MENU
-// ─────────────────────────────────────────────────────────────
-function toggleUserMenu() {
-  document.getElementById('user-dropdown').classList.toggle('open');
+async function restoreFromServer(){
+  const token=localStorage.getItem('access_token');if(!token||!navigator.onLine){setSyncStatus(navigator.onLine?'pending':'offline');return;}
+  try{
+    const res=await fetch('/api/forms/today?date='+TODAY,{headers:{'Authorization':'Bearer '+token}});
+    if(res.status===401){const ok=await tryRefresh();if(ok)return restoreFromServer();return;}
+    if(!res.ok)return;
+    const sf=await res.json();if(!sf?.length)return;
+    sf.forEach(s=>{if(!forms.find(f=>f.form_id===s.form_id)){forms.push({form_id:s.form_id,form_number:s.form_number||forms.length+1,sections:s.sections||{},verified:false,submitted:false,activeTab:'A',minimized:false});}});
+    saveForms();renderAll();setSyncStatus('synced');
+  }catch{setSyncStatus('offline');}
 }
-document.addEventListener('click', e => {
-  const wrap = document.getElementById('user-menu-wrap');
-  if (wrap && !wrap.contains(e.target)) {
-    document.getElementById('user-dropdown').classList.remove('open');
-  }
-});
-
-function logout() {
-  document.getElementById('user-dropdown').classList.remove('open');
-  document.getElementById('signout-modal-bg').classList.add('open');
+async function tryRefresh(){
+  const rt=localStorage.getItem('refresh_token');if(!rt){window.location.href='/';return false;}
+  try{const res=await fetch('/api/refresh',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({refresh_token:rt})});if(!res.ok){window.location.href='/';return false;}localStorage.setItem('access_token',(await res.json()).access_token);return true;}catch{return false;}
 }
-function closeSignoutModal() {
-  document.getElementById('signout-modal-bg').classList.remove('open');
-}
-function doLogout() {
-  exitAllowed = true;
-  localStorage.removeItem('access_token');
-  localStorage.removeItem('refresh_token');
-  localStorage.removeItem('user');
-  window.location.href = '/';
-}
-document.getElementById('signout-modal-bg').addEventListener('click', e => {
-  if (e.target.id === 'signout-modal-bg') closeSignoutModal();
-});
-
-// ── Exit / Leave app guard ───────────────────────────────────
-let exitAllowed    = false;
-let pendingExitUrl = null;
-
-function closeExitModal() {
-  document.getElementById('exit-modal-bg').classList.remove('open');
-  pendingExitUrl = null;
-}
-function confirmExit() {
-  exitAllowed = true;
-  document.getElementById('exit-modal-bg').classList.remove('open');
-  if (pendingExitUrl) {
-    window.location.href = pendingExitUrl;
-  } else {
-    window.close();
-  }
-}
-document.getElementById('exit-modal-bg').addEventListener('click', e => {
-  if (e.target.id === 'exit-modal-bg') closeExitModal();
-});
-
-window.addEventListener('beforeunload', e => {
-  if (exitAllowed) return;
-  const hasDraft = Object.keys(savedData).length > 0;
-  if (hasDraft) {
-    e.preventDefault();
-    e.returnValue = '';
-  }
-});
-
-document.addEventListener('click', e => {
-  if (exitAllowed) return;
-  const hasDraft = Object.keys(savedData).length > 0;
-  if (!hasDraft) return;
-
-  const link = e.target.closest('a[href]');
-  if (!link) return;
-
-  const href = link.getAttribute('href');
-  if (!href || href.startsWith('#') || href === window.location.pathname) return;
-  if (href === '/admin.html') return;
-
-  e.preventDefault();
-  e.stopPropagation();
-  pendingExitUrl = href;
-  document.getElementById('exit-modal-bg').classList.add('open');
-}, true);
-
-function openSwitchModal(e) {
-  e.preventDefault();
-  document.getElementById('user-dropdown').classList.remove('open');
-  document.getElementById('switch-modal-bg').classList.add('open');
-}
-function closeSwitchModal() { document.getElementById('switch-modal-bg').classList.remove('open'); }
-function goToAdmin() {
-  exitAllowed = true;
-  window.location.href = '/admin.html';
-}
-document.getElementById('switch-modal-bg').addEventListener('click', e => {
-  if (e.target.id === 'switch-modal-bg') closeSwitchModal();
-});
-
-// ─────────────────────────────────────────────────────────────
-// INIT
-// ─────────────────────────────────────────────────────────────
-if (navigator.onLine && pending.length > 0) syncAllPending();
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(()=>{});
+function setSyncStatus(s){document.getElementById('sync-dot').className='sync-dot '+s;document.getElementById('sync-label').textContent={offline:'Offline',syncing:'Syncing…',synced:'Synced',pending:'Pending'}[s]||s;}
+function updateNetBanner(){const b=document.getElementById('net-banner');if(navigator.onLine){b.className='online-flash';b.textContent='Back online';setTimeout(()=>{b.className='';b.textContent='';},3000);setSyncStatus('synced');}else{b.className='offline';b.textContent='Offline — data saves locally';setSyncStatus('offline');}}
+window.addEventListener('online',updateNetBanner);window.addEventListener('offline',updateNetBanner);
+setSyncStatus(navigator.onLine?'synced':'offline');
+let toastT=null;
+function toast(msg,dur=2500){const t=document.getElementById('toast');document.getElementById('toast-msg').textContent=msg;t.classList.add('show');if(toastT)clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),dur);}
+function toggleUM(){document.getElementById('udrop').classList.toggle('open');}
+document.addEventListener('click',e=>{const w=document.getElementById('umw');if(w&&!w.contains(e.target))document.getElementById('udrop').classList.remove('open');});
+function openM(e,id){if(e)e.preventDefault();document.getElementById('udrop').classList.remove('open');document.getElementById(id)?.classList.add('open');}
+function closeM(id){document.getElementById(id)?.classList.remove('open');}
+function doLogout(){['access_token','refresh_token','user'].forEach(k=>localStorage.removeItem(k));window.location.href='/';}
+['m-admin','m-signout','m-discard'].forEach(id=>{document.getElementById(id)?.addEventListener('click',e=>{if(e.target.id===id)closeM(id);});});
+renderAll();restoreFromServer();
+if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js').catch(()=>{});
 </script>
 </body>
 </html>

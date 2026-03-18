@@ -10,7 +10,6 @@
   <link rel="apple-touch-icon" href="/icons/icon-192.png"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
-  <!-- SheetJS for Excel export -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -31,15 +30,12 @@
     nav{background:var(--forest);height:56px;display:flex;align-items:center;padding:0 1.25rem;gap:.6rem;position:sticky;top:0;z-index:200}
     .nav-logo{font-family:'Fraunces',serif;color:#fff;font-size:1.05rem;text-decoration:none;flex-shrink:0}
     .nav-logo span{color:var(--mint)}
-
     .nav-page-toggle{display:flex;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:100px;padding:3px;gap:2px;margin-left:.25rem}
     .nav-page-btn{padding:4px 13px;border:none;background:none;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:600;color:rgba(255,255,255,.5);cursor:pointer;transition:all .18s;white-space:nowrap;text-decoration:none;display:flex;align-items:center}
     .nav-page-btn.active{background:rgba(149,213,178,.22);color:#fff}
     .nav-page-btn:hover:not(.active){background:rgba(149,213,178,.12);color:var(--mint)}
-
     .nav-right{margin-left:auto;display:flex;align-items:center;gap:.45rem;flex-shrink:0}
 
-    /* Sync indicator */
     .sync-indicator{display:flex;align-items:center;gap:5px;font-size:.75rem;font-weight:600;color:rgba(255,255,255,.4);padding:4px 8px;border-radius:100px}
     .sync-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.2);flex-shrink:0;transition:background .3s}
     .sync-dot.syncing{background:var(--amber);animation:pulse .8s ease-in-out infinite}
@@ -48,7 +44,6 @@
     .sync-dot.offline{background:#6b7280}
     @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 
-    /* User icon + dropdown */
     .user-menu-wrap{position:relative}
     .user-icon-btn{width:34px;height:34px;border-radius:50%;background:rgba(149,213,178,.15);border:1.5px solid rgba(149,213,178,.3);color:var(--mint);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .18s;flex-shrink:0}
     .user-icon-btn:hover{background:rgba(149,213,178,.28)}
@@ -95,12 +90,10 @@
     .submit-btn .s-lbl{transition:opacity .15s}
     .submit-btn .s-sp{display:none;position:absolute;inset:0;align-items:center;justify-content:center;background:inherit}
     .submit-btn.busy .s-lbl{opacity:0}.submit-btn.busy .s-sp{display:flex}
-
     .export-btn{display:flex;align-items:center;gap:6px;background:#fff;color:var(--dark);border:1.5px solid var(--border);padding:10px 16px;border-radius:11px;font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:600;cursor:pointer;transition:all .18s;white-space:nowrap}
     .export-btn:hover{border-color:var(--leaf);color:var(--green);background:var(--pale)}
     .export-btn:disabled{opacity:.4;pointer-events:none}
     .export-btn svg{width:14px;height:14px}
-
     .action-note{font-size:.75rem;color:var(--grey);width:100%;margin-top:.4rem}
 
     /* ── SECTION GRID ── */
@@ -168,6 +161,35 @@
     .save-btn.busy .lbl{opacity:0}.save-btn.busy .sp{display:flex}
     @keyframes rot{to{transform:rotate(360deg)}}.rot{animation:rot .65s linear infinite}
 
+    /* ── AUTOCOMPLETE ── */
+    .ac-wrap{position:relative}
+    .ac-wrap .fi{padding-right:36px}
+    .ac-spinner{position:absolute;right:11px;top:50%;transform:translateY(-50%);width:16px;height:16px;display:none;pointer-events:none}
+    .ac-spinner.show{display:block}
+    .ac-spinner svg{width:16px;height:16px;color:var(--leaf)}
+    .ac-clear{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:20px;height:20px;border:none;background:none;cursor:pointer;color:var(--grey);display:none;align-items:center;justify-content:center;border-radius:50%;transition:background .15s,color .15s;padding:0}
+    .ac-clear:hover{background:var(--border);color:var(--dark)}
+    .ac-clear.show{display:flex}
+    .ac-clear svg{width:12px;height:12px}
+    .ac-dropdown{position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:1.5px solid var(--border);border-radius:12px;box-shadow:0 8px 28px rgba(0,0,0,.13);z-index:999;overflow:hidden;display:none;max-height:260px;overflow-y:auto}
+    .ac-dropdown.open{display:block;animation:acFade .15s ease}
+    @keyframes acFade{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+    .ac-item{display:flex;align-items:flex-start;gap:.65rem;padding:.75rem 1rem;cursor:pointer;transition:background .12s;border-bottom:1px solid var(--border)}
+    .ac-item:last-child{border-bottom:none}
+    .ac-item:hover,.ac-item.focused{background:var(--pale)}
+    .ac-item-icon{width:32px;height:32px;border-radius:8px;background:var(--pale);display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;margin-top:1px}
+    .ac-item:hover .ac-item-icon,.ac-item.focused .ac-item-icon{background:#c3e6c9}
+    .ac-item-body{flex:1;min-width:0}
+    .ac-item-name{font-weight:700;font-size:.9rem;color:var(--dark);line-height:1.3}
+    .ac-item-name mark{background:none;color:var(--green);font-weight:700}
+    .ac-item-sub{font-size:.73rem;color:var(--grey);margin-top:2px;line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .ac-item-badge{font-size:.65rem;font-weight:700;padding:2px 7px;border-radius:100px;background:#dcfce7;color:#16a34a;flex-shrink:0;margin-top:3px;align-self:flex-start}
+    .ac-no-result{padding:1.1rem 1rem;text-align:center;color:var(--grey);font-size:.84rem}
+    .ac-no-result svg{width:28px;height:28px;margin:0 auto .5rem;display:block;opacity:.25}
+    .ac-filled-badge{display:none;align-items:center;gap:5px;background:#dcfce7;border:1px solid #86efac;color:#16a34a;font-size:.75rem;font-weight:600;padding:4px 10px;border-radius:100px;margin-top:.45rem;width:fit-content}
+    .ac-filled-badge.show{display:flex}
+    .ac-filled-badge svg{width:12px;height:12px}
+
     /* ── CONFIRM SUBMIT MODAL ── */
     .confirm-bg{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.55);align-items:center;justify-content:center;backdrop-filter:blur(4px)}
     .confirm-bg.open{display:flex}
@@ -183,7 +205,6 @@
     .cbtn.yes{background:var(--green);color:#fff}.cbtn.yes:hover{background:var(--leaf)}
     .cbtn.no{background:var(--border);color:var(--dark)}.cbtn.no:hover{background:#d1d5db}
 
-    /* Admin confirm modal */
     .switch-modal-bg{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.55);align-items:center;justify-content:center;backdrop-filter:blur(4px)}
     .switch-modal-bg.open{display:flex}
     .switch-modal{background:#fff;border-radius:18px;padding:2rem 1.75rem;width:90%;max-width:360px;text-align:center;animation:popIn .25s cubic-bezier(.34,1.56,.64,1)}
@@ -218,18 +239,15 @@
 
 <nav>
   <a href="/dashboard.html" class="nav-logo">🌳 Tree<span>App</span></a>
-
   <div class="nav-page-toggle">
     <a href="/dashboard.html" class="nav-page-btn active">Home</a>
     <a href="/history.html"   class="nav-page-btn">History</a>
   </div>
-
   <div class="nav-right">
     <div class="sync-indicator" id="sync-indicator" title="Sync status">
       <span class="sync-dot offline" id="sync-dot"></span>
       <span id="sync-label">—</span>
     </div>
-
     <div class="user-menu-wrap" id="user-menu-wrap">
       <button class="user-icon-btn" onclick="toggleUserMenu()" title="Account">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -261,7 +279,7 @@
   <div class="confirm-modal">
     <div class="confirm-icon">📋</div>
     <h3>Submit Today's Data?</h3>
-    <p>You've filled <strong id="confirm-count">0</strong> of 11 sections:</p>
+    <p>You've filled <strong id="confirm-count">0</strong> of 4 tabs:</p>
     <div class="sec-summary" id="confirm-sections"></div>
     <p style="font-size:.8rem;color:#92400e;background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;padding:.6rem .8rem;margin-bottom:1.1rem">
       ⚠️ Once submitted, today's data will be locked and cleared from this screen.
@@ -316,20 +334,17 @@
   <div class="page-hdr">
     <h1>Outcome Dipstick Questionnaire</h1>
     <p>Tree Plantation – Sustainable Livelihoods &nbsp;|&nbsp; Sun Pharma CSR<br/>
-    Tap a section to fill it. Data auto-saves and syncs when online.</p>
+    Tap a tab to fill it. Data auto-saves and syncs when online.</p>
     <div class="date-badge">📅 <span id="today-label">Loading…</span></div>
   </div>
-
   <div class="prog-wrap">
     <div class="prog-top">
-      <span class="prog-label">Sections completed today</span>
-      <span class="prog-count" id="prog-count">0 / 11</span>
+      <span class="prog-label">Tabs completed today</span>
+      <span class="prog-count" id="prog-count">0 / 4</span>
     </div>
     <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
   </div>
-
   <div class="grid" id="cards-grid"></div>
-
   <div class="action-bar">
     <button class="submit-btn" id="submit-btn" onclick="openConfirm()" disabled>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
@@ -357,8 +372,8 @@
     </div>
     <div class="modal-body" id="modal-body"></div>
     <div class="modal-foot">
-      <button class="save-btn" id="save-btn" onclick="saveSection()">
-        <span class="lbl">Save Section</span>
+      <button class="save-btn" id="save-btn" onclick="saveTab()">
+        <span class="lbl">Save Tab</span>
         <span class="sp"><svg class="rot" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></span>
       </button>
     </div>
@@ -372,31 +387,48 @@
 
 <script>
 // ─────────────────────────────────────────────────────────────
-// SECTION DEFINITIONS
+// TAB DEFINITIONS
 // ─────────────────────────────────────────────────────────────
-const SECTIONS = [
-  { id:'A', icon:'👤', name:'Respondent Profile', desc:'Beneficiary details, land and irrigation', q:10,
-    html:`<div class="fg"><label class="fl">1. Name of Beneficiary</label><input class="fi" id="name" placeholder="Full name"/></div><div class="row2"><div class="fg"><label class="fl">2. Age</label><input class="fi" id="age" type="number" placeholder="Age"/></div><div class="fg"><label class="fl">3. Gender</label><div class="radio-grp"><label class="r-item"><input type="radio" name="gender" value="Male"/> Male</label><label class="r-item"><input type="radio" name="gender" value="Female"/> Female</label><label class="r-item"><input type="radio" name="gender" value="Other"/> Other</label></div></div></div><div class="row2"><div class="fg"><label class="fl">4. Mobile Number</label><input class="fi" id="mobile" type="tel" placeholder="Mobile"/></div><div class="fg"><label class="fl">5. Marital Status</label><select class="fs" id="marital"><option value="">Select</option><option>Single</option><option>Married</option><option>Widowed</option><option>Divorced</option></select></div></div><div class="fg"><label class="fl">6. Location (Village/Town, District, State)</label><input class="fi" id="location" placeholder="e.g. Shirpur, Dhule, Maharashtra"/></div><div class="fg"><label class="fl">7. Landholding size where saplings were planted</label><div class="radio-grp"><label class="r-item"><input type="radio" name="landsize" value="Less than 1 acre"/> &lt;1 acre</label><label class="r-item"><input type="radio" name="landsize" value="1–2 acres"/> 1–2 acres</label><label class="r-item"><input type="radio" name="landsize" value="2–5 acres"/> 2–5 acres</label><label class="r-item"><input type="radio" name="landsize" value="More than 5 acres"/> &gt;5 acres</label></div></div><div class="fg"><label class="fl">8. Land ownership status</label><div class="radio-grp"><label class="r-item"><input type="radio" name="landown" value="Owned"/> Owned</label><label class="r-item"><input type="radio" name="landown" value="Leased"/> Leased</label><label class="r-item"><input type="radio" name="landown" value="Shared / family land"/> Shared / family land</label></div></div><div class="fg"><label class="fl">9. Regular access to irrigation?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="irrigation" value="Yes" onchange="showSub('irr-sub',true)"/> Yes</label><label class="r-item"><input type="radio" name="irrigation" value="No" onchange="showSub('irr-sub',false)"/> No</label></div><div class="sub-f" id="irr-sub"><label class="fl">Source of irrigation (multiple allowed)</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Borewell"/> Borewell</label><label class="c-item"><input type="checkbox" value="Open well"/> Open well</label><label class="c-item"><input type="checkbox" value="Canal"/> Canal</label><label class="c-item"><input type="checkbox" value="Drip irrigation"/> Drip irrigation</label><label class="c-item"><input type="checkbox" value="Rainfed only"/> Rainfed only</label><label class="c-item"><input type="checkbox" value="Other"/> Other</label></div></div></div><div class="fg"><label class="fl">10. How many times received saplings under this program?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="times_received" value="Only once"/> Only once</label><label class="r-item"><input type="radio" name="times_received" value="More than once"/> More than once</label></div></div>`},
-  { id:'B', icon:'🌱', name:'Sapling Quality', desc:'Condition, height, suitability at distribution', q:4,
-    html:`<div class="fg"><label class="fl">11. Condition of saplings at distribution</label><div class="radio-grp"><label class="r-item"><input type="radio" name="sapling_cond" value="Healthy"/> Healthy</label><label class="r-item"><input type="radio" name="sapling_cond" value="Average"/> Average</label><label class="r-item"><input type="radio" name="sapling_cond" value="Weak"/> Weak</label><label class="r-item"><input type="radio" name="sapling_cond" value="Damaged"/> Damaged</label></div></div><div class="fg"><label class="fl">12a. Approximate height of saplings at time of distribution</label><div class="row2"><div class="fg" style="flex:1"><input class="fi" id="sapling_height" type="text" placeholder="e.g. 1.5 ft"/></div></div></div><div class="fg"><label class="fl">12b. Approximate age of saplings at time of distribution (in years)</label><div class="row2"><div class="fg" style="flex:1"><input class="fi" id="sapling_age_yrs" type="number" min="0" step="0.5" placeholder="e.g. 1.5"/></div></div></div><div class="fg"><label class="fl">13. Suitable for your soil and local climate?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="sapling_suit" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="sapling_suit" value="No"/> No</label><label class="r-item"><input type="radio" name="sapling_suit" value="Partially"/> Partially</label></div></div>`},
-  { id:'C', icon:'📦', name:'Sapling Distribution', desc:'Verify MIS numbers vs actual received', q:3,
-    html:`<div class="fg"><label class="fl">14. Did you receive same number of saplings as in MIS?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="mis_match" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="mis_match" value="No"/> No</label></div></div><div class="fg"><label class="fl">15. Number of saplings supposed to receive</label><table class="s-table"><thead><tr><th>Crop</th><th>Count</th></tr></thead><tbody><tr><td>Papaya</td><td><input type="number" id="sup_papaya" placeholder="0"/></td></tr><tr><td>Mulberry</td><td><input type="number" id="sup_mulberry" placeholder="0"/></td></tr><tr><td>Banana</td><td><input type="number" id="sup_banana" placeholder="0"/></td></tr></tbody></table></div><div class="fg"><label class="fl">16. Number of saplings actually received</label><table class="s-table"><thead><tr><th>Crop</th><th>Count</th></tr></thead><tbody><tr><td>Papaya</td><td><input type="number" id="rcv_papaya" placeholder="0"/></td></tr><tr><td>Mulberry</td><td><input type="number" id="rcv_mulberry" placeholder="0"/></td></tr><tr><td>Banana</td><td><input type="number" id="rcv_banana" placeholder="0"/></td></tr></tbody></table></div>`},
-  { id:'D', icon:'🪴', name:'Plantation Process', desc:'Land, season, spacing, manure, protection', q:6,
-    html:`<div class="fg"><label class="fl">17. Planted on approved land under the program?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="approved_land" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="approved_land" value="No"/> No</label></div></div><div class="fg"><label class="fl">18. In which season were the saplings planted?</label><div class="row2" style="gap:.6rem;align-items:flex-end"><div class="fg" style="flex:1"><label class="fl" style="font-weight:500;font-size:.78rem;margin-bottom:.3rem">Month</label><select class="fi fs" id="plant_month"><option value="">Select month…</option><option>January</option><option>February</option><option>March</option><option>April</option><option>May</option><option>June</option><option>July</option><option>August</option><option>September</option><option>October</option><option>November</option><option>December</option></select></div><div class="fg" style="flex:1"><label class="fl" style="font-weight:500;font-size:.78rem;margin-bottom:.3rem">Year</label><select class="fi fs" id="plant_year"><option value="">Select year…</option><option>2020</option><option>2021</option><option>2022</option><option>2023</option><option>2024</option><option>2025</option><option>2026</option></select></div></div></div><div class="fg"><label class="fl">19. Followed suggested pit size and spacing?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="pit_size" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="pit_size" value="No"/> No</label><label class="r-item"><input type="radio" name="pit_size" value="Partially"/> Partially</label></div></div><div class="fg"><label class="fl">20. Applied manure or fertilizer at time of planting?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="manure" value="Yes" onchange="showSub('manure-sub',true)"/> Yes</label><label class="r-item"><input type="radio" name="manure" value="No" onchange="showSub('manure-sub',false)"/> No</label></div><div class="sub-f" id="manure-sub"><label class="fl">Type used (multiple allowed)</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Farmyard manure (FYM)"/> Farmyard manure (FYM)</label><label class="c-item"><input type="checkbox" value="Compost"/> Compost</label><label class="c-item"><input type="checkbox" value="Chemical fertilizer"/> Chemical fertilizer</label><label class="c-item"><input type="checkbox" value="Vermicompost"/> Vermicompost</label><label class="c-item"><input type="checkbox" value="Other"/> Other</label></div></div></div><div class="fg"><label class="fl">21. Protective measures adopted (multiple allowed)</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Mulching"/> Mulching</label><label class="c-item"><input type="checkbox" value="Fencing"/> Fencing</label><label class="c-item"><input type="checkbox" value="Tree guards"/> Tree guards</label><label class="c-item"><input type="checkbox" value="None"/> None</label></div></div><div class="fg"><label class="fl">22. Photographs / geo-tagged images taken?</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Before plantation"/> Before plantation</label><label class="c-item"><input type="checkbox" value="During plantation"/> During plantation</label><label class="c-item"><input type="checkbox" value="After plantation"/> After plantation</label><label class="c-item"><input type="checkbox" value="Not taken"/> Not taken</label></div></div>`},
-  { id:'E', icon:'📊', name:'Survival & Maintenance', desc:'Survival count, mortality reasons, watering', q:4,
-    html:`<div class="fg"><label class="fl">23. Approximate number of saplings currently surviving</label><table class="s-table"><thead><tr><th>Crop</th><th>Surviving</th></tr></thead><tbody><tr><td>Papaya</td><td><input type="number" id="surv_papaya" placeholder="0"/></td></tr><tr><td>Mulberry</td><td><input type="number" id="surv_mulberry" placeholder="0"/></td></tr><tr><td>Banana</td><td><input type="number" id="surv_banana" placeholder="0"/></td></tr></tbody></table></div><div class="fg"><label class="fl">24. Main reasons for mortality (multiple allowed)</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Water shortage"/> Water shortage</label><label class="c-item"><input type="checkbox" value="Pest attack"/> Pest attack</label><label class="c-item"><input type="checkbox" value="Disease"/> Disease</label><label class="c-item"><input type="checkbox" value="Animal grazing"/> Animal grazing</label><label class="c-item"><input type="checkbox" value="Climate/weather"/> Climate/weather</label><label class="c-item"><input type="checkbox" value="Poor sapling quality"/> Poor sapling quality</label><label class="c-item"><input type="checkbox" value="No mortality"/> No mortality</label></div></div><div class="fg"><label class="fl">25. Frequency of watering</label><div class="radio-grp"><label class="r-item"><input type="radio" name="watering" value="Daily"/> Daily</label><label class="r-item"><input type="radio" name="watering" value="Alternate days"/> Alternate days</label><label class="r-item"><input type="radio" name="watering" value="Weekly"/> Weekly</label><label class="r-item"><input type="radio" name="watering" value="Depends on rainfall"/> Depends on rainfall</label></div></div><div class="fg"><label class="fl">26. Frequency of weeding and field cleaning</label><div class="radio-grp"><label class="r-item"><input type="radio" name="weeding" value="Monthly"/> Monthly</label><label class="r-item"><input type="radio" name="weeding" value="Once in 2–3 months"/> Once in 2–3 months</label><label class="r-item"><input type="radio" name="weeding" value="Rarely"/> Rarely</label><label class="r-item"><input type="radio" name="weeding" value="Not done"/> Not done</label></div></div>`},
-  { id:'F', icon:'🎓', name:'Capacity Building', desc:'Training attended, topics, helpfulness', q:4,
-    html:`<div class="fg"><label class="fl">27. Attended any training or awareness program?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="training" value="Yes" onchange="showSub('train-sub',true)"/> Yes</label><label class="r-item"><input type="radio" name="training" value="No" onchange="showSub('train-sub',false)"/> No</label></div><div class="sub-f" id="train-sub"><div class="fg"><label class="fl">28. Training details (if attended)</label><div class="row2" style="margin-top:.5rem"><div class="fg" style="margin-bottom:0"><label class="fl" style="font-weight:500;font-size:.78rem;margin-bottom:.3rem">Month &amp; Year (MM/YY)</label><input class="fi" id="train_mmyy" placeholder="e.g. 03/25" maxlength="5" style="letter-spacing:.05em"/></div><div class="fg" style="margin-bottom:0"><label class="fl" style="font-weight:500;font-size:.78rem;margin-bottom:.3rem">Location</label><input class="fi" id="train_location" placeholder="e.g. Shirpur, Dhule"/></div></div></div></div></div><div class="fg"><label class="fl">29. Topics covered (tick all applicable)</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Plantation methods"/> Plantation methods</label><label class="c-item"><input type="checkbox" value="Crop-specific care (Papaya/Mulberry/Banana)"/> Crop-specific care</label><label class="c-item"><input type="checkbox" value="Pest and disease management"/> Pest and disease management</label><label class="c-item"><input type="checkbox" value="Pruning / harvesting practices"/> Pruning / harvesting practices</label></div></div><div class="fg"><label class="fl">30. Has training helped in better sapling maintenance?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="train_help" value="Yes, significantly"/> Yes, significantly</label><label class="r-item"><input type="radio" name="train_help" value="Yes, to some extent"/> To some extent</label><label class="r-item"><input type="radio" name="train_help" value="No"/> No</label></div></div>`},
-  { id:'G', icon:'🏕️', name:'Field Support', desc:'GVT field team visits and issue resolution', q:5,
-    html:`<div class="fg"><label class="fl">31. Did GVT field team visit your farm after planting?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="team_visit" value="Yes" onchange="showSub('visit-sub',true)"/> Yes</label><label class="r-item"><input type="radio" name="team_visit" value="No" onchange="showSub('visit-sub',false)"/> No</label></div><div class="sub-f" id="visit-sub"><label class="fl">32. Number of visits</label><div class="radio-grp"><label class="r-item"><input type="radio" name="num_visits" value="1 time"/> 1 time</label><label class="r-item"><input type="radio" name="num_visits" value="2–3 times"/> 2–3 times</label><label class="r-item"><input type="radio" name="num_visits" value="More than 3 times"/> More than 3 times</label></div></div></div><div class="fg"><label class="fl">33. Did the field team provide technical guidance?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="tech_guidance" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="tech_guidance" value="No"/> No</label></div></div><div class="fg"><label class="fl">34. If you faced issues, did you know whom to contact?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="know_contact" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="know_contact" value="No"/> No</label></div></div><div class="fg"><label class="fl">35. Were your concerns resolved on time?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="resolved" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="resolved" value="No"/> No</label><label class="r-item"><input type="radio" name="resolved" value="Not applicable"/> Not applicable</label></div></div>`},
-  { id:'H', icon:'🔍', name:'Duplication Check', desc:'Other CSR or government scheme benefits', q:2,
-    html:`<div class="fg"><label class="fl">36. Received similar saplings from another CSR program?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="other_csr" value="Yes" onchange="showSub('csr-sub',true)"/> Yes</label><label class="r-item"><input type="radio" name="other_csr" value="No" onchange="showSub('csr-sub',false)"/> No</label></div><div class="sub-f" id="csr-sub"><label class="fl">Name of Implementation Partner</label><input class="fi" id="csr_partner" placeholder="Partner name"/></div></div><div class="fg"><label class="fl">37. Enrolled under any government horticulture/forestry scheme?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="govt_scheme" value="Yes" onchange="showSub('scheme-sub',true)"/> Yes</label><label class="r-item"><input type="radio" name="govt_scheme" value="No" onchange="showSub('scheme-sub',false)"/> No</label></div><div class="sub-f" id="scheme-sub"><label class="fl">Name of scheme</label><input class="fi" id="scheme_name" placeholder="Scheme name"/></div></div>`},
-  { id:'I', icon:'💰', name:'Outcome & Impact', desc:'Fruit sale income, CY and LY comparison', q:3,
-    html:`<div class="fg"><label class="fl">38. Net profit from sale of fruits — Current Year (Jan 25 – Dec 25)</label><div style="position:relative"><span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-weight:600;color:var(--grey);font-size:.9rem;pointer-events:none">₹</span><input class="fi" id="profit_cy" type="text" inputmode="numeric" placeholder="e.g. 45000" style="padding-left:28px"/></div><span style="font-size:.74rem;color:var(--grey);margin-top:.25rem;display:block">Enter amount in INR. Type 0 if no income yet.</span></div><div class="fg"><label class="fl">39. Net profit from sale of fruits — Last Year (Jan 24 – Dec 24)</label><div style="position:relative"><span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-weight:600;color:var(--grey);font-size:.9rem;pointer-events:none">₹</span><input class="fi" id="profit_ly" type="text" inputmode="numeric" placeholder="e.g. 38000" style="padding-left:28px"/></div><span style="font-size:.74rem;color:var(--grey);margin-top:.25rem;display:block">Enter amount in INR. Type 0 if no income yet.</span></div><div class="fg"><label class="fl">40. Factors affecting income change (multiple allowed)</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Yield improvement"/> Yield improvement</label><label class="c-item"><input type="checkbox" value="Market price changes"/> Market price changes</label><label class="c-item"><input type="checkbox" value="Input cost variation"/> Input cost variation</label><label class="c-item"><input type="checkbox" value="Pest/disease loss"/> Pest/disease loss</label><label class="c-item"><input type="checkbox" value="Weather conditions"/> Weather conditions</label><label class="c-item"><input type="checkbox" value="Others"/> Others</label></div></div>`},
-  { id:'J', icon:'🪧', name:'Branding & Visibility', desc:'CSR awareness and branding materials', q:2,
-    html:`<div class="fg"><label class="fl">41. Informed that plantation is CSR-supported by Sun Pharmaceuticals?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="csr_informed" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="csr_informed" value="No"/> No</label></div></div><div class="fg"><label class="fl">42. Have you seen any branding material?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="branding" value="Signboards"/> Signboards</label><label class="r-item"><input type="radio" name="branding" value="Banners"/> Banners</label><label class="r-item"><input type="radio" name="branding" value="Both"/> Both</label><label class="r-item"><input type="radio" name="branding" value="None"/> None</label></div></div>`},
-  { id:'K', icon:'⭐', name:'Farmer Feedback', desc:'Satisfaction, challenges and suggestions', q:5,
-    html:`<div class="fg"><label class="fl">43. Overall satisfaction with tree plantation support</label><div class="radio-grp"><label class="r-item"><input type="radio" name="satisfaction" value="Very satisfied"/> Very satisfied</label><label class="r-item"><input type="radio" name="satisfaction" value="Satisfied"/> Satisfied</label><label class="r-item"><input type="radio" name="satisfaction" value="Neutral"/> Neutral</label><label class="r-item"><input type="radio" name="satisfaction" value="Dissatisfied"/> Dissatisfied</label><label class="r-item"><input type="radio" name="satisfaction" value="Very dissatisfied"/> Very dissatisfied</label></div></div><div class="fg"><label class="fl">44. Most helpful aspects (multiple allowed)</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Quality of saplings"/> Quality of saplings</label><label class="c-item"><input type="checkbox" value="Timely distribution"/> Timely distribution</label><label class="c-item"><input type="checkbox" value="Training and awareness"/> Training and awareness</label><label class="c-item"><input type="checkbox" value="Field staff support"/> Field staff support</label><label class="c-item"><input type="checkbox" value="Technical guidance"/> Technical guidance</label><label class="c-item"><input type="checkbox" value="Improvement in income/livelihood"/> Improvement in income/livelihood</label></div></div><div class="fg"><label class="fl">45. Challenges faced (multiple allowed)</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Water availability"/> Water availability</label><label class="c-item"><input type="checkbox" value="Pest/disease issues"/> Pest/disease issues</label><label class="c-item"><input type="checkbox" value="Lack of technical knowledge"/> Lack of technical knowledge</label><label class="c-item"><input type="checkbox" value="Labour constraints"/> Labour constraints</label><label class="c-item"><input type="checkbox" value="Animal grazing"/> Animal grazing</label><label class="c-item"><input type="checkbox" value="No major challenges"/> No major challenges</label></div></div><div class="fg"><label class="fl">46. Suggestions for improvement in future programs</label><textarea class="ft" id="suggestions" placeholder="Your suggestions…"></textarea></div><div class="fg"><label class="fl">47. Would you recommend this program to other farmers?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="recommend" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="recommend" value="No"/> No</label><label class="r-item"><input type="radio" name="recommend" value="Maybe"/> Maybe</label></div></div>`}
+const TABS = [
+  { id:'A', icon:'👤', name:'Respondent Profile', desc:'Beneficiary details, land and irrigation', sections:['A'], q:10,
+    html:`
+    <div class="fg">
+      <label class="fl">1. Name of Beneficiary</label>
+      <div class="ac-wrap">
+        <input class="fi" id="name" placeholder="Type name to search…" autocomplete="off"/>
+        <span class="ac-spinner" id="ac-spinner">
+          <svg class="rot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+        </span>
+        <button class="ac-clear" id="ac-clear" type="button" onclick="clearNameField()" title="Clear">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+        <div class="ac-dropdown" id="ac-dropdown"></div>
+      </div>
+      <div class="ac-filled-badge" id="ac-filled-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        Auto-filled from farmer records
+      </div>
+    </div>
+    <div class="row2">
+      <div class="fg"><label class="fl">2. Age</label><input class="fi" id="age" type="number" placeholder="Age"/></div>
+      <div class="fg"><label class="fl">3. Gender</label><div class="radio-grp"><label class="r-item"><input type="radio" name="gender" value="Male"/> Male</label><label class="r-item"><input type="radio" name="gender" value="Female"/> Female</label><label class="r-item"><input type="radio" name="gender" value="Other"/> Other</label></div></div>
+    </div>
+    <div class="row2">
+      <div class="fg"><label class="fl">4. Mobile Number</label><input class="fi" id="mobile" type="tel" placeholder="Mobile"/></div>
+      <div class="fg"><label class="fl">5. Marital Status</label><select class="fs" id="marital"><option value="">Select</option><option>Single</option><option>Married</option><option>Widowed</option><option>Divorced</option></select></div>
+    </div>
+    <div class="fg"><label class="fl">6. Location (Village/Town, District, State)</label><input class="fi" id="location" placeholder="e.g. Shirpur, Dhule, Maharashtra"/></div>
+    <div class="fg"><label class="fl">7. Landholding size where saplings were planted</label><div class="radio-grp"><label class="r-item"><input type="radio" name="landsize" value="Less than 1 acre"/> &lt;1 acre</label><label class="r-item"><input type="radio" name="landsize" value="1–2 acres"/> 1–2 acres</label><label class="r-item"><input type="radio" name="landsize" value="2–5 acres"/> 2–5 acres</label><label class="r-item"><input type="radio" name="landsize" value="More than 5 acres"/> &gt;5 acres</label></div></div>
+    <div class="fg"><label class="fl">8. Land ownership status</label><div class="radio-grp"><label class="r-item"><input type="radio" name="landown" value="Owned"/> Owned</label><label class="r-item"><input type="radio" name="landown" value="Leased"/> Leased</label><label class="r-item"><input type="radio" name="landown" value="Shared"/> Shared</label></div></div>
+    <div class="fg"><label class="fl">9. Irrigation access</label><div class="radio-grp"><label class="r-item"><input type="radio" name="irrigation" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="irrigation" value="No"/> No</label></div></div>
+    <div class="fg"><label class="fl">10. Number of times received saplings under this program</label><div class="radio-grp"><label class="r-item"><input type="radio" name="times_received" value="First time"/> First time</label><label class="r-item"><input type="radio" name="times_received" value="Second time"/> Second time</label><label class="r-item"><input type="radio" name="times_received" value="More than twice"/> More than twice</label></div></div>`
+  },
+  { id:'B', icon:'🌱', name:'Sapling Survivality & Plantation', desc:'Quality, distribution, plantation process, and survival', sections:['B','C','D','E'], q:17,
+    html:`<div class="fg"><label class="fl">11. Condition of saplings at distribution</label><div class="radio-grp"><label class="r-item"><input type="radio" name="sapling_cond" value="Healthy"/> Healthy</label><label class="r-item"><input type="radio" name="sapling_cond" value="Average"/> Average</label><label class="r-item"><input type="radio" name="sapling_cond" value="Weak"/> Weak</label><label class="r-item"><input type="radio" name="sapling_cond" value="Damaged"/> Damaged</label></div></div><div class="fg"><label class="fl">12a. Approximate height of saplings at time of distribution</label><div class="row2"><div class="fg" style="flex:1"><input class="fi" id="sapling_height" type="text" placeholder="e.g. 1.5 ft"/></div></div></div><div class="fg"><label class="fl">12b. Approximate age of saplings at time of distribution (in years)</label><div class="row2"><div class="fg" style="flex:1"><input class="fi" id="sapling_age_yrs" type="number" min="0" step="0.5" placeholder="e.g. 1.5"/></div></div></div><div class="fg"><label class="fl">13. Suitable for your soil and local climate?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="sapling_suit" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="sapling_suit" value="No"/> No</label><label class="r-item"><input type="radio" name="sapling_suit" value="Partially"/> Partially</label></div></div><div class="fg"><label class="fl">14. Did you receive same number of saplings as in MIS?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="mis_match" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="mis_match" value="No"/> No</label></div></div><div class="fg"><label class="fl">15. Number of saplings supposed to receive</label><table class="s-table"><thead><tr><th>Crop</th><th>Count</th></tr></thead><tbody><tr><td>Papaya</td><td><input type="number" id="sup_papaya" placeholder="0"/></td></tr><tr><td>Mulberry</td><td><input type="number" id="sup_mulberry" placeholder="0"/></td></tr><tr><td>Banana</td><td><input type="number" id="sup_banana" placeholder="0"/></td></tr></tbody></table></div><div class="fg"><label class="fl">16. Number of saplings actually received</label><table class="s-table"><thead><tr><th>Crop</th><th>Count</th></tr></thead><tbody><tr><td>Papaya</td><td><input type="number" id="rcv_papaya" placeholder="0"/></td></tr><tr><td>Mulberry</td><td><input type="number" id="rcv_mulberry" placeholder="0"/></td></tr><tr><td>Banana</td><td><input type="number" id="rcv_banana" placeholder="0"/></td></tr></tbody></table></div><div class="fg"><label class="fl">17. Planted on approved land under the program?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="approved_land" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="approved_land" value="No"/> No</label></div></div><div class="fg"><label class="fl">18. In which season were the saplings planted?</label><div class="row2" style="gap:.6rem;align-items:flex-end"><div class="fg" style="flex:1"><label class="fl" style="font-weight:500;font-size:.78rem;margin-bottom:.3rem">Month</label><select class="fi fs" id="plant_month"><option value="">Select month…</option><option>January</option><option>February</option><option>March</option><option>April</option><option>May</option><option>June</option><option>July</option><option>August</option><option>September</option><option>October</option><option>November</option><option>December</option></select></div><div class="fg" style="flex:1"><label class="fl" style="font-weight:500;font-size:.78rem;margin-bottom:.3rem">Year</label><select class="fi fs" id="plant_year"><option value="">Select year…</option><option>2020</option><option>2021</option><option>2022</option><option>2023</option><option>2024</option><option>2025</option><option>2026</option></select></div></div></div><div class="fg"><label class="fl">19. Followed suggested pit size and spacing?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="pit_size" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="pit_size" value="No"/> No</label><label class="r-item"><input type="radio" name="pit_size" value="Partially"/> Partially</label></div></div><div class="fg"><label class="fl">20. Applied manure or fertilizer at time of planting?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="manure" value="Yes" onchange="showSub('manure-sub',true)"/> Yes</label><label class="r-item"><input type="radio" name="manure" value="No" onchange="showSub('manure-sub',false)"/> No</label></div><div class="sub-f" id="manure-sub"><label class="fl">20a. Type of manure/fertilizer used</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="FYM"/> FYM (Farm Yard Manure)</label><label class="c-item"><input type="checkbox" value="Vermicompost"/> Vermicompost</label><label class="c-item"><input type="checkbox" value="Chemical fertilizer"/> Chemical fertilizer</label><label class="c-item"><input type="checkbox" value="Bio-fertilizer"/> Bio-fertilizer</label></div></div></div><div class="fg"><label class="fl">21. Any protective measures taken?</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Fencing"/> Fencing</label><label class="c-item"><input type="checkbox" value="Tree guards"/> Tree guards</label><label class="c-item"><input type="checkbox" value="Thorny branches"/> Thorny branches</label><label class="c-item"><input type="checkbox" value="No protection"/> No protection</label></div></div><div class="fg"><label class="fl">22. Photos taken during plantation?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="photos" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="photos" value="No"/> No</label></div></div><div class="fg"><label class="fl">23. Approximate number of saplings currently surviving</label><table class="s-table"><thead><tr><th>Crop</th><th>Surviving</th></tr></thead><tbody><tr><td>Papaya</td><td><input type="number" id="surv_papaya" placeholder="0"/></td></tr><tr><td>Mulberry</td><td><input type="number" id="surv_mulberry" placeholder="0"/></td></tr><tr><td>Banana</td><td><input type="number" id="surv_banana" placeholder="0"/></td></tr></tbody></table></div><div class="fg"><label class="fl">24. Main reasons for mortality (multiple allowed)</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Water shortage"/> Water shortage</label><label class="c-item"><input type="checkbox" value="Pest attack"/> Pest attack</label><label class="c-item"><input type="checkbox" value="Disease"/> Disease</label><label class="c-item"><input type="checkbox" value="Animal grazing"/> Animal grazing</label><label class="c-item"><input type="checkbox" value="Climate/weather"/> Climate/weather</label><label class="c-item"><input type="checkbox" value="Poor sapling quality"/> Poor sapling quality</label><label class="c-item"><input type="checkbox" value="No mortality"/> No mortality</label></div></div><div class="fg"><label class="fl">25. Frequency of watering</label><div class="radio-grp"><label class="r-item"><input type="radio" name="watering" value="Daily"/> Daily</label><label class="r-item"><input type="radio" name="watering" value="Alternate days"/> Alternate days</label><label class="r-item"><input type="radio" name="watering" value="Weekly"/> Weekly</label><label class="r-item"><input type="radio" name="watering" value="Depends on rainfall"/> Depends on rainfall</label></div></div><div class="fg"><label class="fl">26. Frequency of weeding and field cleaning</label><div class="radio-grp"><label class="r-item"><input type="radio" name="weeding" value="Monthly"/> Monthly</label><label class="r-item"><input type="radio" name="weeding" value="Fortnightly"/> Fortnightly</label><label class="r-item"><input type="radio" name="weeding" value="Weekly"/> Weekly</label><label class="r-item"><input type="radio" name="weeding" value="Rarely"/> Rarely</label></div></div>`},
+  { id:'C', icon:'🎓', name:'Training Quality & Convergence', desc:'Capacity building, field support, and duplication check', sections:['F','G','H'], q:11,
+    html:`<div class="fg"><label class="fl">27. Attended any training or awareness program?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="training" value="Yes" onchange="showSub('train-sub',true)"/> Yes</label><label class="r-item"><input type="radio" name="training" value="No" onchange="showSub('train-sub',false)"/> No</label></div><div class="sub-f" id="train-sub"><div class="fg"><label class="fl">28. Training details (if attended)</label><div class="row2" style="margin-top:.5rem"><div class="fg" style="margin-bottom:0"><label class="fl" style="font-weight:500;font-size:.78rem;margin-bottom:.3rem">Month &amp; Year (MM/YY)</label><input class="fi" id="train_mmyy" placeholder="e.g. 03/25" maxlength="5" style="letter-spacing:.05em"/></div><div class="fg" style="margin-bottom:0"><label class="fl" style="font-weight:500;font-size:.78rem;margin-bottom:.3rem">Location</label><input class="fi" id="train_location" placeholder="e.g. Shirpur, Dhule"/></div></div></div></div></div><div class="fg"><label class="fl">29. Topics covered (tick all applicable)</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Plantation methods"/> Plantation methods</label><label class="c-item"><input type="checkbox" value="Crop-specific care (Papaya/Mulberry/Banana)"/> Crop-specific care</label><label class="c-item"><input type="checkbox" value="Pest and disease management"/> Pest and disease management</label><label class="c-item"><input type="checkbox" value="Pruning / harvesting practices"/> Pruning / harvesting practices</label></div></div><div class="fg"><label class="fl">30. Has training helped in better sapling maintenance?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="train_help" value="Yes, significantly"/> Yes, significantly</label><label class="r-item"><input type="radio" name="train_help" value="Yes, to some extent"/> To some extent</label><label class="r-item"><input type="radio" name="train_help" value="Not really"/> Not really</label></div></div><div class="fg"><label class="fl">31. Did GVT field team visit your farm after planting?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="team_visit" value="Yes" onchange="showSub('visit-sub',true)"/> Yes</label><label class="r-item"><input type="radio" name="team_visit" value="No" onchange="showSub('visit-sub',false)"/> No</label></div><div class="sub-f" id="visit-sub"><label class="fl">32. Number of visits</label><div class="radio-grp"><label class="r-item"><input type="radio" name="num_visits" value="1 time"/> 1 time</label><label class="r-item"><input type="radio" name="num_visits" value="2–3 times"/> 2–3 times</label><label class="r-item"><input type="radio" name="num_visits" value="More than 3 times"/> More than 3 times</label></div></div></div><div class="fg"><label class="fl">33. Did the field team provide technical guidance?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="tech_guidance" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="tech_guidance" value="No"/> No</label></div></div><div class="fg"><label class="fl">34. If you faced issues, did you know whom to contact?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="know_contact" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="know_contact" value="No"/> No</label></div></div><div class="fg"><label class="fl">35. Were your concerns resolved on time?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="resolved" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="resolved" value="No"/> No</label><label class="r-item"><input type="radio" name="resolved" value="Not applicable"/> Not applicable</label></div></div><div class="fg"><label class="fl">36. Received similar saplings from another CSR program?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="other_csr" value="Yes" onchange="showSub('csr-sub',true)"/> Yes</label><label class="r-item"><input type="radio" name="other_csr" value="No" onchange="showSub('csr-sub',false)"/> No</label></div><div class="sub-f" id="csr-sub"><label class="fl">Name of Implementation Partner</label><input class="fi" id="csr_partner" placeholder="Partner name"/></div></div><div class="fg"><label class="fl">37. Enrolled under any government horticulture/forestry scheme?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="govt_scheme" value="Yes" onchange="showSub('scheme-sub',true)"/> Yes</label><label class="r-item"><input type="radio" name="govt_scheme" value="No" onchange="showSub('scheme-sub',false)"/> No</label></div><div class="sub-f" id="scheme-sub"><label class="fl">Name of scheme</label><input class="fi" id="scheme_name" placeholder="Scheme name"/></div></div>`},
+  { id:'D', icon:'💰', name:'Outcome & Impact Indicators', desc:'Income outcomes, branding visibility, and farmer feedback', sections:['I','J','K'], q:10,
+    html:`<div class="fg"><label class="fl">38. Net profit from sale of fruits — Current Year (Jan 25 – Dec 25)</label><div style="position:relative"><span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-weight:600;color:var(--grey);font-size:.9rem;pointer-events:none">₹</span><input class="fi" id="profit_cy" type="text" inputmode="numeric" placeholder="e.g. 45000" style="padding-left:28px"/></div><span style="font-size:.74rem;color:var(--grey);margin-top:.25rem;display:block">Enter amount in INR. Type 0 if no income yet.</span></div><div class="fg"><label class="fl">39. Net profit from sale of fruits — Last Year (Jan 24 – Dec 24)</label><div style="position:relative"><span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-weight:600;color:var(--grey);font-size:.9rem;pointer-events:none">₹</span><input class="fi" id="profit_ly" type="text" inputmode="numeric" placeholder="e.g. 38000" style="padding-left:28px"/></div><span style="font-size:.74rem;color:var(--grey);margin-top:.25rem;display:block">Enter amount in INR. Type 0 if no income yet.</span></div><div class="fg"><label class="fl">40. Factors affecting income change (multiple allowed)</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Yield improvement"/> Yield improvement</label><label class="c-item"><input type="checkbox" value="Market price changes"/> Market price changes</label><label class="c-item"><input type="checkbox" value="Input cost variation"/> Input cost variation</label><label class="c-item"><input type="checkbox" value="Pest/disease loss"/> Pest/disease loss</label><label class="c-item"><input type="checkbox" value="Weather conditions"/> Weather conditions</label><label class="c-item"><input type="checkbox" value="Others"/> Others</label></div></div><div class="fg"><label class="fl">41. Informed that plantation is CSR-supported by Sun Pharmaceuticals?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="csr_informed" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="csr_informed" value="No"/> No</label></div></div><div class="fg"><label class="fl">42. Have you seen any branding material?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="branding" value="Signboards"/> Signboards</label><label class="r-item"><input type="radio" name="branding" value="Banners"/> Banners</label><label class="r-item"><input type="radio" name="branding" value="Both"/> Both</label><label class="r-item"><input type="radio" name="branding" value="None"/> None</label></div></div><div class="fg"><label class="fl">43. Overall satisfaction with tree plantation support</label><div class="radio-grp"><label class="r-item"><input type="radio" name="satisfaction" value="Very satisfied"/> Very satisfied</label><label class="r-item"><input type="radio" name="satisfaction" value="Satisfied"/> Satisfied</label><label class="r-item"><input type="radio" name="satisfaction" value="Neutral"/> Neutral</label><label class="r-item"><input type="radio" name="satisfaction" value="Dissatisfied"/> Dissatisfied</label><label class="r-item"><input type="radio" name="satisfaction" value="Very dissatisfied"/> Very dissatisfied</label></div></div><div class="fg"><label class="fl">44. Most helpful aspects (multiple allowed)</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Quality of saplings"/> Quality of saplings</label><label class="c-item"><input type="checkbox" value="Timely distribution"/> Timely distribution</label><label class="c-item"><input type="checkbox" value="Training and awareness"/> Training and awareness</label><label class="c-item"><input type="checkbox" value="Field staff support"/> Field staff support</label><label class="c-item"><input type="checkbox" value="Technical guidance"/> Technical guidance</label><label class="c-item"><input type="checkbox" value="Improvement in income/livelihood"/> Improvement in income/livelihood</label></div></div><div class="fg"><label class="fl">45. Challenges faced (multiple allowed)</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Water availability"/> Water availability</label><label class="c-item"><input type="checkbox" value="Pest/disease issues"/> Pest/disease issues</label><label class="c-item"><input type="checkbox" value="Lack of technical knowledge"/> Lack of technical knowledge</label><label class="c-item"><input type="checkbox" value="Labour constraints"/> Labour constraints</label><label class="c-item"><input type="checkbox" value="Animal damage"/> Animal damage</label><label class="c-item"><input type="checkbox" value="Market access"/> Market access</label><label class="c-item"><input type="checkbox" value="No challenges"/> No challenges</label></div></div><div class="fg"><label class="fl">46. Suggestions for Improvement / Testimonials</label><textarea class="ft" id="suggestions" placeholder="Any suggestions to improve the program..." rows="3"></textarea></div><div class="fg"><label class="fl">47. Would you recommend this program to other farmers?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="recommend" value="Definitely"/> Definitely</label><label class="r-item"><input type="radio" name="recommend" value="Probably"/> Probably</label><label class="r-item"><input type="radio" name="recommend" value="Not sure"/> Not sure</label><label class="r-item"><input type="radio" name="recommend" value="Probably not"/> Probably not</label></div></div>`}
 ];
 
 const SEC_META = {
@@ -454,7 +486,6 @@ function todayStr() {
 }
 const TODAY = todayStr();
 
-// Clear local data if it's from a different day
 const storedDate = localStorage.getItem(DATE_KEY);
 if (storedDate && storedDate !== TODAY) {
   localStorage.removeItem(SEC_KEY);
@@ -465,7 +496,6 @@ localStorage.setItem(DATE_KEY, TODAY);
 let savedData = JSON.parse(localStorage.getItem(SEC_KEY)  || '{}');
 let pending   = JSON.parse(localStorage.getItem(PEND_KEY) || '[]');
 
-// ✅ FIX: If no access token exists, the pending queue is stale — clear it
 if (!localStorage.getItem('access_token')) {
   pending = [];
   localStorage.removeItem(PEND_KEY);
@@ -478,7 +508,251 @@ document.getElementById('today-label').textContent =
   new Date().toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'long',year:'numeric'});
 
 // ─────────────────────────────────────────────────────────────
-// SYNC STATUS INDICATOR
+// AUTOCOMPLETE — FARMER NAME SEARCH
+// ─────────────────────────────────────────────────────────────
+let acDebounce   = null;
+let acResults    = [];
+let acFocusIdx   = -1;
+let acLocked     = false; // true after a farmer is selected (stops re-searching)
+
+function initNameAutocomplete() {
+  const inp = document.getElementById('name');
+  if (!inp) return;
+
+  inp.addEventListener('input', onNameInput);
+  inp.addEventListener('keydown', onNameKeydown);
+  inp.addEventListener('focus', () => {
+    // Re-show dropdown if there are results and input isn't locked
+    if (!acLocked && acResults.length > 0) showDropdown(acResults, inp.value);
+  });
+
+  // Close dropdown when clicking outside
+  document.addEventListener('mousedown', onOutsideClick, true);
+}
+
+function onNameInput(e) {
+  const val = e.target.value.trim();
+
+  // If user edits after a farmer was selected, unlock so they can search again
+  if (acLocked) {
+    acLocked = false;
+    document.getElementById('ac-filled-badge').classList.remove('show');
+    document.getElementById('ac-clear').classList.remove('show');
+  }
+
+  if (!val) {
+    closeDropdown();
+    document.getElementById('ac-clear').classList.remove('show');
+    return;
+  }
+
+  document.getElementById('ac-clear').classList.add('show');
+
+  clearTimeout(acDebounce);
+  acDebounce = setTimeout(() => fetchFarmerSuggestions(val), 350);
+}
+
+function onNameKeydown(e) {
+  const dd = document.getElementById('ac-dropdown');
+  if (!dd.classList.contains('open')) return;
+
+  const items = dd.querySelectorAll('.ac-item');
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    acFocusIdx = Math.min(acFocusIdx + 1, items.length - 1);
+    updateFocus(items);
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    acFocusIdx = Math.max(acFocusIdx - 1, 0);
+    updateFocus(items);
+  } else if (e.key === 'Enter') {
+    e.preventDefault();
+    if (acFocusIdx >= 0 && items[acFocusIdx]) items[acFocusIdx].click();
+  } else if (e.key === 'Escape') {
+    closeDropdown();
+  }
+}
+
+function updateFocus(items) {
+  items.forEach((el, i) => el.classList.toggle('focused', i === acFocusIdx));
+  if (items[acFocusIdx]) items[acFocusIdx].scrollIntoView({ block: 'nearest' });
+}
+
+function onOutsideClick(e) {
+  const wrap = document.querySelector('.ac-wrap');
+  if (wrap && !wrap.contains(e.target)) closeDropdown();
+}
+
+async function fetchFarmerSuggestions(query) {
+  const spinner = document.getElementById('ac-spinner');
+  const clear   = document.getElementById('ac-clear');
+  spinner.classList.add('show');
+  clear.classList.remove('show');
+
+  try {
+    const token = localStorage.getItem('access_token');
+    const res = await fetch(`/api/excel-data/search?q=${encodeURIComponent(query)}`, {
+      headers: { Authorization: 'Bearer ' + token }
+    });
+    if (!res.ok) throw new Error();
+    acResults = await res.json();
+    showDropdown(acResults, query);
+  } catch {
+    acResults = [];
+    closeDropdown();
+  } finally {
+    spinner.classList.remove('show');
+    clear.classList.add('show');
+  }
+}
+
+function showDropdown(results, query) {
+  const dd = document.getElementById('ac-dropdown');
+  acFocusIdx = -1;
+
+  if (!results.length) {
+    dd.innerHTML = `
+      <div class="ac-no-result">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        No matching farmers found
+      </div>`;
+    dd.classList.add('open');
+    return;
+  }
+
+  const hl = (text) => {
+    if (!query || !text) return text || '';
+    const re = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi');
+    return text.replace(re, '<mark>$1</mark>');
+  };
+
+  dd.innerHTML = results.slice(0, 8).map((r, i) => {
+    // Build location string from available keys
+    const loc = [r.village, r.taluka, r.district].filter(Boolean).join(', ');
+    const crop = r.crop_name || r.crop || '';
+    const contact = r.farmer_contact || r.contact || r.mobile || '';
+    const score = Math.round(r.match_score || 0);
+
+    return `<div class="ac-item" data-idx="${i}" onmousedown="selectFarmer(${i})">
+      <div class="ac-item-icon">🌾</div>
+      <div class="ac-item-body">
+        <div class="ac-item-name">${hl(r.farmer_name || r.name || '')}</div>
+        <div class="ac-item-sub">
+          ${loc ? '📍 ' + loc : ''}
+          ${contact ? (loc ? ' · ' : '') + '📞 ' + contact : ''}
+          ${crop ? ' · 🌱 ' + crop : ''}
+        </div>
+      </div>
+      ${score >= 95 ? '<span class="ac-item-badge">✓ Exact</span>' : (score >= 80 ? '<span class="ac-item-badge" style="background:#fff3cd;color:#856404">~Similar</span>' : '')}
+    </div>`;
+  }).join('');
+
+  dd.classList.add('open');
+}
+
+function selectFarmer(idx) {
+  const farmer = acResults[idx];
+  if (!farmer) return;
+
+  acLocked = true;
+  closeDropdown();
+
+  // Set name field
+  const nameInp = document.getElementById('name');
+  if (nameInp) nameInp.value = farmer.farmer_name || farmer.name || '';
+
+  // Show badges
+  document.getElementById('ac-filled-badge').classList.add('show');
+  document.getElementById('ac-clear').classList.add('show');
+
+  // Auto-fill other Tab A fields
+  autofillFromFarmer(farmer);
+}
+
+function autofillFromFarmer(farmer) {
+  // Helper: get value from multiple possible key names
+  const get = (...keys) => keys.map(k => farmer[k]).find(v => v && String(v).trim()) || '';
+
+  // Age
+  const age = get('age');
+  const ageInp = document.getElementById('age');
+  if (ageInp && age) ageInp.value = age;
+
+  // Mobile
+  const mobile = get('farmer_contact', 'contact', 'mobile', 'phone', 'mobile_no', 'contact_no');
+  const mobileInp = document.getElementById('mobile');
+  if (mobileInp && mobile) mobileInp.value = mobile;
+
+  // Gender
+  const gender = get('gender');
+  if (gender) {
+    // Normalize: M/F/Male/Female
+    let gVal = '';
+    const g = gender.toString().toLowerCase().trim();
+    if (g === 'm' || g === 'male') gVal = 'Male';
+    else if (g === 'f' || g === 'female') gVal = 'Female';
+    else if (g === 'o' || g === 'other') gVal = 'Other';
+    else gVal = gender; // use as-is
+
+    const radioEl = document.querySelector(`input[name="gender"][value="${gVal}"]`);
+    if (radioEl) {
+      radioEl.checked = true;
+      document.querySelectorAll('input[name="gender"]').forEach(r =>
+        r.closest('.r-item').classList.remove('sel'));
+      radioEl.closest('.r-item').classList.add('sel');
+    }
+  }
+
+  // Marital status
+  const marital = get('marital', 'marital_status', 'marital_status_');
+  const maritalSel = document.getElementById('marital');
+  if (maritalSel && marital) {
+    // Try to match option
+    const opt = [...maritalSel.options].find(o =>
+      o.value.toLowerCase() === marital.toString().toLowerCase());
+    if (opt) maritalSel.value = opt.value;
+  }
+
+  // Location — build from village, taluka, district
+  const village  = get('village', 'village_name');
+  const taluka   = get('taluka', 'taluk', 'tehsil');
+  const district = get('district', 'dist');
+  const locParts = [village, taluka, district].filter(Boolean);
+  const locInp = document.getElementById('location');
+  if (locInp && locParts.length) locInp.value = locParts.join(', ');
+
+  // Show a brief toast
+  const filled = ['name'];
+  if (age)                filled.push('age');
+  if (mobile)             filled.push('mobile');
+  if (gender)             filled.push('gender');
+  if (marital)            filled.push('marital status');
+  if (locParts.length)    filled.push('location');
+
+  toast(`✅ Auto-filled: ${filled.join(', ')}`, 3000);
+}
+
+function clearNameField() {
+  const inp = document.getElementById('name');
+  if (inp) inp.value = '';
+  closeDropdown();
+  acLocked = false;
+  acResults = [];
+  document.getElementById('ac-clear').classList.remove('show');
+  document.getElementById('ac-filled-badge').classList.remove('show');
+  inp?.focus();
+}
+
+function closeDropdown() {
+  const dd = document.getElementById('ac-dropdown');
+  if (dd) dd.classList.remove('open');
+  acFocusIdx = -1;
+}
+
+// ─────────────────────────────────────────────────────────────
+// SYNC STATUS
 // ─────────────────────────────────────────────────────────────
 function setSyncStatus(state) {
   const dot   = document.getElementById('sync-dot');
@@ -493,68 +767,57 @@ function setSyncStatus(state) {
 // ─────────────────────────────────────────────────────────────
 async function tryRefreshToken() {
   const refreshToken = localStorage.getItem('refresh_token');
-  if (!refreshToken) {
-    // No refresh token — session is completely dead, redirect to login
-    window.location.href = '/';
-    return false;
-  }
+  if (!refreshToken) { window.location.href = '/'; return false; }
   try {
     const res = await fetch('/api/refresh', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ refresh_token: refreshToken })
     });
-    if (!res.ok) {
-      // Refresh token also expired — force re-login
-      window.location.href = '/';
-      return false;
-    }
+    if (!res.ok) { window.location.href = '/'; return false; }
     const data = await res.json();
     localStorage.setItem('access_token', data.access_token);
     return true;
-  } catch {
-    return false;
-  }
+  } catch { return false; }
 }
 
 // ─────────────────────────────────────────────────────────────
-// RENDER
+// RENDER CARDS
 // ─────────────────────────────────────────────────────────────
 function renderCards() {
-  document.getElementById('cards-grid').innerHTML = SECTIONS.map(s => {
-    const done = !!savedData[s.id];
-    return `<div class="sec-card ${done?'done':''}" onclick="openSection('${s.id}')">
+  document.getElementById('cards-grid').innerHTML = TABS.map(t => {
+    const done = !!savedData[t.id];
+    return `<div class="sec-card ${done?'done':''}" onclick="openTab('${t.id}')">
       <div class="card-top">
-        <div class="card-icon">${s.icon}</div>
-        <div class="tick-badge ${done?'show':''}" id="tick-${s.id}">
+        <div class="card-icon">${t.icon}</div>
+        <div class="tick-badge ${done?'show':''}" id="tick-${t.id}">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
         </div>
       </div>
-      <div class="card-name">Section ${s.id}: ${s.name}</div>
-      <div class="card-desc">${s.desc}</div>
-      <div class="card-q">${s.q} questions</div>
+      <div class="card-name">Tab ${t.id}: ${t.name}</div>
+      <div class="card-desc">${t.desc}</div>
+      <div class="card-q">${t.q} questions</div>
     </div>`;
   }).join('');
 }
 
 function updateProgress() {
-  const done = SECTIONS.filter(s => savedData[s.id]).length;
-  document.getElementById('prog-fill').style.width = (done/11*100)+'%';
-  document.getElementById('prog-count').textContent = `${done} / 11`;
-
-  const hasSections = done > 0;
-  document.getElementById('submit-btn').disabled  = !hasSections;
-  document.getElementById('export-btn').disabled  = !hasSections;
-  document.getElementById('action-note').textContent = hasSections
-    ? `${done} section${done>1?'s':''} filled — submit when done, or export a draft Excel.`
-    : 'Fill at least one section to enable submit and export.';
+  const done = TABS.filter(t => savedData[t.id]).length;
+  document.getElementById('prog-fill').style.width = (done/4*100)+'%';
+  document.getElementById('prog-count').textContent = `${done} / 4`;
+  const hasTabs = done > 0;
+  document.getElementById('submit-btn').disabled  = !hasTabs;
+  document.getElementById('export-btn').disabled  = !hasTabs;
+  document.getElementById('action-note').textContent = hasTabs
+    ? `${done} tab${done>1?'s':''} filled — submit when done, or export a draft Excel.`
+    : 'Fill at least one tab to enable submit and export.';
 }
 
 renderCards();
 updateProgress();
 
 // ─────────────────────────────────────────────────────────────
-// RESTORE FROM SERVER (on login / page load)
+// RESTORE FROM SERVER
 // ─────────────────────────────────────────────────────────────
 async function restoreFromServer() {
   const token = localStorage.getItem('access_token');
@@ -566,70 +829,48 @@ async function restoreFromServer() {
     const res = await fetch(`/api/submissions/temp/today?date=${TODAY}`, {
       headers: { 'Authorization': 'Bearer ' + token }
     });
-
-    // ✅ FIX: Handle 401 — access token expired, attempt silent refresh
     if (res.status === 401) {
       const refreshed = await tryRefreshToken();
-      if (refreshed) return restoreFromServer(); // retry once with new token
-      return; // tryRefreshToken will redirect if fully expired
-    }
-
-    if (!res.ok) {
-      setSyncStatus(pending.length > 0 ? 'pending' : 'synced');
+      if (refreshed) return restoreFromServer();
       return;
     }
-
+    if (!res.ok) { setSyncStatus(pending.length > 0 ? 'pending' : 'synced'); return; }
     const doc = await res.json();
-    if (!doc || !doc.sections) {
-      setSyncStatus(pending.length > 0 ? 'pending' : 'synced');
-      return;
-    }
-
-    // Merge server sections — server wins for fields not in the pending list
+    if (!doc || !doc.sections) { setSyncStatus(pending.length > 0 ? 'pending' : 'synced'); return; }
     const serverSecs = doc.sections;
     Object.keys(serverSecs).forEach(id => {
-      if (!pending.includes(id)) {
-        savedData[id] = serverSecs[id];
-      }
+      if (!pending.includes(id)) savedData[id] = serverSecs[id];
     });
     localStorage.setItem(SEC_KEY, JSON.stringify(savedData));
     renderCards();
     updateProgress();
     setSyncStatus(pending.length > 0 ? 'pending' : 'synced');
-  } catch {
-    setSyncStatus('offline');
-  }
+  } catch { setSyncStatus('offline'); }
 }
 restoreFromServer();
 
 // ─────────────────────────────────────────────────────────────
-// AUTO-SYNC TO SERVER (temp collection)
+// AUTO-SYNC
 // ─────────────────────────────────────────────────────────────
 async function syncToServer(sectionsToSync) {
   const token = localStorage.getItem('access_token');
   if (!token || !navigator.onLine || sectionsToSync.length === 0 || isSyncing) return false;
-
   isSyncing = true;
   setSyncStatus('syncing');
-
   const payload = {};
   sectionsToSync.forEach(id => { if (savedData[id]) payload[id] = savedData[id]; });
-
   try {
     const res = await fetch('/api/submissions/sync', {
       method: 'POST',
       headers: { 'Content-Type':'application/json', 'Authorization':'Bearer '+token },
       body: JSON.stringify({ date: TODAY, sections: payload })
     });
-
-    // ✅ FIX: Handle 401 — refresh token and retry once
     if (res.status === 401) {
       isSyncing = false;
       const refreshed = await tryRefreshToken();
       if (refreshed) return syncToServer(sectionsToSync);
       return false;
     }
-
     if (res.ok) {
       const synced = Object.keys(payload);
       pending = pending.filter(id => !synced.includes(id));
@@ -639,7 +880,6 @@ async function syncToServer(sectionsToSync) {
       return true;
     }
   } catch {}
-
   isSyncing = false;
   setSyncStatus(pending.length > 0 ? 'pending' : 'offline');
   return false;
@@ -653,19 +893,30 @@ async function syncAllPending() {
 // ─────────────────────────────────────────────────────────────
 // MODAL
 // ─────────────────────────────────────────────────────────────
-function openSection(id) {
-  const s = SECTIONS.find(x => x.id === id);
-  currentSec = s;
-  document.getElementById('m-icon').textContent  = s.icon;
-  document.getElementById('m-title').textContent = `Section ${s.id}: ${s.name}`;
-  document.getElementById('modal-body').innerHTML = s.html;
+function openTab(id) {
+  const t = TABS.find(x => x.id === id);
+  currentSec = t;
+  document.getElementById('m-icon').textContent  = t.icon;
+  document.getElementById('m-title').textContent = `Tab ${t.id}: ${t.name}`;
+  document.getElementById('modal-body').innerHTML = t.html;
   initFields();
+
+  // Init autocomplete for Tab A
+  if (id === 'A') {
+    // Reset autocomplete state
+    acLocked = false;
+    acResults = [];
+    initNameAutocomplete();
+  }
+
   if (savedData[id]) restoreValues(id);
   document.getElementById('modal-bg').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
 
 function closeModal() {
+  // Clean up autocomplete listener
+  document.removeEventListener('mousedown', onOutsideClick, true);
   document.getElementById('modal-bg').classList.remove('open');
   document.body.style.overflow = '';
   currentSec = null;
@@ -727,44 +978,40 @@ function restoreValues(id) {
       if (c) { c.checked = true; c.closest('.c-item')?.classList.add('chk'); }
     });
   });
+
+  // Show clear button & filled badge if name is already set in Tab A
+  if (id === 'A' && d.name) {
+    setTimeout(() => {
+      document.getElementById('ac-clear')?.classList.add('show');
+    }, 50);
+  }
 }
 
 // ─────────────────────────────────────────────────────────────
 // SAVE SECTION
 // ─────────────────────────────────────────────────────────────
-function saveSection() {
+function saveTab() {
   if (!currentSec) return;
   const btn = document.getElementById('save-btn');
   btn.classList.add('busy');
-
   setTimeout(async () => {
     const id   = currentSec.id;
     const data = collectValues();
-
-    // Always save locally first
     savedData[id] = data;
     localStorage.setItem(SEC_KEY, JSON.stringify(savedData));
-
-    // Track as pending (not yet synced)
     if (!pending.includes(id)) pending.push(id);
     localStorage.setItem(PEND_KEY, JSON.stringify(pending));
-
     btn.classList.remove('busy');
     closeModal();
     renderCards();
     updateProgress();
-
     if (navigator.onLine) {
       setSyncStatus('syncing');
       const ok = await syncToServer([id]);
-      if (ok) {
-        toast(`Section ${id} saved & synced ✓`);
-      } else {
-        toast(`Section ${id} saved locally`);
-        setSyncStatus('pending');
-      }
+      toast(ok ? `Tab ${id} saved & synced ✓` : `Tab ${id} saved locally`);
+      if (!ok) setSyncStatus('pending');
     } else {
-      toast(`Section ${id} saved offline ✓`);
+      toast(`Tab ${id} saved offline ✓`);
       setSyncStatus('offline');
     }
   }, 300);
@@ -820,19 +1067,17 @@ function exportToday() {
 // SUBMIT FLOW
 // ─────────────────────────────────────────────────────────────
 function openConfirm() {
-  const secIds = Object.keys(savedData).sort();
-  if (!secIds.length) return;
-  document.getElementById('confirm-count').textContent = secIds.length;
-  document.getElementById('confirm-sections').innerHTML = secIds.map(id => {
-    const m = SEC_META[id];
-    return `<span class="sec-tag">${m ? m.icon+' '+m.name : id}</span>`;
+  const tabIds = Object.keys(savedData).sort();
+  if (!tabIds.length) return;
+  document.getElementById('confirm-count').textContent = tabIds.length;
+  document.getElementById('confirm-sections').innerHTML = tabIds.map(id => {
+    const t = TABS.find(tab => tab.id === id);
+    return `<span class="sec-tag">${t ? t.icon+' '+t.name : id}</span>`;
   }).join('');
   document.getElementById('confirm-bg').classList.add('open');
 }
 
-function closeConfirm() {
-  document.getElementById('confirm-bg').classList.remove('open');
-}
+function closeConfirm() { document.getElementById('confirm-bg').classList.remove('open'); }
 
 document.getElementById('confirm-bg').addEventListener('click', e => {
   if (e.target.id === 'confirm-bg') closeConfirm();
@@ -840,34 +1085,22 @@ document.getElementById('confirm-bg').addEventListener('click', e => {
 
 async function doSubmit() {
   const btn = document.getElementById('confirm-submit-btn');
-
   if (!navigator.onLine) {
     closeConfirm();
     toast('You must be online to submit. Data is saved locally.', 3000);
     return;
   }
-
   btn.disabled = true;
   btn.textContent = 'Submitting…';
-
   try {
-    // 1. Ensure all local data is synced to temp (handles token refresh internally)
-    if (pending.length > 0) {
-      await syncToServer([...pending]);
-    }
-
-    // 2. Get a fresh token after potential refresh above
+    if (pending.length > 0) await syncToServer([...pending]);
     const token = localStorage.getItem('access_token');
     if (!token) throw new Error('Not authenticated');
-
-    // 3. Call submit endpoint — moves temp → main collection
     let res = await fetch('/api/submissions/submit', {
       method: 'POST',
       headers: { 'Content-Type':'application/json', 'Authorization':'Bearer '+token },
       body: JSON.stringify({ date: TODAY })
     });
-
-    // ✅ FIX: Handle 401 on submit too
     if (res.status === 401) {
       const refreshed = await tryRefreshToken();
       if (!refreshed) throw new Error('Session expired. Please sign in again.');
@@ -878,24 +1111,19 @@ async function doSubmit() {
         body: JSON.stringify({ date: TODAY })
       });
     }
-
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
       throw new Error(err.detail || 'Submit failed');
     }
-
-    // 4. Clear ALL local data for today
     localStorage.removeItem(SEC_KEY);
     localStorage.removeItem(PEND_KEY);
     savedData = {};
     pending   = [];
-
     closeConfirm();
     renderCards();
     updateProgress();
     setSyncStatus('synced');
     toast('✅ Submitted successfully! Check History to view.', 3500);
-
   } catch (err) {
     btn.disabled = false;
     btn.textContent = 'Submit Now';
@@ -923,7 +1151,6 @@ function updateNetBanner() {
 window.addEventListener('online',  updateNetBanner);
 window.addEventListener('offline', updateNetBanner);
 
-// Set initial sync status
 if (!navigator.onLine) {
   setSyncStatus('offline');
   document.getElementById('net-banner').className = 'offline';
@@ -963,9 +1190,7 @@ function logout() {
   document.getElementById('user-dropdown').classList.remove('open');
   document.getElementById('signout-modal-bg').classList.add('open');
 }
-function closeSignoutModal() {
-  document.getElementById('signout-modal-bg').classList.remove('open');
-}
+function closeSignoutModal() { document.getElementById('signout-modal-bg').classList.remove('open'); }
 function doLogout() {
   exitAllowed = true;
   localStorage.removeItem('access_token');
@@ -977,22 +1202,15 @@ document.getElementById('signout-modal-bg').addEventListener('click', e => {
   if (e.target.id === 'signout-modal-bg') closeSignoutModal();
 });
 
-// ── Exit / Leave app guard ───────────────────────────────────
 let exitAllowed    = false;
 let pendingExitUrl = null;
 
-function closeExitModal() {
-  document.getElementById('exit-modal-bg').classList.remove('open');
-  pendingExitUrl = null;
-}
+function closeExitModal() { document.getElementById('exit-modal-bg').classList.remove('open'); pendingExitUrl = null; }
 function confirmExit() {
   exitAllowed = true;
   document.getElementById('exit-modal-bg').classList.remove('open');
-  if (pendingExitUrl) {
-    window.location.href = pendingExitUrl;
-  } else {
-    window.close();
-  }
+  if (pendingExitUrl) window.location.href = pendingExitUrl;
+  else window.close();
 }
 document.getElementById('exit-modal-bg').addEventListener('click', e => {
   if (e.target.id === 'exit-modal-bg') closeExitModal();
@@ -1000,25 +1218,17 @@ document.getElementById('exit-modal-bg').addEventListener('click', e => {
 
 window.addEventListener('beforeunload', e => {
   if (exitAllowed) return;
-  const hasDraft = Object.keys(savedData).length > 0;
-  if (hasDraft) {
-    e.preventDefault();
-    e.returnValue = '';
-  }
+  if (Object.keys(savedData).length > 0) { e.preventDefault(); e.returnValue = ''; }
 });
 
 document.addEventListener('click', e => {
   if (exitAllowed) return;
-  const hasDraft = Object.keys(savedData).length > 0;
-  if (!hasDraft) return;
-
+  if (!Object.keys(savedData).length) return;
   const link = e.target.closest('a[href]');
   if (!link) return;
-
   const href = link.getAttribute('href');
   if (!href || href.startsWith('#') || href === window.location.pathname) return;
   if (href === '/admin.html') return;
-
   e.preventDefault();
   e.stopPropagation();
   pendingExitUrl = href;
@@ -1031,10 +1241,7 @@ function openSwitchModal(e) {
   document.getElementById('switch-modal-bg').classList.add('open');
 }
 function closeSwitchModal() { document.getElementById('switch-modal-bg').classList.remove('open'); }
-function goToAdmin() {
-  exitAllowed = true;
-  window.location.href = '/admin.html';
-}
+function goToAdmin() { exitAllowed = true; window.location.href = '/admin.html'; }
 document.getElementById('switch-modal-bg').addEventListener('click', e => {
   if (e.target.id === 'switch-modal-bg') closeSwitchModal();
 });
