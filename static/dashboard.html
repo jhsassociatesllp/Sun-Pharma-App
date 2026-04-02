@@ -253,6 +253,16 @@
 <div class="modal-bg" id="m-admin"><div class="modal-box"><div class="modal-icon">🛡️</div><h3>Switch to Control Panel?</h3><p>You can return to the field app anytime.</p><div class="modal-btns"><button class="mbtn no" onclick="closeM('m-admin')">Cancel</button><button class="mbtn yes" onclick="location.href='/admin.html'">Yes, Switch</button></div></div></div>
 <div class="modal-bg" id="m-signout"><div class="modal-box"><div class="modal-icon">👋</div><h3>Sign out?</h3><p>Draft forms are saved on this device.</p><div class="modal-btns"><button class="mbtn no" onclick="closeM('m-signout')">Stay</button><button class="mbtn yes" style="background:#ef4444" onclick="doLogout()">Sign out</button></div></div></div>
 <div class="modal-bg" id="m-discard"><div class="modal-box"><div class="modal-icon">🗑️</div><h3>Discard this form?</h3><p>All data in this form will be permanently deleted.</p><div class="modal-btns"><button class="mbtn no" onclick="closeM('m-discard')">Keep it</button><button class="mbtn yes" style="background:#ef4444" onclick="confirmDiscard()">Discard</button></div></div></div>
+<div class="modal-bg" id="m-unsaved">
+  <div class="modal-box">
+    <div class="modal-icon">💾</div>
+    <h3>Unsaved changes!</h3>
+    <p>You have filled data that hasn't been saved yet. Please click <strong>"Save Tab"</strong> on each tab before submitting, otherwise your data will be lost.</p>
+    <div class="modal-btns">
+      <button class="mbtn yes" onclick="closeM('m-unsaved')">Go back & Save</button>
+    </div>
+  </div>
+</div>
 
 <main class="main">
   <div class="page-hdr">
@@ -431,21 +441,76 @@ function onVerify(fid,checked){
   if(checked)toast('✅ Physical verification confirmed');
 }
 
-async function submitForm(fid){
-  const f=getF(fid);if(!f)return;
-  if(!f.verified){toast('⚠️ Check the physical verification box first',3000);return;}
-  if(!navigator.onLine){toast('Must be online to submit',3000);return;}
-  const btn=document.getElementById('fsbtn-'+fid);btn.classList.add('busy');
-  try{
-    const token=localStorage.getItem('access_token');if(!token)throw new Error('Not authenticated');
-    await fetch('/api/forms/sync',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({form_id:f.form_id,date:TODAY,sections:f.sections||{},form_number:f.form_number})});
-    const res=await fetch('/api/forms/submit',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({form_id:f.form_id,date:TODAY})});
-    if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(e.detail||'Submit failed');}
-    f.submitted=true;saveForms();
-    const card=document.getElementById('fc-'+fid);
-    if(card){const tmp=document.createElement('div');tmp.innerHTML=buildCard(f);card.replaceWith(tmp.firstElementChild);}
-    setSyncStatus('synced');toast('✅ Form #'+f.form_number+' submitted!',3500);
-  }catch(err){btn.classList.remove('busy');toast('Submit failed: '+err.message,3500);}
+function hasUnsavedChanges(fid) {
+  const f = getF(fid); if (!f) return false;
+  for (const tab of TABS) {
+    const panel = document.getElementById('fields-' + fid + '-' + tab.id);
+    if (!panel) continue;
+    const current = collectPanel(fid, tab.id);
+    const saved = f.sections?.[tab.id] || null;
+    // Check if panel has any data filled
+    const hasFilled = Object.entries(current).some(([k, v]) =>
+      Array.isArray(v) ? v.length > 0 : (v !== '' && v !== null && v !== undefined)
+    );
+    if (!hasFilled) continue; // tab is empty, skip
+    if (!saved) return true;  // tab has data but was never saved
+    // Compare current vs saved
+    const isDiff = JSON.stringify(current) !== JSON.stringify(saved);
+    if (isDiff) return true;
+  }
+  return false;
+}
+
+
+// async function submitForm(fid){
+//  const f=getF(fid);if(!f)return;
+//  if(!f.verified){toast('⚠️ Check the physical verification box first',3000);return;}
+//  if(!navigator.onLine){toast('Must be online to submit',3000);return;}
+//  const btn=document.getElementById('fsbtn-'+fid);btn.classList.add('busy');
+//  try{
+//    const token=localStorage.getItem('access_token');if(!token)throw new Error('Not authenticated');
+//    await fetch('/api/forms/sync',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({form_id:f.form_id,date:TODAY,sections:f.sections||{},form_number:f.form_number})});
+//    const res=await fetch('/api/forms/submit',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({form_id:f.form_id,date:TODAY})});
+//    if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(e.detail||'Submit failed');}
+//    f.submitted=true;saveForms();
+//    const card=document.getElementById('fc-'+fid);
+//    if(card){const tmp=document.createElement('div');tmp.innerHTML=buildCard(f);card.replaceWith(tmp.firstElementChild);}
+//    setSyncStatus('synced');toast('✅ Form #'+f.form_number+' submitted!',3500);
+//  }catch(err){btn.classList.remove('busy');toast('Submit failed: '+err.message,3500);}
+//}
+
+async function submitForm(fid) {
+  const f = getF(fid); if (!f) return;
+  if (!f.verified) { toast('⚠️ Check the physical verification box first', 3000); return; }
+  if (!navigator.onLine) { toast('Must be online to submit', 3000); return; }
+
+  // ── NEW: check for unsaved changes ──
+  if (hasUnsavedChanges(fid)) {
+    openUnsavedModal(fid);
+    return;
+  }
+
+  await doSubmitForm(fid);
+}
+
+function openUnsavedModal(fid) {
+  pendingSubmitId = fid;
+  document.getElementById('m-unsaved').classList.add('open');
+}
+
+async function doSubmitForm(fid) {
+  const f = getF(fid); if (!f) return;
+  const btn = document.getElementById('fsbtn-' + fid); btn.classList.add('busy');
+  try {
+    const token = localStorage.getItem('access_token'); if (!token) throw new Error('Not authenticated');
+    await fetch('/api/forms/sync', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, body: JSON.stringify({ form_id: f.form_id, date: TODAY, sections: f.sections || {}, form_number: f.form_number }) });
+    const res = await fetch('/api/forms/submit', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, body: JSON.stringify({ form_id: f.form_id, date: TODAY }) });
+    if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.detail || 'Submit failed'); }
+    f.submitted = true; saveForms();
+    const card = document.getElementById('fc-' + fid);
+    if (card) { const tmp = document.createElement('div'); tmp.innerHTML = buildCard(f); card.replaceWith(tmp.firstElementChild); }
+    setSyncStatus('synced'); toast('✅ Form #' + f.form_number + ' submitted!', 3500);
+  } catch (err) { btn.classList.remove('busy'); toast('Submit failed: ' + err.message, 3500); }
 }
 
 function addForm(){
@@ -456,7 +521,10 @@ function addForm(){
   toast('Form #'+fn+' added');
 }
 
-let pendingDiscardId=null;
+
+let pendingDiscardId = null;
+let pendingSubmitId = null;  // ← ADD THIS
+
 function openDiscardModal(fid){pendingDiscardId=fid;document.getElementById('m-discard').classList.add('open');}
 async function confirmDiscard(){
   closeM('m-discard');
@@ -615,7 +683,7 @@ document.addEventListener('click',e=>{const w=document.getElementById('umw');if(
 function openM(e,id){if(e)e.preventDefault();document.getElementById('udrop').classList.remove('open');document.getElementById(id)?.classList.add('open');}
 function closeM(id){document.getElementById(id)?.classList.remove('open');}
 function doLogout(){['access_token','refresh_token','user'].forEach(k=>localStorage.removeItem(k));window.location.href='/';}
-['m-admin','m-signout','m-discard'].forEach(id=>{document.getElementById(id)?.addEventListener('click',e=>{if(e.target.id===id)closeM(id);});});
+['m-admin','m-signout','m-discard', 'm-unsaved'].forEach(id=>{document.getElementById(id)?.addEventListener('click',e=>{if(e.target.id===id)closeM(id);});});
 renderAll();restoreFromServer();
 if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js').catch(()=>{});
 </script>
