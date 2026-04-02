@@ -548,21 +548,62 @@ function clearAC(fid){
 function closeACDD(fid){document.getElementById('panel-'+fid+'-A')?.querySelector('#ac-dropdown')?.classList.remove('open');if(acS[fid])acS[fid].fi=-1;}
 function showSub(id,show){document.getElementById(id)?.classList.toggle('show',show);}
 
-async function restoreFromServer(){
-  const token=localStorage.getItem('access_token');if(!token||!navigator.onLine){setSyncStatus(navigator.onLine?'pending':'offline');return;}
+// async function restoreFromServer(){
+//   const token=localStorage.getItem('access_token');if(!token||!navigator.onLine){setSyncStatus(navigator.onLine?'pending':'offline');return;}
+//   try{
+//     const res=await fetch('/api/forms/today?date='+TODAY,{headers:{'Authorization':'Bearer '+token}});
+//     if(res.status===401){const ok=await tryRefresh();if(ok)return restoreFromServer();return;}
+//     if(!res.ok)return;
+//     const sf=await res.json();if(!sf?.length)return;
+//     sf.forEach(s=>{if(!forms.find(f=>f.form_id===s.form_id)){forms.push({form_id:s.form_id,form_number:s.form_number||forms.length+1,sections:s.sections||{},verified:false,submitted:false,activeTab:'A',minimized:false});}});
+//     saveForms();renderAll();setSyncStatus('synced');
+//   }catch{setSyncStatus('offline');}
+// }
+
+async function restoreFromServer(isRetry=false){
+  const token=localStorage.getItem('access_token');
+  if(!token||!navigator.onLine){setSyncStatus(navigator.onLine?'pending':'offline');return;}
   try{
     const res=await fetch('/api/forms/today?date='+TODAY,{headers:{'Authorization':'Bearer '+token}});
-    if(res.status===401){const ok=await tryRefresh();if(ok)return restoreFromServer();return;}
+    if(res.status===401){
+      if(isRetry) return; // already tried refresh, give up silently
+      const ok=await tryRefresh();
+      if(ok) return restoreFromServer(true); // pass isRetry=true
+      return;
+    }
     if(!res.ok)return;
     const sf=await res.json();if(!sf?.length)return;
     sf.forEach(s=>{if(!forms.find(f=>f.form_id===s.form_id)){forms.push({form_id:s.form_id,form_number:s.form_number||forms.length+1,sections:s.sections||{},verified:false,submitted:false,activeTab:'A',minimized:false});}});
     saveForms();renderAll();setSyncStatus('synced');
   }catch{setSyncStatus('offline');}
 }
+
+// async function tryRefresh(){
+//   const rt=localStorage.getItem('refresh_token');if(!rt){window.location.href='/';return false;}
+//   try{const res=await fetch('/api/refresh',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({refresh_token:rt})});if(!res.ok){window.location.href='/';return false;}localStorage.setItem('access_token',(await res.json()).access_token);return true;}catch{return false;}
+// }
+
 async function tryRefresh(){
-  const rt=localStorage.getItem('refresh_token');if(!rt){window.location.href='/';return false;}
-  try{const res=await fetch('/api/refresh',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({refresh_token:rt})});if(!res.ok){window.location.href='/';return false;}localStorage.setItem('access_token',(await res.json()).access_token);return true;}catch{return false;}
+  const rt=localStorage.getItem('refresh_token');
+  if(!rt){
+    // Clear everything before redirecting
+    ['access_token','refresh_token','user'].forEach(k=>localStorage.removeItem(k));
+    window.location.href='/';
+    return false;
+  }
+  try{
+    const res=await fetch('/api/refresh',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({refresh_token:rt})});
+    if(!res.ok){
+      // Clear everything before redirecting
+      ['access_token','refresh_token','user'].forEach(k=>localStorage.removeItem(k));
+      window.location.href='/';
+      return false;
+    }
+    localStorage.setItem('access_token',(await res.json()).access_token);
+    return true;
+  }catch{return false;}
 }
+
 function setSyncStatus(s){document.getElementById('sync-dot').className='sync-dot '+s;document.getElementById('sync-label').textContent={offline:'Offline',syncing:'Syncing…',synced:'Synced',pending:'Pending'}[s]||s;}
 function updateNetBanner(){const b=document.getElementById('net-banner');if(navigator.onLine){b.className='online-flash';b.textContent='Back online';setTimeout(()=>{b.className='';b.textContent='';},3000);setSyncStatus('synced');}else{b.className='offline';b.textContent='Offline — data saves locally';setSyncStatus('offline');}}
 window.addEventListener('online',updateNetBanner);window.addEventListener('offline',updateNetBanner);

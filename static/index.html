@@ -101,7 +101,7 @@
       font-family: 'DM Sans', sans-serif; font-size: .9rem; font-weight: 600;
       color: var(--grey); cursor: pointer; transition: all .2s;
     }
-    .tab.active { background: var(--navy); color: #fff; box-shadow: 0 2px 8px rgba(15,21,37,.3); }
+    .tab.active { background: var(--navy); color: #fff !important; box-shadow: 0 2px 8px rgba(15,21,37,.3); }
 
     .form-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; margin-bottom: .3rem; color: var(--navy); }
     .form-sub   { color: var(--grey); font-size: .88rem; margin-bottom: 1.5rem; }
@@ -145,7 +145,7 @@
     .btn:hover { background: var(--navy3); box-shadow: 0 6px 18px rgba(15,21,37,.25); }
     .btn:active { transform: scale(.99); }
     .btn.busy { pointer-events: none; opacity: .75; }
-    .btn .label { transition: opacity .15s; }
+    .btn .label { transition: opacity .15s; color: #fff; }
     .btn .spin { display: none; position: absolute; inset: 0; align-items: center; justify-content: center; }
     .btn.busy .label { opacity: 0; }
     .btn.busy .spin { display: flex; }
