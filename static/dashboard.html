@@ -20,14 +20,11 @@
     }
     html,body{font-family:'DM Sans',sans-serif;background:var(--cream);min-height:100vh}
 
-    /* ── NET BANNER ── */
     #net-banner{display:none;align-items:center;gap:8px;padding:9px 1.5rem;font-size:.82rem;font-weight:500;z-index:300}
     #net-banner.offline{display:flex;background:#1f2937;color:#f9fafb}
     #net-banner.online-flash{display:flex;background:var(--navy2);color:var(--gold2)}
 
-    /* ── NAV ── */
-    nav{background:var(--navy);height:58px;display:flex;align-items:center;padding:0 1.25rem;gap:.6rem;position:sticky;top:0;z-index:200;
-      border-bottom:1px solid rgba(201,168,76,.1);}
+    nav{background:var(--navy);height:58px;display:flex;align-items:center;padding:0 1.25rem;gap:.6rem;position:sticky;top:0;z-index:200;border-bottom:1px solid rgba(201,168,76,.1);}
     .nav-logo{font-family:'Playfair Display',serif;color:#fff;font-size:1.05rem;text-decoration:none;flex-shrink:0;display:flex;align-items:center;gap:.5rem}
     .nav-logo .logo-jhs{color:var(--gold);font-weight:900}
     .nav-page-toggle{display:flex;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:100px;padding:3px;gap:2px;margin-left:.25rem}
@@ -56,29 +53,23 @@
     .dropdown-item.danger{color:var(--red)}.dropdown-item.danger:hover{background:#fef2f2}.dropdown-item.danger svg{color:var(--red)}
     .dropdown-divider{height:1px;background:var(--border);margin:.2rem 0}
 
-    /* ── MAIN ── */
     .main{max-width:900px;margin:0 auto;padding:1.75rem 1.5rem 5rem}
     .page-hdr{margin-bottom:1.5rem}
     .page-hdr h1{font-family:'Playfair Display',serif;font-size:1.55rem;color:var(--navy)}
     .page-hdr p{color:var(--grey);font-size:.85rem;margin-top:.3rem;line-height:1.6}
     .date-badge{display:inline-flex;align-items:center;gap:6px;background:var(--goldp);color:var(--gold);border:1px solid rgba(201,168,76,.2);font-size:.78rem;font-weight:600;padding:4px 12px;border-radius:100px;margin-top:.6rem}
 
-    /* ── FORM CARDS ── */
     .forms-list{display:flex;flex-direction:column;gap:1.25rem}
-
-    /* minimized card state */
     .form-card{background:#fff;border:1.5px solid var(--border);border-radius:16px;overflow:hidden;transition:box-shadow .2s,border-color .2s}
     .form-card.submitted{border-color:#c9a84c55;background:#fffdf5}
     .form-card.minimized .form-body-wrap{display:none}
     .form-card.minimized .form-submit-area{display:none}
 
-    /* header — always visible */
     .form-card-hdr{display:flex;align-items:center;gap:.85rem;padding:1rem 1.25rem;border-bottom:1.5px solid var(--border);background:#fafafa;cursor:pointer;user-select:none;transition:background .15s}
     .form-card.submitted .form-card-hdr{background:#fffdf5;border-color:#c9a84c33}
     .form-card.minimized .form-card-hdr{border-bottom:none}
     .form-card-hdr:hover{background:#f3f4f6}
     .form-card.submitted .form-card-hdr:hover{background:#fffbee}
-
     .form-num-badge{width:36px;height:36px;border-radius:10px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;flex-shrink:0}
     .form-card.submitted .form-num-badge{background:var(--gold)}
     .form-hdr-info{flex:1;min-width:0}
@@ -95,10 +86,6 @@
     .discard-btn svg{width:12px;height:12px;color:var(--grey)}
     .discard-btn:hover svg{color:var(--red)}
 
-    /* body wrap (collapsible) */
-    .form-body-wrap{}
-
-    /* ── TABS ── */
     .form-tabs-row{display:flex;overflow-x:auto;border-bottom:1.5px solid var(--border);padding:0 1.25rem;background:#fff;scrollbar-width:none}
     .form-tabs-row::-webkit-scrollbar{display:none}
     .form-tab-btn{padding:.6rem .85rem;border:none;border-bottom:2.5px solid transparent;background:none;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:600;color:var(--grey);cursor:pointer;white-space:nowrap;transition:color .15s,border-color .15s;margin-bottom:-1.5px;flex-shrink:0;position:relative}
@@ -111,7 +98,6 @@
     .form-tab-panel{display:none}
     .form-tab-panel.active{display:block}
 
-    /* ── VERIFY BOX ── */
     .verify-box{margin:.5rem 0 1rem;padding:.9rem 1.1rem;background:var(--cream);border:1.5px solid var(--border);border-radius:11px}
     .verify-row{display:flex;align-items:flex-start;gap:.75rem;cursor:pointer}
     .verify-chk{width:19px;height:19px;accent-color:var(--gold);cursor:pointer;flex-shrink:0;margin-top:2px}
@@ -119,7 +105,6 @@
     .verify-lbl em{color:var(--red);font-style:normal}
     .verify-hint{font-size:.71rem;color:var(--grey);margin-top:.3rem;margin-left:1.7rem;line-height:1.5}
 
-    /* ── SUBMIT AREA ── */
     .form-submit-area{padding:.85rem 1.25rem;border-top:1.5px solid var(--border);background:#fafafa;display:flex;align-items:center;gap:.85rem;flex-wrap:wrap}
     .form-card.submitted .form-submit-area{display:none}
     .form-submit-btn{display:flex;align-items:center;gap:6px;background:var(--navy);color:#fff;border:none;padding:10px 18px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:600;cursor:pointer;transition:background .18s,box-shadow .18s;position:relative;overflow:hidden}
@@ -133,7 +118,6 @@
     .submit-hint{font-size:.73rem;color:var(--grey)}
     .submit-hint.warn{color:#92400e;font-weight:500}
 
-    /* ── ADD FORM BTN ── */
     .add-form-wrap{margin-top:1rem}
     .add-form-btn{width:100%;padding:14px;border:2px dashed var(--border);border-radius:14px;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.65rem;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:600;color:var(--grey);transition:all .18s}
     .add-form-btn:hover{border-color:var(--gold);color:var(--gold);background:var(--goldp)}
@@ -147,8 +131,15 @@
     /* ── FORM FIELDS ── */
     .fg{margin-bottom:1.1rem}
     .fl{display:block;font-size:.82rem;font-weight:600;margin-bottom:.4rem;color:var(--navy2)}
+    .fl .req{color:var(--red);margin-left:2px}
     .fi,.fs,.ft{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.9rem;background:#fff;color:var(--dark);outline:none;transition:border-color .18s,box-shadow .18s}
     .fi:focus,.fs:focus,.ft:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,.1)}
+    .fi.field-error,.fs.field-error,.ft.field-error{border-color:var(--red)!important;box-shadow:0 0 0 3px rgba(239,68,68,.1)!important;animation:shake .3s ease}
+    @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+    .radio-grp.field-error .r-item:first-child,.chk-grp.field-error .c-item:first-child{outline:2px solid var(--red);outline-offset:2px;border-radius:8px}
+    .radio-grp.field-error,.chk-grp.field-error{border:2px solid var(--red);border-radius:10px;padding:6px;background:#fef2f2;animation:shake .3s ease}
+    .field-err-msg{font-size:.74rem;color:var(--red);margin-top:.3rem;display:flex;align-items:center;gap:4px;font-weight:500}
+    .field-err-msg svg{width:12px;height:12px;flex-shrink:0}
     .fs{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:32px}
     .ft{resize:vertical;min-height:78px}
     .row2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
@@ -169,6 +160,7 @@
     .s-table td{padding:4px 5px;border-bottom:1px solid var(--border)}
     .s-table input{border:1.5px solid var(--border);border-radius:7px;padding:5px 8px;width:100%;font-family:'DM Sans',sans-serif;font-size:.87rem;outline:none}
     .s-table input:focus{border-color:var(--gold)}
+    .s-table input.field-error{border-color:var(--red)!important;background:#fef2f2}
     .save-tab-btn{display:inline-flex;align-items:center;gap:6px;background:var(--navy);color:#fff;border:none;padding:9px 16px;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;transition:background .18s;margin-top:1rem;position:relative;overflow:hidden}
     .save-tab-btn:hover{background:var(--navy3)}
     .save-tab-btn.busy{pointer-events:none;opacity:.7}
@@ -176,6 +168,13 @@
     .save-tab-btn .sp{display:none;position:absolute;inset:0;align-items:center;justify-content:center;background:inherit}
     .save-tab-btn.busy .lbl{opacity:0}.save-tab-btn.busy .sp{display:flex}
     @keyframes rot{to{transform:rotate(360deg)}}.rot{animation:rot .65s linear infinite}
+
+    /* validation summary banner */
+    .val-banner{display:none;background:#fef2f2;border:1.5px solid #fecaca;border-radius:10px;padding:.75rem 1rem;margin-bottom:1rem;font-size:.82rem;color:#b91c1c;font-weight:500}
+    .val-banner.show{display:flex;align-items:flex-start;gap:.5rem}
+    .val-banner svg{width:15px;height:15px;flex-shrink:0;margin-top:1px}
+    .val-banner ul{margin:.3rem 0 0 1rem;font-weight:400}
+    .val-banner ul li{margin-bottom:2px}
 
     /* ── AUTOCOMPLETE ── */
     .ac-wrap{position:relative}
@@ -207,7 +206,7 @@
     /* ── MODALS ── */
     .modal-bg{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.55);align-items:center;justify-content:center;backdrop-filter:blur(4px)}
     .modal-bg.open{display:flex}
-    .modal-box{background:#fff;border-radius:18px;padding:2rem 1.75rem;width:90%;max-width:360px;text-align:center;animation:popIn .25s cubic-bezier(.34,1.56,.64,1)}
+    .modal-box{background:#fff;border-radius:18px;padding:2rem 1.75rem;width:90%;max-width:380px;text-align:center;animation:popIn .25s cubic-bezier(.34,1.56,.64,1)}
     @keyframes popIn{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
     .modal-icon{font-size:2.2rem;margin-bottom:.75rem}
     .modal-box h3{font-family:'Playfair Display',serif;font-size:1.15rem;color:var(--navy);margin-bottom:.4rem}
@@ -216,6 +215,12 @@
     .mbtn{flex:1;padding:10px;border-radius:10px;border:none;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .18s}
     .mbtn.yes{background:var(--navy);color:#fff}.mbtn.yes:hover{background:var(--navy3)}
     .mbtn.no{background:var(--border);color:var(--dark)}.mbtn.no:hover{background:#d1d5db}
+
+    /* validation modal list */
+    .modal-err-list{text-align:left;margin:.5rem 0 1.2rem;max-height:200px;overflow-y:auto}
+    .modal-err-list li{font-size:.83rem;color:#b91c1c;padding:4px 0;border-bottom:1px solid #fecaca;list-style:none;display:flex;align-items:flex-start;gap:6px}
+    .modal-err-list li::before{content:'⚠';font-size:.75rem;flex-shrink:0;margin-top:1px}
+
     .toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 18px;border-radius:100px;font-size:.84rem;font-weight:500;white-space:nowrap;opacity:0;transition:opacity .28s;pointer-events:none;z-index:9999;display:flex;align-items:center;gap:7px}
     .toast svg{width:14px;height:14px}
     .toast.show{opacity:1}
@@ -250,16 +255,22 @@
     </div>
   </div>
 </nav>
+
+<!-- MODALS -->
 <div class="modal-bg" id="m-admin"><div class="modal-box"><div class="modal-icon">🛡️</div><h3>Switch to Control Panel?</h3><p>You can return to the field app anytime.</p><div class="modal-btns"><button class="mbtn no" onclick="closeM('m-admin')">Cancel</button><button class="mbtn yes" onclick="location.href='/admin.html'">Yes, Switch</button></div></div></div>
 <div class="modal-bg" id="m-signout"><div class="modal-box"><div class="modal-icon">👋</div><h3>Sign out?</h3><p>Draft forms are saved on this device.</p><div class="modal-btns"><button class="mbtn no" onclick="closeM('m-signout')">Stay</button><button class="mbtn yes" style="background:#ef4444" onclick="doLogout()">Sign out</button></div></div></div>
 <div class="modal-bg" id="m-discard"><div class="modal-box"><div class="modal-icon">🗑️</div><h3>Discard this form?</h3><p>All data in this form will be permanently deleted.</p><div class="modal-btns"><button class="mbtn no" onclick="closeM('m-discard')">Keep it</button><button class="mbtn yes" style="background:#ef4444" onclick="confirmDiscard()">Discard</button></div></div></div>
-<div class="modal-bg" id="m-unsaved">
+<div class="modal-bg" id="m-unsaved"><div class="modal-box"><div class="modal-icon">💾</div><h3>Unsaved changes!</h3><p>You have filled data that hasn't been saved yet. Please click <strong>"Save Tab"</strong> on each tab before submitting, otherwise your data will be lost.</p><div class="modal-btns"><button class="mbtn yes" onclick="closeM('m-unsaved')">Go back &amp; Save</button></div></div></div>
+
+<!-- Validation Error Modal -->
+<div class="modal-bg" id="m-validation">
   <div class="modal-box">
-    <div class="modal-icon">💾</div>
-    <h3>Unsaved changes!</h3>
-    <p>You have filled data that hasn't been saved yet. Please click <strong>"Save Tab"</strong> on each tab before submitting, otherwise your data will be lost.</p>
+    <div class="modal-icon">❌</div>
+    <h3>Please fill required fields</h3>
+    <p style="margin-bottom:.6rem">The following fields are mandatory:</p>
+    <ul class="modal-err-list" id="val-err-list"></ul>
     <div class="modal-btns">
-      <button class="mbtn yes" onclick="closeM('m-unsaved')">Go back & Save</button>
+      <button class="mbtn yes" onclick="closeM('m-validation')">OK, I'll fill them</button>
     </div>
   </div>
 </div>
@@ -283,11 +294,177 @@
 <div class="toast" id="toast"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span id="toast-msg"></span></div>
 
 <script>
+// ── REQUIRED FIELDS PER TAB ──────────────────────────────────
+// Each entry: { type: 'text'|'radio'|'select'|'checkbox'|'table', id/name, label }
+const TAB_REQUIRED = {
+  A: [
+    { type:'text',    id:'name',          label:'Name of Beneficiary' },
+    { type:'text',    id:'age',           label:'Age' },
+    { type:'radio',   name:'gender',      label:'Gender' },
+    { type:'text',    id:'mobile',        label:'Mobile' },
+    { type:'select',  id:'marital',       label:'Marital Status' },
+    { type:'text',    id:'location',      label:'Location' },
+    { type:'radio',   name:'landsize',    label:'Landholding size' },
+    { type:'radio',   name:'landown',     label:'Land ownership' },
+    { type:'radio',   name:'irrigation',  label:'Irrigation access' },
+    { type:'radio',   name:'times_received', label:'Times received saplings' },
+  ],
+  B: [
+    { type:'radio',   name:'sapling_cond',  label:'Sapling condition at distribution' },
+    { type:'text',    id:'sapling_height',  label:'Sapling height at distribution' },
+    { type:'text',    id:'sapling_age_yrs', label:'Sapling age at distribution (years)' },
+    { type:'radio',   name:'sapling_suit',  label:'Suitable for soil/climate' },
+    { type:'radio',   name:'mis_match',     label:'Received same count as MIS' },
+    { type:'table',   ids:['sup_papaya','sup_mulberry','sup_banana'], label:'Saplings supposed to receive (all crops)' },
+    { type:'table',   ids:['rcv_papaya','rcv_mulberry','rcv_banana'], label:'Saplings actually received (all crops)' },
+    { type:'radio',   name:'approved_land', label:'Planted on approved land' },
+    { type:'select',  id:'plant_month',     label:'Planting month' },
+    { type:'select',  id:'plant_year',      label:'Planting year' },
+    { type:'radio',   name:'pit_size',      label:'Followed pit size/spacing' },
+    { type:'radio',   name:'manure',        label:'Applied manure/fertilizer' },
+    { type:'checkbox',grpIdx:1,            label:'Protective measures' },
+    { type:'radio',   name:'photos',        label:'Photos taken' },
+    { type:'table',   ids:['surv_papaya','surv_mulberry','surv_banana'], label:'Saplings currently surviving (all crops)' },
+    { type:'checkbox',grpIdx:2,            label:'Mortality reasons' },
+    { type:'radio',   name:'watering',      label:'Watering frequency' },
+    { type:'radio',   name:'weeding',       label:'Weeding frequency' },
+  ],
+  C: [
+    { type:'radio',   name:'training',       label:'Attended training' },
+    { type:'checkbox',grpIdx:0,             label:'Topics covered' },
+    { type:'radio',   name:'train_help',     label:'Training helped' },
+    { type:'radio',   name:'team_visit',     label:'GVT field team visit' },
+    { type:'radio',   name:'tech_guidance',  label:'Technical guidance' },
+    { type:'radio',   name:'know_contact',   label:'Knew whom to contact' },
+    { type:'radio',   name:'resolved',       label:'Concerns resolved' },
+    { type:'radio',   name:'other_csr',      label:'Another CSR program' },
+    { type:'radio',   name:'govt_scheme',    label:'Govt horticulture scheme' },
+  ],
+  D: [
+    { type:'text',    id:'profit_cy',     label:'Net profit — Current Year' },
+    { type:'text',    id:'profit_ly',     label:'Net profit — Last Year' },
+    { type:'checkbox',grpIdx:0,          label:'Income change factors' },
+    { type:'radio',   name:'csr_informed',label:'Informed of CSR support (Sun Pharma)' },
+    { type:'radio',   name:'branding',    label:'Branding material seen' },
+    { type:'radio',   name:'satisfaction',label:'Overall satisfaction' },
+    { type:'checkbox',grpIdx:1,          label:'Most helpful aspects' },
+    { type:'checkbox',grpIdx:2,          label:'Challenges faced' },
+    { type:'text',    id:'suggestions',   label:'Suggestions / Testimonials' },
+    { type:'radio',   name:'recommend',   label:'Would recommend this program' },
+  ]
+};
+
+// ── VALIDATE TAB ─────────────────────────────────────────────
+// Returns array of error messages. Empty = valid.
+function validateTab(fid, tabId) {
+  const panel = document.getElementById('fields-' + fid + '-' + tabId);
+  if (!panel) return [];
+  const rules = TAB_REQUIRED[tabId] || [];
+  const errors = [];
+
+  // clear previous highlights
+  panel.querySelectorAll('.field-error').forEach(el => el.classList.remove('field-error'));
+  panel.querySelectorAll('.field-err-msg').forEach(el => el.remove());
+
+  rules.forEach(rule => {
+    let fail = false;
+
+    if (rule.type === 'text') {
+      const el = panel.querySelector('#' + rule.id);
+      if (!el) return;
+      if (!el.value.trim()) {
+        fail = true;
+        el.classList.add('field-error');
+        const msg = makeErrMsg(rule.label + ' is required');
+        el.closest('.fg')?.appendChild(msg);
+      }
+    }
+
+    else if (rule.type === 'select') {
+      const el = panel.querySelector('#' + rule.id);
+      if (!el) return;
+      if (!el.value) {
+        fail = true;
+        el.classList.add('field-error');
+        const msg = makeErrMsg(rule.label + ' is required');
+        el.closest('.fg')?.appendChild(msg);
+      }
+    }
+
+    else if (rule.type === 'radio') {
+      const checked = panel.querySelector(`input[name="${rule.name}"]:checked`);
+      if (!checked) {
+        fail = true;
+        const grp = panel.querySelector(`input[name="${rule.name}"]`)?.closest('.radio-grp');
+        if (grp) {
+          grp.classList.add('field-error');
+          const msg = makeErrMsg(rule.label + ' — please select an option');
+          grp.closest('.fg')?.appendChild(msg);
+        }
+      }
+    }
+
+    else if (rule.type === 'checkbox') {
+      const grps = panel.querySelectorAll('.chk-grp');
+      const grp = grps[rule.grpIdx];
+      if (!grp) return;
+      const anyChecked = grp.querySelector('input:checked');
+      if (!anyChecked) {
+        fail = true;
+        grp.classList.add('field-error');
+        const msg = makeErrMsg(rule.label + ' — please select at least one');
+        grp.closest('.fg')?.appendChild(msg);
+      }
+    }
+
+    else if (rule.type === 'table') {
+      // All cells in the table row group must be filled
+      let anyEmpty = false;
+      rule.ids.forEach(id => {
+        const el = panel.querySelector('#' + id);
+        if (!el) return;
+        if (el.value === '' || el.value === null) {
+          anyEmpty = true;
+          el.classList.add('field-error');
+        }
+      });
+      if (anyEmpty) {
+        fail = true;
+        // find the closest fg to first id and append error
+        const firstEl = panel.querySelector('#' + rule.ids[0]);
+        const fg = firstEl?.closest('.fg');
+        if (fg && !fg.querySelector('.field-err-msg')) {
+          fg.appendChild(makeErrMsg(rule.label + ' — fill all crop values'));
+        }
+      }
+    }
+
+    if (fail) errors.push(rule.label);
+  });
+
+  return errors;
+}
+
+function makeErrMsg(text) {
+  const d = document.createElement('div');
+  d.className = 'field-err-msg';
+  d.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>${text}`;
+  return d;
+}
+
+function clearValidation(fid, tabId) {
+  const panel = document.getElementById('fields-' + fid + '-' + tabId);
+  if (!panel) return;
+  panel.querySelectorAll('.field-error').forEach(el => el.classList.remove('field-error'));
+  panel.querySelectorAll('.field-err-msg').forEach(el => el.remove());
+}
+
+// ── TAB HTML ─────────────────────────────────────────────────
 const TAB_HTML = {
-A: () => `<div class="fg"><label class="fl">1. Name of Beneficiary</label><div class="ac-wrap"><input class="fi" id="name" placeholder="Type name to search…" autocomplete="off"/><span class="ac-spinner" id="ac-spinner"><svg class="rot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></span><button class="ac-clear" id="ac-clear" type="button" title="Clear"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button><div class="ac-dropdown" id="ac-dropdown"></div></div><div class="ac-filled-badge" id="ac-filled-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Auto-filled from farmer records</div></div><div class="row2"><div class="fg"><label class="fl">2. Age</label><input class="fi" id="age" type="number" placeholder="Age"/></div><div class="fg"><label class="fl">3. Gender</label><div class="radio-grp"><label class="r-item"><input type="radio" name="gender" value="Male"/> Male</label><label class="r-item"><input type="radio" name="gender" value="Female"/> Female</label><label class="r-item"><input type="radio" name="gender" value="Other"/> Other</label></div></div></div><div class="row2"><div class="fg"><label class="fl">4. Mobile</label><input class="fi" id="mobile" type="tel" placeholder="Mobile"/></div><div class="fg"><label class="fl">5. Marital Status</label><select class="fs" id="marital"><option value="">Select</option><option>Single</option><option>Married</option><option>Widowed</option><option>Divorced</option></select></div></div><div class="fg"><label class="fl">6. Location (Village, District, State)</label><input class="fi" id="location" placeholder="e.g. Shirpur, Dhule, Maharashtra"/></div><div class="fg"><label class="fl">7. Landholding size</label><div class="radio-grp"><label class="r-item"><input type="radio" name="landsize" value="Less than 1 acre"/> &lt;1 acre</label><label class="r-item"><input type="radio" name="landsize" value="1–2 acres"/> 1–2 acres</label><label class="r-item"><input type="radio" name="landsize" value="2–5 acres"/> 2–5 acres</label><label class="r-item"><input type="radio" name="landsize" value="More than 5 acres"/> &gt;5 acres</label></div></div><div class="fg"><label class="fl">8. Land ownership</label><div class="radio-grp"><label class="r-item"><input type="radio" name="landown" value="Owned"/> Owned</label><label class="r-item"><input type="radio" name="landown" value="Leased"/> Leased</label><label class="r-item"><input type="radio" name="landown" value="Shared"/> Shared</label></div></div><div class="fg"><label class="fl">9. Irrigation access</label><div class="radio-grp"><label class="r-item"><input type="radio" name="irrigation" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="irrigation" value="No"/> No</label></div></div><div class="fg"><label class="fl">10. Times received saplings</label><div class="radio-grp"><label class="r-item"><input type="radio" name="times_received" value="First time"/> First time</label><label class="r-item"><input type="radio" name="times_received" value="Second time"/> Second time</label><label class="r-item"><input type="radio" name="times_received" value="More than twice"/> More than twice</label></div></div>`,
-B: () => `<div class="fg"><label class="fl">11. Sapling condition at distribution</label><div class="radio-grp"><label class="r-item"><input type="radio" name="sapling_cond" value="Healthy"/> Healthy</label><label class="r-item"><input type="radio" name="sapling_cond" value="Average"/> Average</label><label class="r-item"><input type="radio" name="sapling_cond" value="Weak"/> Weak</label><label class="r-item"><input type="radio" name="sapling_cond" value="Damaged"/> Damaged</label></div></div><div class="fg"><label class="fl">12a. Sapling height at distribution</label><input class="fi" id="sapling_height" type="text" placeholder="e.g. 1.5 ft"/></div><div class="fg"><label class="fl">12b. Sapling age at distribution (years)</label><input class="fi" id="sapling_age_yrs" type="number" min="0" step="0.5" placeholder="e.g. 1.5"/></div><div class="fg"><label class="fl">13. Suitable for soil/climate?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="sapling_suit" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="sapling_suit" value="No"/> No</label><label class="r-item"><input type="radio" name="sapling_suit" value="Partially"/> Partially</label></div></div><div class="fg"><label class="fl">14. Received same count as MIS?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="mis_match" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="mis_match" value="No"/> No</label></div></div><div class="fg"><label class="fl">15. Saplings supposed to receive</label><table class="s-table"><thead><tr><th>Crop</th><th>Count</th></tr></thead><tbody><tr><td>Papaya</td><td><input type="number" id="sup_papaya" placeholder="0"/></td></tr><tr><td>Mulberry</td><td><input type="number" id="sup_mulberry" placeholder="0"/></td></tr><tr><td>Banana</td><td><input type="number" id="sup_banana" placeholder="0"/></td></tr></tbody></table></div><div class="fg"><label class="fl">16. Saplings actually received</label><table class="s-table"><thead><tr><th>Crop</th><th>Count</th></tr></thead><tbody><tr><td>Papaya</td><td><input type="number" id="rcv_papaya" placeholder="0"/></td></tr><tr><td>Mulberry</td><td><input type="number" id="rcv_mulberry" placeholder="0"/></td></tr><tr><td>Banana</td><td><input type="number" id="rcv_banana" placeholder="0"/></td></tr></tbody></table></div><div class="fg"><label class="fl">17. Planted on approved land?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="approved_land" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="approved_land" value="No"/> No</label></div></div><div class="fg"><label class="fl">18. Planting season</label><div class="row2"><select class="fi fs" id="plant_month"><option value="">Month…</option><option>January</option><option>February</option><option>March</option><option>April</option><option>May</option><option>June</option><option>July</option><option>August</option><option>September</option><option>October</option><option>November</option><option>December</option></select><select class="fi fs" id="plant_year"><option value="">Year…</option><option>2020</option><option>2021</option><option>2022</option><option>2023</option><option>2024</option><option>2025</option><option>2026</option></select></div></div><div class="fg"><label class="fl">19. Followed pit size/spacing?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="pit_size" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="pit_size" value="No"/> No</label><label class="r-item"><input type="radio" name="pit_size" value="Partially"/> Partially</label></div></div><div class="fg"><label class="fl">20. Applied manure/fertilizer?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="manure" value="Yes" onchange="showSub('manure-sub',true)"/> Yes</label><label class="r-item"><input type="radio" name="manure" value="No" onchange="showSub('manure-sub',false)"/> No</label></div><div class="sub-f" id="manure-sub"><label class="fl">Type used</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="FYM"/> FYM</label><label class="c-item"><input type="checkbox" value="Vermicompost"/> Vermicompost</label><label class="c-item"><input type="checkbox" value="Chemical fertilizer"/> Chemical</label><label class="c-item"><input type="checkbox" value="Bio-fertilizer"/> Bio-fertilizer</label></div></div></div><div class="fg"><label class="fl">21. Protective measures</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Fencing"/> Fencing</label><label class="c-item"><input type="checkbox" value="Tree guards"/> Tree guards</label><label class="c-item"><input type="checkbox" value="Thorny branches"/> Thorny branches</label><label class="c-item"><input type="checkbox" value="No protection"/> No protection</label></div></div><div class="fg"><label class="fl">22. Photos taken?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="photos" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="photos" value="No"/> No</label></div></div><div class="fg"><label class="fl">23. Saplings currently surviving</label><table class="s-table"><thead><tr><th>Crop</th><th>Surviving</th></tr></thead><tbody><tr><td>Papaya</td><td><input type="number" id="surv_papaya" placeholder="0"/></td></tr><tr><td>Mulberry</td><td><input type="number" id="surv_mulberry" placeholder="0"/></td></tr><tr><td>Banana</td><td><input type="number" id="surv_banana" placeholder="0"/></td></tr></tbody></table></div><div class="fg"><label class="fl">24. Mortality reasons</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Water shortage"/> Water shortage</label><label class="c-item"><input type="checkbox" value="Pest attack"/> Pest attack</label><label class="c-item"><input type="checkbox" value="Disease"/> Disease</label><label class="c-item"><input type="checkbox" value="Animal grazing"/> Animal grazing</label><label class="c-item"><input type="checkbox" value="Climate/weather"/> Climate/weather</label><label class="c-item"><input type="checkbox" value="Poor sapling quality"/> Poor sapling quality</label><label class="c-item"><input type="checkbox" value="No mortality"/> No mortality</label></div></div><div class="fg"><label class="fl">25. Watering frequency</label><div class="radio-grp"><label class="r-item"><input type="radio" name="watering" value="Daily"/> Daily</label><label class="r-item"><input type="radio" name="watering" value="Alternate days"/> Alternate days</label><label class="r-item"><input type="radio" name="watering" value="Weekly"/> Weekly</label><label class="r-item"><input type="radio" name="watering" value="Depends on rainfall"/> On rainfall</label></div></div><div class="fg"><label class="fl">26. Weeding frequency</label><div class="radio-grp"><label class="r-item"><input type="radio" name="weeding" value="Monthly"/> Monthly</label><label class="r-item"><input type="radio" name="weeding" value="Fortnightly"/> Fortnightly</label><label class="r-item"><input type="radio" name="weeding" value="Weekly"/> Weekly</label><label class="r-item"><input type="radio" name="weeding" value="Rarely"/> Rarely</label></div></div>`,
-C: () => `<div class="fg"><label class="fl">27. Attended training?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="training" value="Yes" onchange="showSub('train-sub',true)"/> Yes</label><label class="r-item"><input type="radio" name="training" value="No" onchange="showSub('train-sub',false)"/> No</label></div><div class="sub-f" id="train-sub"><div class="row2"><div class="fg" style="margin-bottom:0"><label class="fl" style="font-size:.77rem;font-weight:500">MM/YY</label><input class="fi" id="train_mmyy" placeholder="03/25" maxlength="5"/></div><div class="fg" style="margin-bottom:0"><label class="fl" style="font-size:.77rem;font-weight:500">Location</label><input class="fi" id="train_location" placeholder="e.g. Shirpur"/></div></div></div></div><div class="fg"><label class="fl">29. Topics covered</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Plantation methods"/> Plantation methods</label><label class="c-item"><input type="checkbox" value="Crop-specific care"/> Crop-specific care</label><label class="c-item"><input type="checkbox" value="Pest and disease management"/> Pest & disease</label><label class="c-item"><input type="checkbox" value="Pruning / harvesting practices"/> Pruning / harvesting</label></div></div><div class="fg"><label class="fl">30. Training helped?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="train_help" value="Yes, significantly"/> Yes, significantly</label><label class="r-item"><input type="radio" name="train_help" value="Yes, to some extent"/> To some extent</label><label class="r-item"><input type="radio" name="train_help" value="Not really"/> Not really</label></div></div><div class="fg"><label class="fl">31. GVT field team visit?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="team_visit" value="Yes" onchange="showSub('visit-sub',true)"/> Yes</label><label class="r-item"><input type="radio" name="team_visit" value="No" onchange="showSub('visit-sub',false)"/> No</label></div><div class="sub-f" id="visit-sub"><label class="fl">32. Number of visits</label><div class="radio-grp"><label class="r-item"><input type="radio" name="num_visits" value="1 time"/> 1 time</label><label class="r-item"><input type="radio" name="num_visits" value="2–3 times"/> 2–3 times</label><label class="r-item"><input type="radio" name="num_visits" value="More than 3 times"/> More than 3</label></div></div></div><div class="fg"><label class="fl">33. Technical guidance?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="tech_guidance" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="tech_guidance" value="No"/> No</label></div></div><div class="fg"><label class="fl">34. Knew whom to contact?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="know_contact" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="know_contact" value="No"/> No</label></div></div><div class="fg"><label class="fl">35. Concerns resolved?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="resolved" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="resolved" value="No"/> No</label><label class="r-item"><input type="radio" name="resolved" value="Not applicable"/> N/A</label></div></div><div class="fg"><label class="fl">36. Another CSR program?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="other_csr" value="Yes" onchange="showSub('csr-sub',true)"/> Yes</label><label class="r-item"><input type="radio" name="other_csr" value="No" onchange="showSub('csr-sub',false)"/> No</label></div><div class="sub-f" id="csr-sub"><input class="fi" id="csr_partner" placeholder="Partner name"/></div></div><div class="fg"><label class="fl">37. Govt horticulture scheme?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="govt_scheme" value="Yes" onchange="showSub('scheme-sub',true)"/> Yes</label><label class="r-item"><input type="radio" name="govt_scheme" value="No" onchange="showSub('scheme-sub',false)"/> No</label></div><div class="sub-f" id="scheme-sub"><input class="fi" id="scheme_name" placeholder="Scheme name"/></div></div>`,
-D: () => `<div class="fg"><label class="fl">38. Net profit — Current Year (Jan 25–Dec 25)</label><div style="position:relative"><span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-weight:600;color:var(--grey);pointer-events:none">₹</span><input class="fi" id="profit_cy" type="text" inputmode="numeric" placeholder="e.g. 45000" style="padding-left:28px"/></div></div><div class="fg"><label class="fl">39. Net profit — Last Year (Jan 24–Dec 24)</label><div style="position:relative"><span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-weight:600;color:var(--grey);pointer-events:none">₹</span><input class="fi" id="profit_ly" type="text" inputmode="numeric" placeholder="e.g. 38000" style="padding-left:28px"/></div></div><div class="fg"><label class="fl">40. Income change factors</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Yield improvement"/> Yield improvement</label><label class="c-item"><input type="checkbox" value="Market price changes"/> Market price</label><label class="c-item"><input type="checkbox" value="Input cost variation"/> Input cost</label><label class="c-item"><input type="checkbox" value="Pest/disease loss"/> Pest/disease loss</label><label class="c-item"><input type="checkbox" value="Weather conditions"/> Weather</label><label class="c-item"><input type="checkbox" value="Others"/> Others</label></div></div><div class="fg"><label class="fl">41. Informed of CSR support (Sun Pharma)?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="csr_informed" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="csr_informed" value="No"/> No</label></div></div><div class="fg"><label class="fl">42. Branding material seen?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="branding" value="Signboards"/> Signboards</label><label class="r-item"><input type="radio" name="branding" value="Banners"/> Banners</label><label class="r-item"><input type="radio" name="branding" value="Both"/> Both</label><label class="r-item"><input type="radio" name="branding" value="None"/> None</label></div></div><div class="fg"><label class="fl">43. Overall satisfaction</label><div class="radio-grp"><label class="r-item"><input type="radio" name="satisfaction" value="Very satisfied"/> Very satisfied</label><label class="r-item"><input type="radio" name="satisfaction" value="Satisfied"/> Satisfied</label><label class="r-item"><input type="radio" name="satisfaction" value="Neutral"/> Neutral</label><label class="r-item"><input type="radio" name="satisfaction" value="Dissatisfied"/> Dissatisfied</label><label class="r-item"><input type="radio" name="satisfaction" value="Very dissatisfied"/> Very dissatisfied</label></div></div><div class="fg"><label class="fl">44. Most helpful aspects</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Quality of saplings"/> Quality of saplings</label><label class="c-item"><input type="checkbox" value="Timely distribution"/> Timely distribution</label><label class="c-item"><input type="checkbox" value="Training and awareness"/> Training</label><label class="c-item"><input type="checkbox" value="Field staff support"/> Field staff support</label><label class="c-item"><input type="checkbox" value="Technical guidance"/> Technical guidance</label><label class="c-item"><input type="checkbox" value="Improvement in income/livelihood"/> Income improvement</label></div></div><div class="fg"><label class="fl">45. Challenges faced</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Water availability"/> Water availability</label><label class="c-item"><input type="checkbox" value="Pest/disease issues"/> Pest/disease</label><label class="c-item"><input type="checkbox" value="Lack of technical knowledge"/> Lack of knowledge</label><label class="c-item"><input type="checkbox" value="Labour constraints"/> Labour</label><label class="c-item"><input type="checkbox" value="Animal damage"/> Animal damage</label><label class="c-item"><input type="checkbox" value="Market access"/> Market access</label><label class="c-item"><input type="checkbox" value="No challenges"/> No challenges</label></div></div><div class="fg"><label class="fl">46. Suggestions / Testimonials</label><textarea class="ft" id="suggestions" rows="3" placeholder="Any suggestions…"></textarea></div><div class="fg"><label class="fl">47. Would recommend this program?</label><div class="radio-grp"><label class="r-item"><input type="radio" name="recommend" value="Definitely"/> Definitely</label><label class="r-item"><input type="radio" name="recommend" value="Probably"/> Probably</label><label class="r-item"><input type="radio" name="recommend" value="Not sure"/> Not sure</label><label class="r-item"><input type="radio" name="recommend" value="Probably not"/> Probably not</label></div></div>`
+A: () => `<div class="fg"><label class="fl">1. Name of Beneficiary <span class="req">*</span></label><div class="ac-wrap"><input class="fi" id="name" placeholder="Type name to search…" autocomplete="off"/><span class="ac-spinner" id="ac-spinner"><svg class="rot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></span><button class="ac-clear" id="ac-clear" type="button" title="Clear"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button><div class="ac-dropdown" id="ac-dropdown"></div></div><div class="ac-filled-badge" id="ac-filled-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Auto-filled from farmer records</div></div><div class="row2"><div class="fg"><label class="fl">2. Age <span class="req">*</span></label><input class="fi" id="age" type="number" placeholder="Age"/></div><div class="fg"><label class="fl">3. Gender <span class="req">*</span></label><div class="radio-grp"><label class="r-item"><input type="radio" name="gender" value="Male"/> Male</label><label class="r-item"><input type="radio" name="gender" value="Female"/> Female</label><label class="r-item"><input type="radio" name="gender" value="Other"/> Other</label></div></div></div><div class="row2"><div class="fg"><label class="fl">4. Mobile <span class="req">*</span></label><input class="fi" id="mobile" type="tel" placeholder="Mobile"/></div><div class="fg"><label class="fl">5. Marital Status <span class="req">*</span></label><select class="fs" id="marital"><option value="">Select</option><option>Single</option><option>Married</option><option>Widowed</option><option>Divorced</option></select></div></div><div class="fg"><label class="fl">6. Location (Village, District, State) <span class="req">*</span></label><input class="fi" id="location" placeholder="e.g. Shirpur, Dhule, Maharashtra"/></div><div class="fg"><label class="fl">7. Landholding size <span class="req">*</span></label><div class="radio-grp"><label class="r-item"><input type="radio" name="landsize" value="Less than 1 acre"/> &lt;1 acre</label><label class="r-item"><input type="radio" name="landsize" value="1–2 acres"/> 1–2 acres</label><label class="r-item"><input type="radio" name="landsize" value="2–5 acres"/> 2–5 acres</label><label class="r-item"><input type="radio" name="landsize" value="More than 5 acres"/> &gt;5 acres</label></div></div><div class="fg"><label class="fl">8. Land ownership <span class="req">*</span></label><div class="radio-grp"><label class="r-item"><input type="radio" name="landown" value="Owned"/> Owned</label><label class="r-item"><input type="radio" name="landown" value="Leased"/> Leased</label><label class="r-item"><input type="radio" name="landown" value="Shared"/> Shared</label></div></div><div class="fg"><label class="fl">9. Irrigation access <span class="req">*</span></label><div class="radio-grp"><label class="r-item"><input type="radio" name="irrigation" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="irrigation" value="No"/> No</label></div></div><div class="fg"><label class="fl">10. Times received saplings <span class="req">*</span></label><div class="radio-grp"><label class="r-item"><input type="radio" name="times_received" value="First time"/> First time</label><label class="r-item"><input type="radio" name="times_received" value="Second time"/> Second time</label><label class="r-item"><input type="radio" name="times_received" value="More than twice"/> More than twice</label></div></div>`,
+B: () => `<div class="fg"><label class="fl">11. Sapling condition at distribution <span class="req">*</span></label><div class="radio-grp"><label class="r-item"><input type="radio" name="sapling_cond" value="Healthy"/> Healthy</label><label class="r-item"><input type="radio" name="sapling_cond" value="Average"/> Average</label><label class="r-item"><input type="radio" name="sapling_cond" value="Weak"/> Weak</label><label class="r-item"><input type="radio" name="sapling_cond" value="Damaged"/> Damaged</label></div></div><div class="fg"><label class="fl">12a. Sapling height at distribution <span class="req">*</span></label><input class="fi" id="sapling_height" type="text" placeholder="e.g. 1.5 ft"/></div><div class="fg"><label class="fl">12b. Sapling age at distribution (years) <span class="req">*</span></label><input class="fi" id="sapling_age_yrs" type="number" min="0" step="0.5" placeholder="e.g. 1.5"/></div><div class="fg"><label class="fl">13. Suitable for soil/climate? <span class="req">*</span></label><div class="radio-grp"><label class="r-item"><input type="radio" name="sapling_suit" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="sapling_suit" value="No"/> No</label><label class="r-item"><input type="radio" name="sapling_suit" value="Partially"/> Partially</label></div></div><div class="fg"><label class="fl">14. Received same count as MIS? <span class="req">*</span></label><div class="radio-grp"><label class="r-item"><input type="radio" name="mis_match" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="mis_match" value="No"/> No</label></div></div><div class="fg"><label class="fl">15. Saplings supposed to receive <span class="req">*</span></label><table class="s-table"><thead><tr><th>Crop</th><th>Count</th></tr></thead><tbody><tr><td>Papaya</td><td><input type="number" id="sup_papaya" placeholder="0"/></td></tr><tr><td>Mulberry</td><td><input type="number" id="sup_mulberry" placeholder="0"/></td></tr><tr><td>Banana</td><td><input type="number" id="sup_banana" placeholder="0"/></td></tr></tbody></table></div><div class="fg"><label class="fl">16. Saplings actually received <span class="req">*</span></label><table class="s-table"><thead><tr><th>Crop</th><th>Count</th></tr></thead><tbody><tr><td>Papaya</td><td><input type="number" id="rcv_papaya" placeholder="0"/></td></tr><tr><td>Mulberry</td><td><input type="number" id="rcv_mulberry" placeholder="0"/></td></tr><tr><td>Banana</td><td><input type="number" id="rcv_banana" placeholder="0"/></td></tr></tbody></table></div><div class="fg"><label class="fl">17. Planted on approved land? <span class="req">*</span></label><div class="radio-grp"><label class="r-item"><input type="radio" name="approved_land" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="approved_land" value="No"/> No</label></div></div><div class="fg"><label class="fl">18. Planting season <span class="req">*</span></label><div class="row2"><select class="fi fs" id="plant_month"><option value="">Month…</option><option>January</option><option>February</option><option>March</option><option>April</option><option>May</option><option>June</option><option>July</option><option>August</option><option>September</option><option>October</option><option>November</option><option>December</option></select><select class="fi fs" id="plant_year"><option value="">Year…</option><option>2020</option><option>2021</option><option>2022</option><option>2023</option><option>2024</option><option>2025</option><option>2026</option></select></div></div><div class="fg"><label class="fl">19. Followed pit size/spacing? <span class="req">*</span></label><div class="radio-grp"><label class="r-item"><input type="radio" name="pit_size" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="pit_size" value="No"/> No</label><label class="r-item"><input type="radio" name="pit_size" value="Partially"/> Partially</label></div></div><div class="fg"><label class="fl">20. Applied manure/fertilizer? <span class="req">*</span></label><div class="radio-grp"><label class="r-item"><input type="radio" name="manure" value="Yes" onchange="showSub('manure-sub',true)"/> Yes</label><label class="r-item"><input type="radio" name="manure" value="No" onchange="showSub('manure-sub',false)"/> No</label></div><div class="sub-f" id="manure-sub"><label class="fl">Type used</label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="FYM"/> FYM</label><label class="c-item"><input type="checkbox" value="Vermicompost"/> Vermicompost</label><label class="c-item"><input type="checkbox" value="Chemical fertilizer"/> Chemical</label><label class="c-item"><input type="checkbox" value="Bio-fertilizer"/> Bio-fertilizer</label></div></div></div><div class="fg"><label class="fl">21. Protective measures <span class="req">*</span></label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Fencing"/> Fencing</label><label class="c-item"><input type="checkbox" value="Tree guards"/> Tree guards</label><label class="c-item"><input type="checkbox" value="Thorny branches"/> Thorny branches</label><label class="c-item"><input type="checkbox" value="No protection"/> No protection</label></div></div><div class="fg"><label class="fl">22. Photos taken? <span class="req">*</span></label><div class="radio-grp"><label class="r-item"><input type="radio" name="photos" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="photos" value="No"/> No</label></div></div><div class="fg"><label class="fl">23. Saplings currently surviving <span class="req">*</span></label><table class="s-table"><thead><tr><th>Crop</th><th>Surviving</th></tr></thead><tbody><tr><td>Papaya</td><td><input type="number" id="surv_papaya" placeholder="0"/></td></tr><tr><td>Mulberry</td><td><input type="number" id="surv_mulberry" placeholder="0"/></td></tr><tr><td>Banana</td><td><input type="number" id="surv_banana" placeholder="0"/></td></tr></tbody></table></div><div class="fg"><label class="fl">24. Mortality reasons <span class="req">*</span></label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Water shortage"/> Water shortage</label><label class="c-item"><input type="checkbox" value="Pest attack"/> Pest attack</label><label class="c-item"><input type="checkbox" value="Disease"/> Disease</label><label class="c-item"><input type="checkbox" value="Animal grazing"/> Animal grazing</label><label class="c-item"><input type="checkbox" value="Climate/weather"/> Climate/weather</label><label class="c-item"><input type="checkbox" value="Poor sapling quality"/> Poor sapling quality</label><label class="c-item"><input type="checkbox" value="No mortality"/> No mortality</label></div></div><div class="fg"><label class="fl">25. Watering frequency <span class="req">*</span></label><div class="radio-grp"><label class="r-item"><input type="radio" name="watering" value="Daily"/> Daily</label><label class="r-item"><input type="radio" name="watering" value="Alternate days"/> Alternate days</label><label class="r-item"><input type="radio" name="watering" value="Weekly"/> Weekly</label><label class="r-item"><input type="radio" name="watering" value="Depends on rainfall"/> On rainfall</label></div></div><div class="fg"><label class="fl">26. Weeding frequency <span class="req">*</span></label><div class="radio-grp"><label class="r-item"><input type="radio" name="weeding" value="Monthly"/> Monthly</label><label class="r-item"><input type="radio" name="weeding" value="Fortnightly"/> Fortnightly</label><label class="r-item"><input type="radio" name="weeding" value="Weekly"/> Weekly</label><label class="r-item"><input type="radio" name="weeding" value="Rarely"/> Rarely</label></div></div>`,
+C: () => `<div class="fg"><label class="fl">27. Attended training? <span class="req">*</span></label><div class="radio-grp"><label class="r-item"><input type="radio" name="training" value="Yes" onchange="showSub('train-sub',true)"/> Yes</label><label class="r-item"><input type="radio" name="training" value="No" onchange="showSub('train-sub',false)"/> No</label></div><div class="sub-f" id="train-sub"><div class="row2"><div class="fg" style="margin-bottom:0"><label class="fl" style="font-size:.77rem;font-weight:500">MM/YY</label><input class="fi" id="train_mmyy" placeholder="03/25" maxlength="5"/></div><div class="fg" style="margin-bottom:0"><label class="fl" style="font-size:.77rem;font-weight:500">Location</label><input class="fi" id="train_location" placeholder="e.g. Shirpur"/></div></div></div></div><div class="fg"><label class="fl">29. Topics covered <span class="req">*</span></label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Plantation methods"/> Plantation methods</label><label class="c-item"><input type="checkbox" value="Crop-specific care"/> Crop-specific care</label><label class="c-item"><input type="checkbox" value="Pest and disease management"/> Pest &amp; disease</label><label class="c-item"><input type="checkbox" value="Pruning / harvesting practices"/> Pruning / harvesting</label></div></div><div class="fg"><label class="fl">30. Training helped? <span class="req">*</span></label><div class="radio-grp"><label class="r-item"><input type="radio" name="train_help" value="Yes, significantly"/> Yes, significantly</label><label class="r-item"><input type="radio" name="train_help" value="Yes, to some extent"/> To some extent</label><label class="r-item"><input type="radio" name="train_help" value="Not really"/> Not really</label></div></div><div class="fg"><label class="fl">31. GVT field team visit? <span class="req">*</span></label><div class="radio-grp"><label class="r-item"><input type="radio" name="team_visit" value="Yes" onchange="showSub('visit-sub',true)"/> Yes</label><label class="r-item"><input type="radio" name="team_visit" value="No" onchange="showSub('visit-sub',false)"/> No</label></div><div class="sub-f" id="visit-sub"><label class="fl">32. Number of visits</label><div class="radio-grp"><label class="r-item"><input type="radio" name="num_visits" value="1 time"/> 1 time</label><label class="r-item"><input type="radio" name="num_visits" value="2–3 times"/> 2–3 times</label><label class="r-item"><input type="radio" name="num_visits" value="More than 3 times"/> More than 3</label></div></div></div><div class="fg"><label class="fl">33. Technical guidance? <span class="req">*</span></label><div class="radio-grp"><label class="r-item"><input type="radio" name="tech_guidance" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="tech_guidance" value="No"/> No</label></div></div><div class="fg"><label class="fl">34. Knew whom to contact? <span class="req">*</span></label><div class="radio-grp"><label class="r-item"><input type="radio" name="know_contact" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="know_contact" value="No"/> No</label></div></div><div class="fg"><label class="fl">35. Concerns resolved? <span class="req">*</span></label><div class="radio-grp"><label class="r-item"><input type="radio" name="resolved" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="resolved" value="No"/> No</label><label class="r-item"><input type="radio" name="resolved" value="Not applicable"/> N/A</label></div></div><div class="fg"><label class="fl">36. Another CSR program? <span class="req">*</span></label><div class="radio-grp"><label class="r-item"><input type="radio" name="other_csr" value="Yes" onchange="showSub('csr-sub',true)"/> Yes</label><label class="r-item"><input type="radio" name="other_csr" value="No" onchange="showSub('csr-sub',false)"/> No</label></div><div class="sub-f" id="csr-sub"><input class="fi" id="csr_partner" placeholder="Partner name"/></div></div><div class="fg"><label class="fl">37. Govt horticulture scheme? <span class="req">*</span></label><div class="radio-grp"><label class="r-item"><input type="radio" name="govt_scheme" value="Yes" onchange="showSub('scheme-sub',true)"/> Yes</label><label class="r-item"><input type="radio" name="govt_scheme" value="No" onchange="showSub('scheme-sub',false)"/> No</label></div><div class="sub-f" id="scheme-sub"><input class="fi" id="scheme_name" placeholder="Scheme name"/></div></div>`,
+D: () => `<div class="fg"><label class="fl">38. Net profit — Current Year (Jan 25–Dec 25) <span class="req">*</span></label><div style="position:relative"><span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-weight:600;color:var(--grey);pointer-events:none">₹</span><input class="fi" id="profit_cy" type="text" inputmode="numeric" placeholder="e.g. 45000" style="padding-left:28px"/></div></div><div class="fg"><label class="fl">39. Net profit — Last Year (Jan 24–Dec 24) <span class="req">*</span></label><div style="position:relative"><span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-weight:600;color:var(--grey);pointer-events:none">₹</span><input class="fi" id="profit_ly" type="text" inputmode="numeric" placeholder="e.g. 38000" style="padding-left:28px"/></div></div><div class="fg"><label class="fl">40. Income change factors <span class="req">*</span></label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Yield improvement"/> Yield improvement</label><label class="c-item"><input type="checkbox" value="Market price changes"/> Market price</label><label class="c-item"><input type="checkbox" value="Input cost variation"/> Input cost</label><label class="c-item"><input type="checkbox" value="Pest/disease loss"/> Pest/disease loss</label><label class="c-item"><input type="checkbox" value="Weather conditions"/> Weather</label><label class="c-item"><input type="checkbox" value="Others"/> Others</label></div></div><div class="fg"><label class="fl">41. Informed of CSR support (Sun Pharma)? <span class="req">*</span></label><div class="radio-grp"><label class="r-item"><input type="radio" name="csr_informed" value="Yes"/> Yes</label><label class="r-item"><input type="radio" name="csr_informed" value="No"/> No</label></div></div><div class="fg"><label class="fl">42. Branding material seen? <span class="req">*</span></label><div class="radio-grp"><label class="r-item"><input type="radio" name="branding" value="Signboards"/> Signboards</label><label class="r-item"><input type="radio" name="branding" value="Banners"/> Banners</label><label class="r-item"><input type="radio" name="branding" value="Both"/> Both</label><label class="r-item"><input type="radio" name="branding" value="None"/> None</label></div></div><div class="fg"><label class="fl">43. Overall satisfaction <span class="req">*</span></label><div class="radio-grp"><label class="r-item"><input type="radio" name="satisfaction" value="Very satisfied"/> Very satisfied</label><label class="r-item"><input type="radio" name="satisfaction" value="Satisfied"/> Satisfied</label><label class="r-item"><input type="radio" name="satisfaction" value="Neutral"/> Neutral</label><label class="r-item"><input type="radio" name="satisfaction" value="Dissatisfied"/> Dissatisfied</label><label class="r-item"><input type="radio" name="satisfaction" value="Very dissatisfied"/> Very dissatisfied</label></div></div><div class="fg"><label class="fl">44. Most helpful aspects <span class="req">*</span></label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Quality of saplings"/> Quality of saplings</label><label class="c-item"><input type="checkbox" value="Timely distribution"/> Timely distribution</label><label class="c-item"><input type="checkbox" value="Training and awareness"/> Training</label><label class="c-item"><input type="checkbox" value="Field staff support"/> Field staff support</label><label class="c-item"><input type="checkbox" value="Technical guidance"/> Technical guidance</label><label class="c-item"><input type="checkbox" value="Improvement in income/livelihood"/> Income improvement</label></div></div><div class="fg"><label class="fl">45. Challenges faced <span class="req">*</span></label><div class="chk-grp"><label class="c-item"><input type="checkbox" value="Water availability"/> Water availability</label><label class="c-item"><input type="checkbox" value="Pest/disease issues"/> Pest/disease</label><label class="c-item"><input type="checkbox" value="Lack of technical knowledge"/> Lack of knowledge</label><label class="c-item"><input type="checkbox" value="Labour constraints"/> Labour</label><label class="c-item"><input type="checkbox" value="Animal damage"/> Animal damage</label><label class="c-item"><input type="checkbox" value="Market access"/> Market access</label><label class="c-item"><input type="checkbox" value="No challenges"/> No challenges</label></div></div><div class="fg"><label class="fl">46. Suggestions / Testimonials <span class="req">*</span></label><textarea class="ft" id="suggestions" rows="3" placeholder="Any suggestions…"></textarea></div><div class="fg"><label class="fl">47. Would recommend this program? <span class="req">*</span></label><div class="radio-grp"><label class="r-item"><input type="radio" name="recommend" value="Definitely"/> Definitely</label><label class="r-item"><input type="radio" name="recommend" value="Probably"/> Probably</label><label class="r-item"><input type="radio" name="recommend" value="Not sure"/> Not sure</label><label class="r-item"><input type="radio" name="recommend" value="Probably not"/> Probably not</label></div></div>`
 };
 
 const TABS = [{id:'A',icon:'👤',name:'Profile'},{id:'B',icon:'🌱',name:'Saplings'},{id:'C',icon:'🎓',name:'Training'},{id:'D',icon:'💰',name:'Outcome'}];
@@ -310,9 +487,8 @@ let forms=JSON.parse(localStorage.getItem(STORE_KEY)||'[]');
 function saveForms(){localStorage.setItem(STORE_KEY,JSON.stringify(forms));const hasDraft=forms.some(f=>!f.submitted&&Object.keys(f.sections||{}).length>0);document.getElementById('export-btn').disabled=!hasDraft;}
 function getF(fid){return forms.find(f=>f.form_id===fid);}
 
-// ── MINIMIZE ─────────────────────────────────────────────────
-function toggleMinimize(fid,e) {
-  if(e) e.stopPropagation();
+function toggleMinimize(fid,e){
+  if(e)e.stopPropagation();
   const f=getF(fid);if(!f||f.submitted)return;
   f.minimized=!f.minimized;saveForms();
   const card=document.getElementById('fc-'+fid);if(!card)return;
@@ -320,7 +496,6 @@ function toggleMinimize(fid,e) {
   const btn=card.querySelector('.minimize-btn');if(btn)btn.title=f.minimized?'Expand form':'Minimise form';
 }
 
-// ── RENDER ───────────────────────────────────────────────────
 function renderAll(){
   const list=document.getElementById('forms-list');
   if(!forms.length){list.innerHTML=`<div style="text-align:center;padding:3rem 1rem;color:var(--grey)"><div style="font-size:2.5rem;margin-bottom:.75rem">📋</div><div style="font-weight:600;color:var(--dark);margin-bottom:.3rem">No forms yet</div><div style="font-size:.85rem">Click "Add New Beneficiary Form" below to start.</div></div>`;saveForms();return;}
@@ -420,8 +595,25 @@ function collectPanel(fid,tabId){
   return d;
 }
 
-async function saveTab(fid,tabId){
-  const btn=document.getElementById('stbtn-'+fid+'-'+tabId);if(!btn)return;
+// ── SAVE TAB (with validation) ────────────────────────────────
+async function saveTab(fid, tabId){
+  const btn = document.getElementById('stbtn-'+fid+'-'+tabId); if(!btn) return;
+
+  // Run validation first
+  const errors = validateTab(fid, tabId);
+  if(errors.length > 0){
+    // Show validation modal
+    const list = document.getElementById('val-err-list');
+    list.innerHTML = errors.map(e=>`<li>${e}</li>`).join('');
+    document.getElementById('m-validation').classList.add('open');
+    // Scroll to first error field
+    const panel = document.getElementById('fields-'+fid+'-'+tabId);
+    const firstErr = panel?.querySelector('.field-error, .radio-grp.field-error, .chk-grp.field-error');
+    firstErr?.scrollIntoView({behavior:'smooth', block:'center'});
+    toast('⚠️ Please fill all required fields', 3000);
+    return;
+  }
+
   btn.classList.add('busy');
   const data=collectPanel(fid,tabId);
   const f=getF(fid);if(!f){btn.classList.remove('busy');return;}
@@ -429,8 +621,15 @@ async function saveTab(fid,tabId){
   try{const token=localStorage.getItem('access_token');if(token&&navigator.onLine){setSyncStatus('syncing');await fetch('/api/forms/sync',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({form_id:f.form_id,date:TODAY,sections:f.sections,form_number:f.form_number})});setSyncStatus('synced');}}catch{setSyncStatus('pending');}
   btn.classList.remove('busy');
   const card=document.getElementById('fc-'+fid);
-  if(card){const tbs=card.querySelectorAll('.form-tab-btn');const idx=TABS.findIndex(t=>t.id===tabId);if(tbs[idx])tbs[idx].classList.add('done');const sub=document.getElementById('hsub-'+fid);if(sub)sub.textContent=Object.keys(f.sections).length+'/4 tabs · '+(f.sections?.A?.location||'location not set');if(tabId==='A'){const title=document.getElementById('htitle-'+fid);if(title)title.textContent=data.name||'Beneficiary #'+f.form_number;}}
-  toast('Tab '+tabId+' saved ✓');
+  if(card){
+    const tbs=card.querySelectorAll('.form-tab-btn');
+    const idx=TABS.findIndex(t=>t.id===tabId);
+    if(tbs[idx])tbs[idx].classList.add('done');
+    const sub=document.getElementById('hsub-'+fid);
+    if(sub)sub.textContent=Object.keys(f.sections).length+'/4 tabs · '+(f.sections?.A?.location||'location not set');
+    if(tabId==='A'){const title=document.getElementById('htitle-'+fid);if(title)title.textContent=data.name||'Beneficiary #'+f.form_number;}
+  }
+  toast('✅ Tab '+tabId+' saved!');
 }
 
 function onVerify(fid,checked){
@@ -441,76 +640,86 @@ function onVerify(fid,checked){
   if(checked)toast('✅ Physical verification confirmed');
 }
 
-function hasUnsavedChanges(fid) {
-  const f = getF(fid); if (!f) return false;
-  for (const tab of TABS) {
-    const panel = document.getElementById('fields-' + fid + '-' + tab.id);
-    if (!panel) continue;
-    const current = collectPanel(fid, tab.id);
-    const saved = f.sections?.[tab.id] || null;
-    // Check if panel has any data filled
-    const hasFilled = Object.entries(current).some(([k, v]) =>
-      Array.isArray(v) ? v.length > 0 : (v !== '' && v !== null && v !== undefined)
-    );
-    if (!hasFilled) continue; // tab is empty, skip
-    if (!saved) return true;  // tab has data but was never saved
-    // Compare current vs saved
-    const isDiff = JSON.stringify(current) !== JSON.stringify(saved);
-    if (isDiff) return true;
+// ── UNSAVED CHANGES CHECK ────────────────────────────────────
+function hasUnsavedChanges(fid){
+  const f=getF(fid);if(!f)return false;
+  for(const tab of TABS){
+    const panel=document.getElementById('fields-'+fid+'-'+tab.id);if(!panel)continue;
+    const current=collectPanel(fid,tab.id);
+    const saved=f.sections?.[tab.id]||null;
+    const hasFilled=Object.entries(current).some(([k,v])=>Array.isArray(v)?v.length>0:(v!==''&&v!==null&&v!==undefined));
+    if(!hasFilled)continue;
+    if(!saved)return true;
+    if(JSON.stringify(current)!==JSON.stringify(saved))return true;
   }
   return false;
 }
 
+// ── SUBMIT FORM (with unsaved check + all-tab validation) ────
+async function submitForm(fid){
+  const f=getF(fid);if(!f)return;
+  if(!f.verified){toast('⚠️ Check the physical verification box first',3000);return;}
+  if(!navigator.onLine){toast('Must be online to submit',3000);return;}
 
-// async function submitForm(fid){
-//  const f=getF(fid);if(!f)return;
-//  if(!f.verified){toast('⚠️ Check the physical verification box first',3000);return;}
-//  if(!navigator.onLine){toast('Must be online to submit',3000);return;}
-//  const btn=document.getElementById('fsbtn-'+fid);btn.classList.add('busy');
-//  try{
-//    const token=localStorage.getItem('access_token');if(!token)throw new Error('Not authenticated');
-//    await fetch('/api/forms/sync',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({form_id:f.form_id,date:TODAY,sections:f.sections||{},form_number:f.form_number})});
-//    const res=await fetch('/api/forms/submit',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({form_id:f.form_id,date:TODAY})});
-//    if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(e.detail||'Submit failed');}
-//    f.submitted=true;saveForms();
-//    const card=document.getElementById('fc-'+fid);
-//    if(card){const tmp=document.createElement('div');tmp.innerHTML=buildCard(f);card.replaceWith(tmp.firstElementChild);}
-//    setSyncStatus('synced');toast('✅ Form #'+f.form_number+' submitted!',3500);
-//  }catch(err){btn.classList.remove('busy');toast('Submit failed: '+err.message,3500);}
-//}
+  // Check unsaved changes
+  if(hasUnsavedChanges(fid)){
+    document.getElementById('m-unsaved').classList.add('open');
+    return;
+  }
 
-async function submitForm(fid) {
-  const f = getF(fid); if (!f) return;
-  if (!f.verified) { toast('⚠️ Check the physical verification box first', 3000); return; }
-  if (!navigator.onLine) { toast('Must be online to submit', 3000); return; }
+  // Check that ALL 4 tabs have been saved
+  const missingTabs = TABS.filter(t => !f.sections?.[t.id]);
+  if(missingTabs.length > 0){
+    const names = missingTabs.map(t=>t.icon+' '+t.name).join(', ');
+    toast(`⚠️ Please save all tabs first: ${names}`, 4000);
+    // Show which tabs are missing
+    const list = document.getElementById('val-err-list');
+    list.innerHTML = missingTabs.map(t=>`<li>Tab ${t.id} (${t.name}) — not saved yet</li>`).join('');
+    document.getElementById('m-validation').classList.add('open');
+    // Update modal title
+    document.querySelector('#m-validation h3').textContent = 'Complete all tabs first';
+    document.querySelector('#m-validation p').textContent = 'These tabs have not been saved yet:';
+    return;
+  }
 
-  // ── NEW: check for unsaved changes ──
-  if (hasUnsavedChanges(fid)) {
-    openUnsavedModal(fid);
+  // Re-validate all saved tab data against rules
+  const allErrors = [];
+  for(const tab of TABS){
+    const errs = validateTab(fid, tab.id);
+    if(errs.length > 0){
+      errs.forEach(e => allErrors.push(`[Tab ${tab.id}] ${e}`));
+    }
+  }
+  if(allErrors.length > 0){
+    const list = document.getElementById('val-err-list');
+    list.innerHTML = allErrors.map(e=>`<li>${e}</li>`).join('');
+    document.querySelector('#m-validation h3').textContent = 'Required fields missing';
+    document.querySelector('#m-validation p').textContent = 'Please go back and fill these required fields:';
+    document.getElementById('m-validation').classList.add('open');
     return;
   }
 
   await doSubmitForm(fid);
 }
 
-function openUnsavedModal(fid) {
-  pendingSubmitId = fid;
+function openUnsavedModal(fid){
+  pendingSubmitId=fid;
   document.getElementById('m-unsaved').classList.add('open');
 }
 
-async function doSubmitForm(fid) {
-  const f = getF(fid); if (!f) return;
-  const btn = document.getElementById('fsbtn-' + fid); btn.classList.add('busy');
-  try {
-    const token = localStorage.getItem('access_token'); if (!token) throw new Error('Not authenticated');
-    await fetch('/api/forms/sync', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, body: JSON.stringify({ form_id: f.form_id, date: TODAY, sections: f.sections || {}, form_number: f.form_number }) });
-    const res = await fetch('/api/forms/submit', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, body: JSON.stringify({ form_id: f.form_id, date: TODAY }) });
-    if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.detail || 'Submit failed'); }
-    f.submitted = true; saveForms();
-    const card = document.getElementById('fc-' + fid);
-    if (card) { const tmp = document.createElement('div'); tmp.innerHTML = buildCard(f); card.replaceWith(tmp.firstElementChild); }
-    setSyncStatus('synced'); toast('✅ Form #' + f.form_number + ' submitted!', 3500);
-  } catch (err) { btn.classList.remove('busy'); toast('Submit failed: ' + err.message, 3500); }
+async function doSubmitForm(fid){
+  const f=getF(fid);if(!f)return;
+  const btn=document.getElementById('fsbtn-'+fid);btn.classList.add('busy');
+  try{
+    const token=localStorage.getItem('access_token');if(!token)throw new Error('Not authenticated');
+    await fetch('/api/forms/sync',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({form_id:f.form_id,date:TODAY,sections:f.sections||{},form_number:f.form_number})});
+    const res=await fetch('/api/forms/submit',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({form_id:f.form_id,date:TODAY})});
+    if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(e.detail||'Submit failed');}
+    f.submitted=true;saveForms();
+    const card=document.getElementById('fc-'+fid);
+    if(card){const tmp=document.createElement('div');tmp.innerHTML=buildCard(f);card.replaceWith(tmp.firstElementChild);}
+    setSyncStatus('synced');toast('✅ Form #'+f.form_number+' submitted!',3500);
+  }catch(err){btn.classList.remove('busy');toast('Submit failed: '+err.message,3500);}
 }
 
 function addForm(){
@@ -521,9 +730,8 @@ function addForm(){
   toast('Form #'+fn+' added');
 }
 
-
-let pendingDiscardId = null;
-let pendingSubmitId = null;  // ← ADD THIS
+let pendingDiscardId=null;
+let pendingSubmitId=null;
 
 function openDiscardModal(fid){pendingDiscardId=fid;document.getElementById('m-discard').classList.add('open');}
 async function confirmDiscard(){
@@ -616,27 +824,15 @@ function clearAC(fid){
 function closeACDD(fid){document.getElementById('panel-'+fid+'-A')?.querySelector('#ac-dropdown')?.classList.remove('open');if(acS[fid])acS[fid].fi=-1;}
 function showSub(id,show){document.getElementById(id)?.classList.toggle('show',show);}
 
-// async function restoreFromServer(){
-//   const token=localStorage.getItem('access_token');if(!token||!navigator.onLine){setSyncStatus(navigator.onLine?'pending':'offline');return;}
-//   try{
-//     const res=await fetch('/api/forms/today?date='+TODAY,{headers:{'Authorization':'Bearer '+token}});
-//     if(res.status===401){const ok=await tryRefresh();if(ok)return restoreFromServer();return;}
-//     if(!res.ok)return;
-//     const sf=await res.json();if(!sf?.length)return;
-//     sf.forEach(s=>{if(!forms.find(f=>f.form_id===s.form_id)){forms.push({form_id:s.form_id,form_number:s.form_number||forms.length+1,sections:s.sections||{},verified:false,submitted:false,activeTab:'A',minimized:false});}});
-//     saveForms();renderAll();setSyncStatus('synced');
-//   }catch{setSyncStatus('offline');}
-// }
-
 async function restoreFromServer(isRetry=false){
   const token=localStorage.getItem('access_token');
   if(!token||!navigator.onLine){setSyncStatus(navigator.onLine?'pending':'offline');return;}
   try{
     const res=await fetch('/api/forms/today?date='+TODAY,{headers:{'Authorization':'Bearer '+token}});
     if(res.status===401){
-      if(isRetry) return; // already tried refresh, give up silently
+      if(isRetry)return;
       const ok=await tryRefresh();
-      if(ok) return restoreFromServer(true); // pass isRetry=true
+      if(ok)return restoreFromServer(true);
       return;
     }
     if(!res.ok)return;
@@ -646,29 +842,13 @@ async function restoreFromServer(isRetry=false){
   }catch{setSyncStatus('offline');}
 }
 
-// async function tryRefresh(){
-//   const rt=localStorage.getItem('refresh_token');if(!rt){window.location.href='/';return false;}
-//   try{const res=await fetch('/api/refresh',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({refresh_token:rt})});if(!res.ok){window.location.href='/';return false;}localStorage.setItem('access_token',(await res.json()).access_token);return true;}catch{return false;}
-// }
-
 async function tryRefresh(){
   const rt=localStorage.getItem('refresh_token');
-  if(!rt){
-    // Clear everything before redirecting
-    ['access_token','refresh_token','user'].forEach(k=>localStorage.removeItem(k));
-    window.location.href='/';
-    return false;
-  }
+  if(!rt){['access_token','refresh_token','user'].forEach(k=>localStorage.removeItem(k));window.location.href='/';return false;}
   try{
     const res=await fetch('/api/refresh',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({refresh_token:rt})});
-    if(!res.ok){
-      // Clear everything before redirecting
-      ['access_token','refresh_token','user'].forEach(k=>localStorage.removeItem(k));
-      window.location.href='/';
-      return false;
-    }
-    localStorage.setItem('access_token',(await res.json()).access_token);
-    return true;
+    if(!res.ok){['access_token','refresh_token','user'].forEach(k=>localStorage.removeItem(k));window.location.href='/';return false;}
+    localStorage.setItem('access_token',(await res.json()).access_token);return true;
   }catch{return false;}
 }
 
@@ -681,9 +861,16 @@ function toast(msg,dur=2500){const t=document.getElementById('toast');document.g
 function toggleUM(){document.getElementById('udrop').classList.toggle('open');}
 document.addEventListener('click',e=>{const w=document.getElementById('umw');if(w&&!w.contains(e.target))document.getElementById('udrop').classList.remove('open');});
 function openM(e,id){if(e)e.preventDefault();document.getElementById('udrop').classList.remove('open');document.getElementById(id)?.classList.add('open');}
-function closeM(id){document.getElementById(id)?.classList.remove('open');}
+function closeM(id){
+  document.getElementById(id)?.classList.remove('open');
+  // Reset validation modal title/desc when closing
+  if(id==='m-validation'){
+    document.querySelector('#m-validation h3').textContent='Please fill required fields';
+    document.querySelector('#m-validation p').textContent='The following fields are mandatory:';
+  }
+}
 function doLogout(){['access_token','refresh_token','user'].forEach(k=>localStorage.removeItem(k));window.location.href='/';}
-['m-admin','m-signout','m-discard', 'm-unsaved'].forEach(id=>{document.getElementById(id)?.addEventListener('click',e=>{if(e.target.id===id)closeM(id);});});
+['m-admin','m-signout','m-discard','m-unsaved','m-validation'].forEach(id=>{document.getElementById(id)?.addEventListener('click',e=>{if(e.target.id===id)closeM(id);});});
 renderAll();restoreFromServer();
 if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js').catch(()=>{});
 </script>
